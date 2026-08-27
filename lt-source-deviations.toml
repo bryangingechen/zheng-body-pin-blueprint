@@ -1,0 +1,46 @@
+# Paper <-> Lean divergence register.
+#
+# Harness format (see tools/verso-harness/references/lt-method.md). Normally
+# this records where Verso prose deviates from upstream TeX; here it is turned
+# on the paper/Lean seam instead, since there is no TeX source.
+#
+# `fingerprint` is a SHA-256 over the reviewed text, so an entry expires as soon
+# as what it excuses changes. Entries below have no fingerprint yet because the
+# chapters they refer to are not written — add one when the chapter lands.
+
+version = 1
+
+[[witness]]
+paper = "Lem 6.3"
+chapter = "BodyPinBlueprint/Chapters/BodyPin.lean"
+reason = "The paper argues through Nash-Williams forest decomposition and Edmonds' matroid-union rank formula. Lean uses no matroid API at all: exists_sparse22_of_all_partition_terms extracts the subgraph directly from a maximum sparse subset and an explicit tight partition, and says so in a source comment at OptimalPartition.lean:370."
+
+[[witness]]
+paper = "Lem 2.1, 3.7, 3.8"
+chapter = "BodyPinBlueprint/Chapters/Sparsity.lean"
+reason = "Short uncrossing arguments on paper; formally they rest on ~3500 lines with no paper counterpart -- a Nixon-Owen construction theorem for (2,2)-tight graphs, proper tight modules, triangle sequences, same-vertex tight completion."
+
+[[witness]]
+paper = "§4, Thm 4.2"
+chapter = "BodyPinBlueprint/Chapters/Strata.lean"
+reason = "Expository only. The determinantal, local-complete-intersection and Cohen-Macaulay statements have no Lean counterpart; the formalization uses the field-theoretic inequality throughout, so Theorem 1.1 does not depend on section 4."
+
+[[witness]]
+paper = "§1 (Asimow-Roth)"
+chapter = "BodyPinBlueprint/Chapters/Statement.lean"
+reason = "The Lean theorem is the maximum-rank form. The step from attained maximum rank to generic rigidity in the usual sense is a literature citation, not a formalized result."
+
+[[witness]]
+paper = "§1, A.1"
+chapter = "BodyPinBlueprint/Chapters/Statement.lean"
+reason = "Pins are occurrences, not multiset edges: BodyPinIncidence carries a pin type with two endpoint maps, so parallel pins stay distinct. Partitions are surjections W -> [t] rather than set partitions, which makes the empty body set and the one-block case fall out of the definition."
+
+[[witness]]
+paper = "(1.2)"
+chapter = "BodyPinBlueprint/Chapters/Statement.lean"
+reason = "Lean carries two capacity conventions: partitionCapacity over unordered pairs, and orderedPartitionCapacity counting each pair twice with bound 12(t-1) as an audit form. The paper has only the unordered one."
+
+[[witness]]
+paper = "Prop 3.3, Prop 6.5"
+chapter = "BodyPinBlueprint/Chapters/Flags.lean"
+reason = "The v4.29.0 line has no :::proposition directive, but the harness rule is to preserve environment kind faithfully. Paper Propositions are rendered with :::lemma_ and the word Proposition in the node title. This entry expires on a port to a release line that has the directive."

@@ -1,0 +1,528 @@
+# Paper -> Lean correspondence
+#
+# The spine of this blueprint: for each numbered result in the paper, the Lean
+# declaration that discharges it. Machine-readable on purpose — `scripts/
+# coverage.py` (Phase 2) consumes it, and the audit chapter renders it.
+#
+# Accuracy note: `lean` names were read off the formalization sources but only
+# the Statement-chapter entries have been checked by a real build so far. Treat
+# an unchecked `lean` name as a claim to verify, not as fact; `strictResolve` is
+# on, so a wrong name fails the build the moment a node cites it.
+#
+# status:
+#   mapped     paper result has a Lean anchor
+#   deviation  mapped, but Lean proves it by a different route; see
+#              lt-source-deviations.toml
+#   informal   in the paper, no Lean counterpart, not load-bearing
+#   gap        cited by the paper, not formalized
+#   lean-only  in Lean, no paper counterpart
+
+version = 1
+
+[paper]
+citation = "Zheng, Stress Degeneracy of Direction Complexes of (2,2)-Sparse Graphs and Three-Dimensional Body-Pin Rigidity, August 2026"
+doi = "10.13140/RG.2.2.17830.28485"
+file = "zheng-2026-body_pin_partition_collinearity_flag_en_20260816.pdf"
+sha256 = "c3cbf64f8bbb719bd886fd940af5474b821d7e598af8e087d48fb345f521ab43"
+bytes = 649632
+note = "Result numbering is version-specific; re-check every entry against a new revision."
+
+[formalization]
+repo = "DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture"
+rev = "afdfb9fc8f28abc4feb5dcee31ae04082922ceb7"
+tag = "v1.0.0"
+
+# ---------------------------------------------------------------- section 1
+
+[[entry]]
+paper = "§1"
+title = "Loopless body-pin multigraph H"
+chapter = "Statement"
+label = "bodypin_incidence"
+lean = ["RB31E2E.BodyPinIncidence"]
+modules = ["RB31EndToEnd/Specification.lean", "RB31EndToEnd/Graph/LooplessMultiGraph.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "§1"
+title = "Expanded graph G_H as a union of body cliques"
+chapter = "Statement"
+label = "bodypin_expansion"
+lean = ["RB31E2E.BodyPinIncidence.bodyPinGraph", "RB31E2E.BodyPinIncidence.bodyClique"]
+modules = ["RB31EndToEnd/Rigidity/BodyPinGraph.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "(1.1)"
+title = "Capacity l_H = 0, 3, 5, 6"
+chapter = "Statement"
+label = "pin_capacity"
+lean = ["RB31E2E.pinCapacity"]
+modules = ["RB31EndToEnd/Specification.lean", "RB31EndToEnd/Combinatorics/BodyPinCapacity.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "(1.2)/(A.2)"
+title = "Partition condition, sum l >= 6(t-1)"
+chapter = "Statement"
+label = "partition_condition"
+lean = ["RB31E2E.BodyPinIncidence.PartitionCondition"]
+modules = ["RB31EndToEnd/Specification.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "(1.4)"
+title = "Rigidity matrix D_F(a)"
+chapter = "Statement"
+label = "rigidity_matrix"
+lean = ["RB31E2E.BarJoint.rigidityOperator"]
+modules = ["RB31EndToEnd/Rigidity/BarJoint.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "§1"
+title = "Generic rigidity as attained maximum rank"
+chapter = "Statement"
+label = "generic_rigidity_max_rank"
+lean = ["RB31E2E.BarJoint.genericRigidityRank", "RB31E2E.BarJoint.IsGenericallyRigidInR3"]
+modules = ["RB31EndToEnd/Rigidity/BarJoint.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "Thm 1.1 / A.1"
+title = "Body-pin partition characterization (ROOT THEOREM)"
+chapter = "Statement"
+label = "bodypin_partition_characterization"
+lean = ["RB31E2E.endToEndBodyPinStatement", "RB31E2E.EndToEndBodyPinStatement"]
+modules = ["RB31EndToEnd.lean", "RB31EndToEnd/Target.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "§1"
+title = "Asimow-Roth: maximum rank implies generic rigidity"
+chapter = "Statement"
+status = "gap"
+note = "Cited, not formalized. The Lean theorem is the max-rank form throughout."
+
+[[entry]]
+title = "Equivalence reduces to the sufficiency direction"
+chapter = "Statement"
+label = "reduction_to_sufficiency"
+lean = ["RB31E2E.endToEndBodyPinStatement_iff_sufficiency"]
+modules = ["RB31EndToEnd/TargetReduction.lean"]
+status = "lean-only"
+verified = true
+
+# ---------------------------------------------------------------- section 2
+
+[[entry]]
+paper = "(1.3)"
+title = "(2,2)-sparse and tight sets"
+chapter = "Sparsity"
+label = "sparse22"
+lean = ["RB31E2E.Sparse22", "RB31E2E.Tight22"]
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/Basic.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "§2.1"
+title = "Uncrossing; addable-edge criterion"
+chapter = "Sparsity"
+label = "uncrossing"
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/Uncrossing.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 2.1"
+title = "Addable edge among three vertices"
+chapter = "Sparsity"
+label = "addable_edge_triple"
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/DegreeThreeAugmentation.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "(2.1)-(2.3)"
+title = "Block form and the self-stress exact sequence"
+chapter = "Deletion"
+label = "stress_exact_sequence"
+modules = ["RB31EndToEnd/Linear/BlockKernelExact.lean", "RB31EndToEnd/Linear/DirectionStressDeletion.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "(2.4)-(2.6)"
+title = "The (s,t,u,delta) ledger and the defect Delta"
+chapter = "Deletion"
+label = "deletion_ledger"
+modules = ["RB31EndToEnd/Linear/OutsideLocalPayment.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Ex 2.2"
+title = "Collinear two-edge path; certified response edge"
+chapter = "Deletion"
+label = "certified_response_edge"
+modules = ["RB31EndToEnd/Linear/DirectionResponse.lean", "RB31EndToEnd/Linear/DirectionResponseBaseChange.lean", "RB31EndToEnd/Linear/DirectionResponseVertexDeletion.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 2.3"
+title = "Low-degree local classification"
+chapter = "Deletion"
+label = "low_degree_classification"
+lean = ["RB31E2E.outsideExceptional_linear_dichotomy"]
+modules = ["RB31EndToEnd/Linear/OutsideLocalClassification.lean", "RB31EndToEnd/Linear/OutsideLocalGeometry.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 2.4"
+title = "Descent of affine coefficients"
+chapter = "Deletion"
+label = "affine_coefficient_descent"
+lean = ["RB31E2E.AffineSpanDescent.affineCoefficients_mem_span"]
+modules = ["RB31EndToEnd/Algebra/AffineSpanDescent.lean", "RB31EndToEnd/Algebra/AlgebraicIndependentAffine.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 2.5"
+title = "Rigidity rows among the three neighbours"
+chapter = "Deletion"
+label = "neighbour_rigidity_rows"
+modules = ["RB31EndToEnd/Linear/OutsideExceptionalFullResponse.lean"]
+status = "mapped"
+
+# ---------------------------------------------------------------- section 3
+
+[[entry]]
+paper = "Def 3.1"
+title = "Collinearity flag d < T < Q"
+chapter = "Flags"
+label = "collinearity_flag"
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlag.lean"]
+status = "deviation"
+note = "Renamed throughout: provenance flag / terminals / ghost vertex. See the vocabulary table in PLAN.md."
+
+[[entry]]
+paper = "Def 3.2"
+title = "Sparse collinearity-flag system"
+chapter = "Flags"
+label = "flag_system"
+lean = ["RB31E2E.ProvenanceFlag.State", "RB31E2E.ProvenanceFlag.State.CompletionSparse"]
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlag.lean"]
+status = "deviation"
+
+[[entry]]
+paper = "Prop 3.3"
+title = "Incidence forest; codim X_T = 2|Gamma|"
+chapter = "Flags"
+label = "flag_incidence_forest"
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagForest.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "§3.2"
+title = "Support multiplicity and the O/P/S split"
+chapter = "Flags"
+label = "support_multiplicity"
+lean = ["RB31E2E.ProvenanceFlag.State.card_live_partition"]
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagSelection.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 3.4"
+title = "Flag selection lemma"
+chapter = "Flags"
+label = "flag_selection"
+lean = ["RB31E2E.ProvenanceFlag.State.exists_outside_degree_le_three_or_private_degree_le_two"]
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagSelection.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 3.5"
+title = "Completion-preserving pivot"
+chapter = "Flags"
+label = "missing_edge_pivot"
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagPrivatePivot.lean", "RB31EndToEnd/Linear/PrivatePivotStress.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 3.6"
+title = "Local classification at a private support vertex"
+chapter = "Flags"
+label = "private_local_classification"
+lean = ["RB31E2E.private_nonexceptional_or_exceptional", "RB31E2E.private_local_payment"]
+modules = ["RB31EndToEnd/Linear/PrivateLocalClassification.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 3.7"
+title = "Addable edge or complete triangle outside the flags"
+chapter = "Flags"
+label = "outside_augmentation"
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagOutsideMove.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagOutsideRegistration.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 3.8"
+title = "Certified response edge, private-support case"
+chapter = "Flags"
+label = "private_augmentation"
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagPrivateMove.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Thm 3.9"
+title = "Stress-codimension inequality for collinearity flags"
+chapter = "Flags"
+label = "stress_codim_flags"
+lean = ["RB31E2E.ProvenanceFlag.provenanceFlag_semismallness"]
+modules = ["RB31EndToEnd/NullCellule/ProvenanceFlagSemismallnessFinal.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagSemismallness.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Thm 1.2"
+title = "Stress-codimension inequality (Gamma empty)"
+chapter = "Flags"
+label = "stress_codim"
+lean = ["RB31E2E.endToEndBodyPinStatement_of_groundedPF"]
+modules = ["RB31EndToEnd/NullCellule/GroundedPFEndToEnd.lean"]
+status = "deviation"
+note = "Appears as the grounded-PF hypothesis of the assembly theorem, not as a standalone statement."
+
+# ---------------------------------------------------------------- section 4
+
+[[entry]]
+paper = "§4, (4.7)"
+title = "Grounded model and the grounded inequality"
+chapter = "Strata"
+label = "grounded_model"
+modules = ["RB31EndToEnd/Linear/GroundedDirectionConstraint.lean", "RB31EndToEnd/NullCellule/GroundedTwistSplit.lean", "RB31EndToEnd/Algebra/GroundedTwist.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "(4.2)-(4.3)"
+title = "Direction complex; Sigma_s(F) as determinantal loci"
+chapter = "Strata"
+status = "informal"
+
+[[entry]]
+paper = "Ex 4.1"
+title = "The collinear triangle"
+chapter = "Strata"
+status = "informal"
+
+[[entry]]
+paper = "Thm 4.2"
+title = "codim Sigma_s >= s; N_F is LCI, Cohen-Macaulay, pure"
+chapter = "Strata"
+status = "informal"
+note = "Not load-bearing: Theorem 1.1 never depends on the scheme statements."
+
+[[entry]]
+paper = "Rem 4.3"
+title = "Flag conditions vs exact stress strata"
+chapter = "Strata"
+status = "informal"
+
+# ---------------------------------------------------------------- section 5
+
+[[entry]]
+paper = "(5.1)"
+title = "Split-Klein quadratic form and twists"
+chapter = "SplitKlein"
+label = "split_klein_form"
+lean = ["RB31E2E.Vec3Twist.splitKlein"]
+modules = ["RB31EndToEnd/Linear/Vec3Twist.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "(5.2)"
+title = "The ideal I_F and the distinct locus"
+chapter = "SplitKlein"
+label = "isotropic_difference_ideal"
+modules = ["RB31EndToEnd/NullCellule/Definitions.lean", "RB31EndToEnd/NullCellule/PolynomialModel.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 5.1"
+title = "Componentwise Witt shear"
+chapter = "SplitKlein"
+label = "witt_shear_componentwise"
+lean = ["RB31E2E.WittShear.exists_scalar_shear_snd_ne_zero"]
+modules = ["RB31EndToEnd/NullCellule/WittShear.lean", "RB31EndToEnd/NullCellule/WittShearDistinctPrime.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Ex 5.2"
+title = "A shear separating coincident coordinates"
+chapter = "SplitKlein"
+status = "informal"
+
+[[entry]]
+paper = "Lem 5.3"
+title = "ht P + trdeg = N for a polynomial ring"
+chapter = "SplitKlein"
+label = "polynomial_dimension_formula"
+modules = ["RB31EndToEnd/Algebra/PolynomialPrimeTrdegHeight.lean", "RB31EndToEnd/Algebra/FiniteCoordinateTrdeg.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Thm 1.3"
+title = "Height of the distinct isotropic-difference ideal"
+chapter = "SplitKlein"
+label = "isotropic_ideal_height"
+modules = ["RB31EndToEnd/NullCellule/SelectedNullHeight.lean", "RB31EndToEnd/NullCellule/SelectedNullHeightPrimewise.lean", "RB31EndToEnd/Algebra/LinearFormIdealHeight.lean", "RB31EndToEnd/Algebra/MinimalPrimeLinearFibreHeight.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Cor 5.4"
+title = "The ungrounded isotropic-difference variety"
+chapter = "SplitKlein"
+label = "ungrounded_variety"
+modules = ["RB31EndToEnd/NullCellule/GroundScale.lean"]
+status = "mapped"
+
+# ---------------------------------------------------------------- section 6
+
+[[entry]]
+paper = "Lem 6.1"
+title = "Twist description of motions within a body"
+chapter = "BodyPin"
+label = "twist_description"
+lean = ["RB31E2E.exists_unique_twist_of_tetrahedronMotion"]
+modules = ["RB31EndToEnd/Rigidity/BodyTwistBridge.lean", "RB31EndToEnd/Linear/TwistSystem.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 6.2"
+title = "The fibre of a pin; three pins imply collinear"
+chapter = "BodyPin"
+label = "pin_fibre"
+lean = ["RB31E2E.PinFibres.three_pin_solutions_collinear"]
+modules = ["RB31EndToEnd/Linear/PinFibres.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "§6.1"
+title = "The twist-equality partition"
+chapter = "BodyPin"
+label = "twist_equality_partition"
+modules = ["RB31EndToEnd/Incidence/EqualityPartition.lean", "RB31EndToEnd/Combinatorics/BodyPinFinpartition.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Lem 6.3"
+title = "Selecting a (2,2)-sparse subgraph via matroid union"
+chapter = "BodyPin"
+label = "sparse_subgraph_selection"
+lean = ["RB31E2E.exists_sparse22_of_all_partition_terms", "RB31E2E.BodyPinIncidence.exists_sparse_nullSkeleton"]
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/OptimalPartition.lean", "RB31EndToEnd/Combinatorics/BodyPinSparseSkeleton.lean"]
+status = "deviation"
+note = "Lean uses no matroid API at all. No Nash-Williams, no Edmonds."
+
+[[entry]]
+paper = "Lem 6.4"
+title = "Dimension drop along free G_m orbits"
+chapter = "BodyPin"
+label = "orbit_dimension_drop"
+modules = ["RB31EndToEnd/NullCellule/GroundScale.lean", "RB31EndToEnd/Algebra/HomogeneousPrimeChartHeight.lean", "RB31EndToEnd/Algebra/HomogeneousChartContradiction.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "Prop 6.5"
+title = "Exceptional parameter image is a proper closed subset"
+chapter = "BodyPin"
+label = "exceptional_pin_parameters"
+modules = ["RB31EndToEnd/Incidence/SmallBundleCertificate.lean", "RB31EndToEnd/Incidence/TripleBundleCertificate.lean", "RB31EndToEnd/Incidence/FiniteBadCover.lean", "RB31EndToEnd/Incidence/FiniteFullProvenancePropernessAssembly.lean", "RB31EndToEnd/Incidence/CollinearityPolynomial.lean"]
+status = "mapped"
+note = "Cluster node in the first pass; the Incidence chart layer sits under it. See PLAN.md on going deeper later."
+
+[[entry]]
+paper = "§6.4"
+title = "Necessity"
+chapter = "Necessity"
+label = "necessity"
+lean = ["RB31E2E.BodyPinIncidence.partitionCondition_of_genericallyRigidInR3"]
+modules = ["RB31EndToEnd/Rigidity/GraphNecessity.lean", "RB31EndToEnd/Rigidity/TwistNecessity.lean", "RB31EndToEnd/Linear/PinRank.lean"]
+status = "mapped"
+
+[[entry]]
+paper = "§6.4"
+title = "Sufficiency: C to R specialization and final assembly"
+chapter = "BodyPin"
+label = "sufficiency_assembly"
+modules = ["RB31EndToEnd/Algebra/ComplexRealSpecialization.lean", "RB31EndToEnd/Algebra/RationalCertificateDescent.lean", "RB31EndToEnd/Rigidity/BodyTwistGenericBridge.lean", "RB31EndToEnd/NullCellule/GroundedPFEndToEnd.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagGroundedPF.lean"]
+status = "mapped"
+
+# ---------------------------------------------------------------- appendix
+
+[[entry]]
+paper = "A.1"
+title = "Formal statement; equivalence with the informal one"
+chapter = "Statement"
+modules = ["RB31EndToEnd/Specification.lean", "RB31EndToEnd/Target.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "A.2"
+title = "Trust boundary and axiom closure"
+chapter = "Correspondence"
+label = "trust_boundary"
+modules = ["Tests/Trust.lean"]
+status = "mapped"
+note = "Axiom closure is exactly propext, Classical.choice, Quot.sound. Checked by the upstream scripts/audit.sh."
+
+# ------------------------------------------------- Lean-only infrastructure
+# Clusters with no paper counterpart. Named after the proof step they serve so
+# the label survives a later split onto child nodes.
+
+[[entry]]
+title = "Nixon-Owen construction theorem for (2,2)-tight graphs"
+chapter = "Sparsity"
+label = "lean_nixon_owen_reduction"
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/Construction.lean", "RB31EndToEnd/Combinatorics/Sparse22/GraphExtension.lean", "RB31EndToEnd/Combinatorics/Sparse22/TriangleSequence.lean", "RB31EndToEnd/Combinatorics/Sparse22/TightCompletion.lean", "RB31EndToEnd/Combinatorics/Sparse22/Transport.lean"]
+status = "lean-only"
+note = "~3500 lines supporting the short uncrossing arguments of Lem 2.1, 3.7, 3.8."
+
+[[entry]]
+title = "Provenance weight and initial-ideal apparatus"
+chapter = "SplitKlein"
+label = "lean_weight_apparatus"
+modules = ["RB31EndToEnd/NullCellule/WeightInitialIdeal.lean", "RB31EndToEnd/NullCellule/WeightComponents.lean", "RB31EndToEnd/NullCellule/VertexK4Weight.lean", "RB31EndToEnd/NullCellule/ReplacementIdentities.lean", "RB31EndToEnd/Algebra/FilteredInitialHeight.lean", "RB31EndToEnd/Algebra/GroundedTwistPolynomial.lean"]
+status = "lean-only"
+
+[[entry]]
+title = "Universal and provenance chart layer"
+chapter = "BodyPin"
+label = "lean_chart_layer"
+modules = ["RB31EndToEnd/Incidence/UniversalHomogeneousChart.lean", "RB31EndToEnd/Incidence/UniversalChartIdeal.lean", "RB31EndToEnd/Incidence/UniversalChartContraction.lean", "RB31EndToEnd/Incidence/UniversalChartHeightElimination.lean", "RB31EndToEnd/Incidence/UniversalDistinctChartContraction.lean", "RB31EndToEnd/Incidence/UniversalFullProvenanceChartContraction.lean", "RB31EndToEnd/Incidence/UniversalActivePinHeightTransfer.lean", "RB31EndToEnd/Incidence/DistinctProvenanceChart.lean", "RB31EndToEnd/Incidence/FullProvenanceChart.lean", "RB31EndToEnd/Incidence/TotalRingProvenanceSwap.lean", "RB31EndToEnd/Incidence/PinOuterActiveHeight.lean", "RB31EndToEnd/Incidence/PinOuterFullProvenanceHeightTransfer.lean", "RB31EndToEnd/Incidence/ActivePinPrimeHeight.lean", "RB31EndToEnd/Incidence/PinTriangularElimination.lean", "RB31EndToEnd/Incidence/SkeletonOccurrenceSelection.lean", "RB31EndToEnd/Incidence/Arithmetic.lean"]
+status = "lean-only"
+note = "Largest cluster. First pass documents it as one step under Prop 6.5 and Thm 1.3."
+
+[[entry]]
+title = "Flag state transitions and budget ledger"
+chapter = "Flags"
+label = "lean_flag_moves"
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagDeletion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagInsertion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagPrivateDeletion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagArithmetic.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagDeletionLedger.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagPlacement.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagInsertedBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideRegisteredBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptional.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptionalBudget.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagPrivateExceptional.lean"]
+status = "lean-only"
+
+[[entry]]
+title = "Base-change and field-tower plumbing"
+chapter = "Deletion"
+label = "lean_base_change"
+modules = ["RB31EndToEnd/Linear/DirectionStressBaseChange.lean", "RB31EndToEnd/Linear/DirectionStressVertexDeletion.lean", "RB31EndToEnd/Linear/FiniteFamilyBaseChange.lean", "RB31EndToEnd/Linear/FiniteRowSystem.lean", "RB31EndToEnd/Linear/FiniteRowSpanStress.lean", "RB31EndToEnd/Linear/DirectionStress.lean", "RB31EndToEnd/Algebra/CoordinateFieldTower.lean", "RB31EndToEnd/Algebra/FractionQuotientCoordinates.lean", "RB31EndToEnd/Algebra/FiniteOpenIntersection.lean", "RB31EndToEnd/Algebra/FiniteChartCertificates.lean", "RB31EndToEnd/Algebra/CoefficientLinearFibre.lean", "RB31EndToEnd/Algebra/LinearFormIdeal.lean", "RB31EndToEnd/Algebra/MinimalPrimeLinearFibre.lean", "RB31EndToEnd/Algebra/HomogeneousDenominatorContradiction.lean", "RB31EndToEnd/NullCellule/SelectedDirectionFibre.lean", "RB31EndToEnd/NullCellule/SelectedDirectionHeight.lean", "RB31EndToEnd/Linear/OutsideRegistrationStress.lean"]
+status = "lean-only"
+
+[[entry]]
+title = "Genericity machinery for the necessity direction"
+chapter = "Necessity"
+label = "lean_genericity"
+modules = ["RB31EndToEnd/Rigidity/BodyTwistGenericBridge.lean"]
+status = "lean-only"
+note = "isOpen_setOf_le_rigidityRank, AllCoresAffinelyIndependent, coreLineDetPolynomial. The paper's necessity proof is one paragraph."

@@ -1,3 +1,25 @@
+# Start here
+
+Read in this order before doing anything:
+
+1. `PLAN.md` — what this blueprint is for, chapter structure, decisions and
+   their reasons, phases, and what to do next.
+2. `correspondence.toml` — the paper -> Lean mapping. The spine of the project.
+3. The "Project-Specific Conventions" section further down this file.
+4. `notes/` — `attribution.md` (provenance), `upstream.md` (harness/verso
+   findings), `questions.md` (open reading questions).
+
+`BodyPinBlueprint/Chapters/Statement.lean` is the worked example: copy its shape.
+
+Quick sanity check that the repo is healthy:
+
+```bash
+python3 tools/verso-harness/scripts/check_harness.py --project-root .
+bash ./scripts/ci-pages.sh          # ~5 min warm, ~45 min cold
+```
+
+---
+
 # Leanblueprint To Verso Harness Notes
 
 - This repo uses the local helper at `tools/verso-harness`.
