@@ -126,7 +126,8 @@ Six nodes, eight declaration references resolving under `strictResolve`, root
 theorem rendering its kernel-checked signature and a *complete* status. Two
 upstream template gaps found and written up in `notes/upstream.md`.
 
-**Phase 1 — statement, front matter, scaffolding. DONE.** Chapter 01 written in
+**Phase 1 — statement, front matter, scaffolding. DONE** (commit `d051f78`).
+Chapter 01 written in
 full: 10 nodes, each `paper`-tagged one carrying a hand-transcribed `tex`
 witness. Front matter on the index page — conjecture history, scope statement,
 tag legend, provenance caveats, and the research note as the reader's on-ramp.
@@ -146,6 +147,19 @@ Two structural decisions taken here, both recorded in `correspondence.toml`:
   rendering.
 - **A `gap` tag**, so node tags and `correspondence.toml` statuses stay in
   one-to-one correspondence. Asimow–Roth is the only member.
+
+Four of the paper's references were read directly during this phase, which
+corrected the Asimow–Roth node: they prove a rank equality at a regular point,
+and their "regular point" is exactly the maximum-rank placement the
+formalization uses. `notes/attribution.md` records what was checked and what is
+still taken on the paper's report.
+
+Conventions were then split by directory — root `AGENTS.md` for repo policy,
+`BodyPinBlueprint/AGENTS.md` for chapter authoring, `source/references/AGENTS.md`
+for the local reference PDFs — so a task only loads what it needs. The root file
+also drops the harness's LT source-fidelity instructions, which cannot apply
+without a TeX source and previously had to be read before the section explaining
+that they do not apply.
 
 **Phase 2 — necessity, sparsity, deletion. NEXT.** Chapters 02–04. Establishes the two
 habits that carry the rest: the adjacent-witness pattern, and cluster nodes for
