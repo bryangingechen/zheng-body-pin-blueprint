@@ -1,0 +1,25 @@
+package_name = "BodyPinBlueprint"
+blueprint_main = "BlueprintMain"
+formalization_path = "formalization"
+chapter_root = "BodyPinBlueprint/Chapters"
+# There is no LaTeX source for this project: the paper was distributed as a PDF,
+# so this key is an inert placeholder and the harness LT (source-fidelity)
+# pipeline does not apply. `lt.default_chapters` stays empty for the same
+# reason. See AGENTS.md, "No TeX source (permanent)".
+tex_source_glob = "./no-tex-source-available"
+
+[lt]
+# Add real direct-port chapter files here once they exist in the host repo.
+default_chapters = []
+
+[lt.node_kinds]
+theorem = "theorem"
+definition = "definition"
+lemma = "lemma_"
+corollary = "corollary"
+proof = "proof"
+
+[harness]
+native_warnings = false
+docstring_warnings = false
+strict_external_code = true

@@ -1,0 +1,41 @@
+# Three-Dimensional Body-Pin Rigidity
+
+This repository is the Verso port and integration repo for `Three-Dimensional Body-Pin Rigidity`.
+
+- Upstream formalization: `formalization/`
+- Shared harness: `tools/verso-harness/`
+- Harness config: `verso-harness.toml`
+
+## Pages
+
+- Public site: configure after GitHub Pages is enabled for this repo
+- Workflow: `.github/workflows/blueprint.yml` via the upstream `verso-blueprint` reusable workflow
+- Local build: `bash ./scripts/ci-pages.sh`
+- Local output: `_out/site/html-multi/index.html`
+
+## Port Source
+
+The written-mathematics source of truth remains the legacy TeX / leanblueprint
+material identified by `tex_source_glob` in `verso-harness.toml`.
+
+For normal blueprint and integration work in this repo, treat the upstream
+formalization checkout at `formalization/` as read-only unless you are
+explicitly doing upstream or fork work there.
+
+## Workflow
+
+This repo is a consumer of the shared harness. For startup, retrofit, LT audit,
+and maintenance rules, use the harness docs:
+
+- `tools/verso-harness/README.md`
+- `tools/verso-harness/references/start-new-port.md`
+- `tools/verso-harness/references/retrofit.md`
+- `AGENTS.md`
+
+## Notes
+
+- Root `lean-toolchain` follows the upstream formalization toolchain.
+- `lakefile.lean` pins the matching `VersoBlueprint` branch for that toolchain.
+- `harness.docstring_warnings` in `verso-harness.toml` controls whether
+  standard helper-owned workflows show missing-docstring warnings.
+- Generic LT commands should be run via `tools/verso-harness/scripts/...`.

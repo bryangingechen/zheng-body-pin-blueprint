@@ -1,0 +1,6 @@
+[submodule "tools/verso-harness"]
+	path = tools/verso-harness
+	url = https://github.com/ejgallego/leanblueprint-to-verso.git
+[submodule "formalization"]
+	path = formalization
+	url = https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture.git
