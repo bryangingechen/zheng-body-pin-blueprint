@@ -14,6 +14,7 @@ Read in this order before doing anything:
 Quick sanity check that the repo is healthy:
 
 ```bash
+bash ./scripts/check-source.sh      # is the right paper revision present?
 python3 tools/verso-harness/scripts/check_harness.py --project-root .
 bash ./scripts/ci-pages.sh          # ~5 min warm, ~45 min cold
 ```
@@ -146,9 +147,15 @@ The paper was distributed as a PDF; no LaTeX source exists to obtain. Therefore:
 - Source-independent harness checks **do** apply and should be used:
   `check_harness.py`, `check_blueprint_node_kinds.py`,
   `check_verso_math_delimiters.py`, `check_blueprint_heading_structure.py`.
-- `tex` witness blocks are hand-transcribed from the paper. Transcribe from the
-  PDF text layer, not by eye, and treat "witness matches the paper" as an
-  explicit review item — no script will check it for you.
+- `tex` witness blocks are hand-transcribed from the paper. Transcribe from
+  `source/paper.txt` (the `pdftotext -layout` output), not by eye from a
+  rendered page, and treat "witness matches the paper" as an explicit review
+  item — no script will check it for you.
+- `source/` is gitignored apart from its README: the paper is not ours to
+  redistribute. Run `bash ./scripts/check-source.sh` before writing prose; it
+  verifies `source/paper.pdf` against the hash in `correspondence.toml` and
+  regenerates the text layer. A hash mismatch means the paper revision changed
+  and the correspondence entries need re-checking before they are cited.
 
 ## Witnesses quote the paper, never the blog
 

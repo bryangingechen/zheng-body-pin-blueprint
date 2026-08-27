@@ -6,3 +6,9 @@
 .DS_Store
 __pycache__/
 *.pyc
+
+# The paper and its extracted text: needed locally to transcribe `tex` witness
+# blocks, but not ours to redistribute ((c) Zheng, no licence). See
+# source/README.md and scripts/check-source.sh.
+/source/*
+!/source/README.md
