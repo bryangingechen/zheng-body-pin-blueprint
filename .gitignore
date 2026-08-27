@@ -7,8 +7,11 @@
 __pycache__/
 *.pyc
 
-# The paper and its extracted text: needed locally to transcribe `tex` witness
-# blocks, but not ours to redistribute ((c) Zheng, no licence). See
-# source/README.md and scripts/check-source.sh.
+# Everything under source/ is other people's copyrighted work, held locally so
+# that `tex` witnesses can be transcribed and cited claims checked, and not ours
+# to redistribute: the paper ((c) Zheng, no licence) and, under references/,
+# copies of the works it cites. The directory-local tooling and conventions are
+# ignored along with them -- see source/README.md for the tracked summary, and
+# source/references/AGENTS.md locally.
 /source/*
 !/source/README.md

@@ -51,15 +51,20 @@ audit. Node counts are targets. See `correspondence.toml` for what goes where.
 
 | # | Chapter | Paper | ~Nodes | Notes |
 |---|---|---|---|---|
-| 01 | `Statement` | §1, A.1 | 12 | **Done (Phase 0):** 6 nodes. Asimow–Roth is a `gap`. |
-| 02 | `Necessity` | §6.4 first half, §6.1 | 8 | One paragraph on paper, 894 Lean lines. |
-| 03 | `Sparsity` | §2.1 + Lean-only | 10 | ~3,500 lines with no paper counterpart. |
-| 04 | `Deletion` | §2.2 | 12 | Exact sequence, ledger, defect Δ. |
-| 05 | `Flags` | §3 | 16 | The heart. Vocabulary table first — every Lean name here is renamed. |
-| 06 | `Strata` | §4 | 3 | **Deliberately short.** See below. |
-| 07 | `SplitKlein` | §5 | 14 | Plus the Lean-only weight apparatus. |
-| 08 | `BodyPin` | §6 | 14 | Matroid-union deviation shown beside Lean's substitute. |
-| 09 | `Correspondence` | — | 6 | Table, glossary, deviations, trust boundary, reverse index. |
+| 01 | `Statement` | §1, A.1 | 12 | **Written (Phase 1):** 10 nodes, all with witnesses. Asimow–Roth is a `gap`. |
+| 02 | `Necessity` | §6.4 first half, §6.1 | 8 | **Stubbed:** 2 nodes. One paragraph on paper, 894 Lean lines. |
+| 03 | `Sparsity` | §2.1 + Lean-only | 10 | **Stubbed:** 4 nodes. ~3,500 lines with no paper counterpart. |
+| 04 | `Deletion` | §2.2 | 12 | **Stubbed:** 7 nodes. Exact sequence, ledger, defect Δ. |
+| 05 | `Flags` | §3 | 16 | **Stubbed:** 12 nodes. The heart. Vocabulary table first — every Lean name here is renamed. |
+| 06 | `Strata` | §4 | 3 | **Stubbed:** 3 nodes. **Deliberately short.** See below. |
+| 07 | `SplitKlein` | §5 | 14 | **Stubbed:** 7 nodes. Plus the Lean-only weight apparatus. |
+| 08 | `BodyPin` | §6 | 14 | **Stubbed:** 8 nodes. Matroid-union deviation shown beside Lean's substitute. |
+| 09 | `Correspondence` | — | 6 | **Stubbed:** 1 node + section skeleton. Table, glossary, deviations, trust boundary, reverse index. |
+
+Stubs carry no `(lean := ...)`. The `lean` names in `correspondence.toml` outside
+Chapter 01 are still unverified claims, and `strictResolve` turns a wrong one
+into a build error the moment a node cites it — which is the right time to find
+out, i.e. when that chapter is written, not now.
 
 ### Chapter 06 is a route comparison, not a summary of §4
 
@@ -121,21 +126,37 @@ Six nodes, eight declaration references resolving under `strictResolve`, root
 theorem rendering its kernel-checked signature and a *complete* status. Two
 upstream template gaps found and written up in `notes/upstream.md`.
 
-**Phase 1 — statement, front matter, scaffolding.** Chapter 01 in full.
-Introduction with the conjecture's history, the scope statement, and the link to
-Zheng's research note as the reader's on-ramp. Fix `README.md` (the generated
-text still claims a legacy TeX source of truth). TeX prelude macros as needed.
-`Bibliography.lean`: the paper's DOI, the note, and the 31 references — start
-with the four the note foregrounds (see `notes/attribution.md`). Stub the
-remaining eight chapters with titled, tagged, empty nodes so the graph and
-summary are populated from the start.
-*Exit:* a reader can see what is claimed, what is formalized, what is cited.
-Deployed to Pages.
+**Phase 1 — statement, front matter, scaffolding. DONE.** Chapter 01 written in
+full: 10 nodes, each `paper`-tagged one carrying a hand-transcribed `tex`
+witness. Front matter on the index page — conjecture history, scope statement,
+tag legend, provenance caveats, and the research note as the reader's on-ramp.
+`README.md` rewritten. `Bibliography.lean` holds all 31 of the paper's
+references plus the paper, the note, and the Lean development, and
+`{blueprint_bibliography}` renders them. Eight chapters stubbed with titled,
+tagged nodes. Prelude trimmed to macros that are actually used.
 
-**Phase 2 — necessity, sparsity, deletion.** Chapters 02–04. Establishes the two
+Two structural decisions taken here, both recorded in `correspondence.toml`:
+
+- **Theorem 1.1 and Theorem A.1 are separate nodes.** They are separate
+  statements — one about generic rigidity in the usual sense, one about
+  attained maximum rank — and conflating them is exactly the confusion this
+  blueprint exists to prevent. `formal_statement` carries the Lean anchor and
+  is complete; `bodypin_partition_characterization` depends on it and on
+  `asimow_roth`, and so reads as not-fully-formalized. That is the honest
+  rendering.
+- **A `gap` tag**, so node tags and `correspondence.toml` statuses stay in
+  one-to-one correspondence. Asimow–Roth is the only member.
+
+**Phase 2 — necessity, sparsity, deletion. NEXT.** Chapters 02–04. Establishes the two
 habits that carry the rest: the adjacent-witness pattern, and cluster nodes for
 Lean-only infrastructure. Chapter 03 is the first real test of describing 3,500
 lines the paper never mentions. Write `scripts/coverage.py` here.
+
+As of the end of Phase 1 the blueprint's 54 nodes and the 54 labelled entries of
+`correspondence.toml` are in exact one-to-one correspondence, chapter for
+chapter. That invariant is the first thing `scripts/coverage.py` should check,
+and it is cheap to keep true if it is never allowed to break.
+
 *Exit:* deviations register populated; coverage checker in CI.
 
 **Phase 3 — collinearity flags.** Chapter 05. Vocabulary table first, then flag

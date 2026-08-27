@@ -108,7 +108,110 @@ the math span that happened to trip it.
 
 ---
 
-## 3. Environment notes (local, not upstream bugs)
+## 3. `Citable` has no constructor for a book
+
+**Where:** `verso`, `src/verso-manual/VersoManual/Bibliography.lean`
+
+**What happens:** `Citable` offers exactly four shapes — `article`,
+`inProceedings`, `thesis`, `arXiv`. Five of the 31 references in this paper are
+monographs (Bruns–Herzog, Bruns–Vetter, Eisenbud, Fulton,
+Graver–Servatius–Servatius), and there is nothing to put them in. `thesis` is
+wrong; `inProceedings` renders a spurious "In" before the title of a book that
+is not a collection.
+
+**Workaround here:** enter them as `article` with the series in the `journal`
+slot and the series number in `volume`, which is where author-date styles put
+them anyway, so it renders correctly:
+
+> W. Bruns and H. J. Herzog (1998). "Cohen–Macaulay Rings, revised edition".
+> *Cambridge Studies in Advanced Mathematics, Cambridge University Press.* **39**.
+
+Two smaller consequences of the same narrowness: `inProceedings` has no `pages`
+field, so page ranges for book chapters have to be appended to `series`; and a
+preprint or a web-published research note has no natural home at all (this repo
+puts them in `article` with `journal := "Preprint"` / `"Research note"`).
+
+**Suggested change:** add a `book` constructor (title, authors, publisher,
+series, volume, edition, year, url) and a `misc`/`online` constructor
+(title, authors, year, howpublished, url). Both are standard BibTeX entry types
+and neither needs new rendering machinery.
+
+---
+
+## 4. Bibliography sorts by the whole author string, but cites by last name
+
+**Where:** `verso`, `src/verso-manual/VersoManual/Bibliography.lean`
+(`Citable.sortKey`) versus `VersoBlueprint`, `src/VersoBlueprint/Cite.lean`
+(`authorText`).
+
+**What happens:** inline citations abbreviate an author with
+`Bibliography.lastName`, which takes the last word of the name — so
+`inlines!"L. Asimow"` cites as "Asimow (1978)". But `Citable.sortKey` uses
+`slugString` of the *entire* author inline, so the same entry sorts under "L.".
+The rendered bibliography therefore comes out ordered by first initial, and an
+author with two papers can be split apart by an unrelated third.
+
+Writing the authors surname-first to fix the ordering breaks the citations
+instead: `inlines!"Asimow, L."` cites as "L. (1978)". The two are not
+simultaneously satisfiable, and citations are the more visible of the two, so
+this repo writes initials-first and lives with the ordering.
+
+**Suggested change:** have `sortKey` use `lastName` for each author, falling
+back to the full inline when `lastName` returns it unchanged. That makes the two
+consistent and needs no change to how entries are written.
+
+---
+
+## 5. No year-suffix disambiguation for same-author, same-year entries
+
+**Where:** `verso`, `src/verso-manual/VersoManual/Bibliography.lean`;
+`VersoBlueprint`, `src/VersoBlueprint/Cite.lean` (`pieceText`).
+
+**What happens:** a rendered citation is `s!"{lastName} ({year})"`, with `year :
+Int` and no disambiguating suffix. This blueprint cites three distinct Zheng
+2026 artifacts — the paper, the research note, and the Lean development — and
+all three render as "Zheng (2026)". The links and hover previews differ, but the
+visible text does not, which is exactly what the author-date `2026a` / `2026b`
+convention exists to fix.
+
+**Workaround here:** name the artifact in the surrounding prose ("the author's
+research note", "the paper") so the sentence disambiguates what the citation
+cannot. Not a fix; a reader skimming the citations alone still cannot tell them
+apart.
+
+**Suggested change:** either add an optional `yearSuffix : Option String` to
+each `Citable` shape, or compute suffixes automatically at render time from the
+set of registered entries sharing a `(lastName, year)` key — the bibliography
+command already has the whole entry list in hand when it renders.
+
+---
+
+## 6. `CitePartKind` has no `definition`, `proposition`, or `example`
+
+**Where:** `VersoBlueprint`, `src/VersoBlueprint/Cite.lean` (`CitePartKind`).
+
+**What happens:** citation locators are typed, and the type offers `chapter`,
+`section`, `theorem`, `lemma`, `corollary`, `page`, `equation`, `figure`. A
+mathematics paper routinely needs `definition`, `proposition`, `example` and
+`remark` as well; `appendix` would help too. This paper has Definitions 3.1 and
+3.2, Propositions 3.3 and 6.5, and Examples 2.2, 4.1 and 5.2, none of which can
+be typed.
+
+**Workaround here:** drop `kind` and put the whole locator in `index`
+(`(index := "Proposition 3.3")`). The rendered citation is identical — the
+inline text is just `{locator} {index}` either way. What is lost is the
+bibliography usage panel, which falls back from "Cites Proposition 3.3" to the
+clumsier "Cites reference Proposition 3.3", and the machine-readable `kind` in
+the manifest.
+
+**Suggested change:** add `definition`, `proposition`, `example`, `remark` and
+`appendix` to `CitePartKind` and its `parse?`. Each is one line, and the render
+path already handles an arbitrary `text`. Alternatively, when `kind` is absent
+but `index` begins with a capitalised word, drop the "reference" filler.
+
+---
+
+## 7. Environment notes (local, not upstream bugs)
 
 Recording these because they cost time and will recur on this machine:
 
@@ -122,3 +225,9 @@ Recording these because they cost time and will recur on this machine:
 - `ensure_dependency_cache.py` calls `elan which lake` as a fallback after
   `shutil.which("lake")`, and tolerates a non-zero exit — so it survives a
   broken elan shim. Good behaviour; worth keeping.
+
+- Chapter modules that set `doc.verso true` have their `/-! ... -/` module
+  docstring elaborated as a Verso document, so backticked paths and words in a
+  file header draw "Code element could be more specific" warnings. Expected
+  behaviour rather than a bug, but it is not obvious. Use `/- ... -/` for
+  chapter headers.

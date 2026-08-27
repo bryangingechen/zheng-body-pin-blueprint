@@ -23,6 +23,12 @@ upstream file (see `AGENTS.md`, "No TeX source"). Transcribing from
 `source/paper.txt` rather than by eye from a rendered page removes the main
 source of error. A witness that misquotes the paper is worse than no witness.
 
+## Third-party reference PDFs
+
+Copies of the paper's own references, when one is needed to check a claim, go in
+`source/references/`. That directory is gitignored like the rest of `source/`,
+and carries its own `AGENTS.md` with the conventions for it.
+
 ## Obtaining the paper
 
 DOI `10.13140/RG.2.2.17830.28485` (ResearchGate). There is no arXiv version as

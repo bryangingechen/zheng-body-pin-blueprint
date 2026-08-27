@@ -22,8 +22,11 @@ triage, not mathematical credit.
 
 ## The author's informal research note
 
-- <https://denzelzheng.com/blog/body-pin-rigidity-collinearity-flags/>,
-  20 August 2026. © Dongzhe (Denzel) Zheng, no licence stated.
+- *Stress Degeneracy, Collinearity Flags, and Three-Dimensional Body–Pin
+  Rigidity*,
+  <https://denzelzheng.com/blog/body-pin-rigidity-collinearity-flags/>,
+  20 August 2026. © Dongzhe (Denzel) Zheng, no licence stated. Title and date
+  confirmed against the live page, 2026-08-27.
 - Six sections tracking the paper's argument in prose: the partition criterion;
   the Euclidean gap left by the cofactor theorem; stress degeneracy as a
   codimension estimate; why vertex deletion needs collinearity flags; from
@@ -67,9 +70,90 @@ triage, not mathematical credit.
   somewhere in the front matter, since it is relevant to how a reader should
   weigh the artifact.
 
+## Checked against primary sources
+
+The blueprint currently takes most of its historical claims from Zheng's own
+§1, which is normal practice but is not the same as having checked them. What
+has actually been verified against a primary source, and what has not:
+
+All four sources below were read directly, from copies held locally and not
+committed. The record here is the durable part: it is what lets a reader who
+does not have the PDFs see which claims rest on a primary source.
+
+*Asimow–Roth 1978, checked 2026-08-27.* The `asimow_roth` node was wrong and has
+been rewritten. What they actually prove:
+
+- A *regular point* of the edge function is defined (§2) as a placement at which
+  the derivative attains $\max_x \operatorname{rank} \mathrm{d}f(x)$. This is
+  literally the formalization's maximum-rank notion, which is worth knowing:
+  `genericRigidityRank` is the literature's own definition, not a substitute for
+  a genericity theory the project lacked.
+- Regular points are a dense open subset of $\mathbb{R}^{nv}$, singular set of
+  Lebesgue measure zero, because $P(x) = \sum (k \times k \text{ minors})^2$ is
+  a nontrivial polynomial (§3).
+- The theorem of §3 is a *rank equality*, not the "rigidity coincides with
+  infinitesimal rigidity" slogan the node used to state: at a regular point $p$
+  with $m = \dim p$ the affine-hull dimension, $G(p)$ is rigid in
+  $\mathbb{R}^n$ iff $\operatorname{rank} \mathrm{d}f_G(p) = nv - (m+1)(2n-m)/2$.
+- Corollary 2: rigid at one regular point implies rigid at every regular point.
+  This is what makes rigidity a property of the graph, and it is the load-bearing
+  half of the citation.
+
+*Király–Tanigawa 2019, Conjecture 5, checked 2026-08-27.* Handbook chapter 20,
+§20.3.5, printed pages 435–459. Statement confirmed and identical to Zheng's
+Theorem 1.1 modulo the expansion step: $\sum h_G(X,X') \ge 6(|\mathcal{P}|-1)$
+with capacities 6/5/3/0. Two things worth recording:
+
+- They attribute it to "Jackson, Jordán and Tanigawa" jointly, without the
+  independent-proposal history that JJV give.
+- They remark that if $h_G$ were 6 rather than 5 at $d_G = 2$, the condition
+  would be the Tutte–Nash-Williams condition for $3G$ to contain six
+  edge-disjoint spanning trees. That is a good way to see what the capacity 5 is
+  doing, and it belongs in Chapter 01 or the glossary eventually.
+
+*Jackson–Jordán–Villányi 2026, checked 2026-08-27.* Full PDF, not the truncated
+arXiv HTML.
+
+- Conjecture 7.6 confirmed verbatim, and it uses $\ell_H$ with exactly the four
+  cases Zheng uses. So the notation is inherited, not coined — noted on
+  `pin_capacity`.
+- §7.2's body–pin graph definition confirmed, including the $d_H(w)+4$ bound.
+- Theorem 7.7 (the $C^1_2$-cofactor version of Conjecture 7.6) and Theorem 7.8
+  ($\mathrm{dof}^1_2(G_H) = \max_{\mathcal{P}} \mathrm{val}_H(\mathcal{P})$,
+  the min–max formula) confirmed.
+- The attribution is now first-hand rather than a report of a report: "A
+  conjectured characterisation of body-pin graphs which are rigid in $R^3$ was
+  posed independently by the first two authors and Tanigawa in 2009 and 2011,
+  respectively. It was eventually published in 2019 by Király and Tanigawa
+  [14, Conjecture 5]." The first two authors are Jackson and Jordán.
+
+*Still unchecked.* Everything else in the reference list. Nothing currently
+turns on it — the four above are the ones the front matter and Chapter 01 lean
+on.
+
+## Citation keys
+
+`lowerCamelSurname` + year, with a trailing letter when one pair of authors has
+two entries in a year (`clinchJacksonTanigawa2022a` / `...2022b`). Three
+non-paper keys: `zheng2026` (the paper), `zheng2026note` (the research note),
+`zheng2026lean` (the Lean development, from its `CITATION.cff`). Never cite by
+the paper's bracketed number — it moves between revisions for the same reason
+result numbers do.
+
+Two `Citable` shape decisions worth knowing when adding entries, both forced by
+upstream (see `notes/upstream.md` §4):
+
+- Monographs go in as `article` with the series in the journal slot and the
+  series number in the volume slot; there is no `book` constructor.
+- Authors are written initials-first (`L. Asimow`), because inline citations
+  abbreviate to the *last word* of a name.
+
 ## Still to do
 
-- [ ] Transcribe the paper's 31 references into `Bibliography.lean`, starting
-      with the four above.
-- [ ] Decide citation key scheme.
-- [ ] Draft the README / Introduction scope statement wording.
+- [x] Transcribe the paper's 31 references into `Bibliography.lean` (Phase 1).
+      All 31 present, plus the paper, the note, and the formalization.
+- [x] Decide citation key scheme.
+- [x] Draft the README / Introduction scope statement wording (Phase 1: the
+      front matter of `BodyPinBlueprint.lean`, and `README.md`).
+- [ ] Ask the author about the licence and about an arXiv version. Bryan has an
+      open thread.

@@ -28,7 +28,7 @@ reason = "Expository only. The determinantal, local-complete-intersection and Co
 [[witness]]
 paper = "§1 (Asimow-Roth)"
 chapter = "BodyPinBlueprint/Chapters/Statement.lean"
-reason = "The Lean theorem is the maximum-rank form. The step from attained maximum rank to generic rigidity in the usual sense is a literature citation, not a formalized result."
+reason = "The Lean theorem is the maximum-rank form. The step from attained maximum rank to generic rigidity in the usual sense is a literature citation, not a formalized result. Checked against Asimow-Roth 1978 directly (see notes/attribution.md): their 'regular point' is exactly a maximum-rank placement, so the Lean definition uses the literature's own notion; what is not formalized is the theorem of their section 3 and its Corollary 2, which is what turns a rank equality into rigidity."
 
 [[witness]]
 paper = "§1, A.1"

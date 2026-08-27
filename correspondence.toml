@@ -16,6 +16,14 @@
 #   informal   in the paper, no Lean counterpart, not load-bearing
 #   gap        cited by the paper, not formalized
 #   lean-only  in Lean, no paper counterpart
+#
+# These are exactly the node tags used in the blueprint (see AGENTS.md); the two
+# vocabularies are kept in step so the table and the rendered graph can be read
+# against each other.
+#
+# verified = true means a real build has resolved this entry's `lean` names
+# under `strictResolve`, or -- for an entry with no `lean` names -- that its node
+# exists and its chapter is written. Absent means not yet checked.
 
 version = 1
 
@@ -49,9 +57,10 @@ paper = "§1"
 title = "Expanded graph G_H as a union of body cliques"
 chapter = "Statement"
 label = "bodypin_expansion"
-lean = ["RB31E2E.BodyPinIncidence.bodyPinGraph", "RB31E2E.BodyPinIncidence.bodyClique"]
+lean = ["RB31E2E.BodyPinIncidence.bodyPinGraph", "RB31E2E.BodyPinIncidence.bodyClique", "RB31E2E.BodyPinIncidence.canonicalBodyPinGraph"]
 modules = ["RB31EndToEnd/Rigidity/BodyPinGraph.lean"]
 status = "mapped"
+verified = true
 
 [[entry]]
 paper = "(1.1)"
@@ -68,7 +77,7 @@ paper = "(1.2)/(A.2)"
 title = "Partition condition, sum l >= 6(t-1)"
 chapter = "Statement"
 label = "partition_condition"
-lean = ["RB31E2E.BodyPinIncidence.PartitionCondition"]
+lean = ["RB31E2E.BodyPinIncidence.partitionCapacity", "RB31E2E.BodyPinIncidence.PartitionCondition"]
 modules = ["RB31EndToEnd/Specification.lean"]
 status = "mapped"
 verified = true
@@ -78,7 +87,7 @@ paper = "(1.4)"
 title = "Rigidity matrix D_F(a)"
 chapter = "Statement"
 label = "rigidity_matrix"
-lean = ["RB31E2E.BarJoint.rigidityOperator"]
+lean = ["RB31E2E.BarJoint.edgeConstraint", "RB31E2E.BarJoint.rigidityOperator"]
 modules = ["RB31EndToEnd/Rigidity/BarJoint.lean"]
 status = "mapped"
 verified = true
@@ -88,26 +97,39 @@ paper = "§1"
 title = "Generic rigidity as attained maximum rank"
 chapter = "Statement"
 label = "generic_rigidity_max_rank"
-lean = ["RB31E2E.BarJoint.genericRigidityRank", "RB31E2E.BarJoint.IsGenericallyRigidInR3"]
+lean = ["RB31E2E.BarJoint.genericRigidityRank", "RB31E2E.BarJoint.IsGenericallyRigidInR3", "RB31E2E.BodyPinIncidence.GenericallyRigidInR3"]
 modules = ["RB31EndToEnd/Rigidity/BarJoint.lean"]
 status = "mapped"
 verified = true
 
 [[entry]]
-paper = "Thm 1.1 / A.1"
-title = "Body-pin partition characterization (ROOT THEOREM)"
+paper = "Thm 1.1"
+title = "Body-pin partition characterization, informal form"
 chapter = "Statement"
 label = "bodypin_partition_characterization"
-lean = ["RB31E2E.endToEndBodyPinStatement", "RB31E2E.EndToEndBodyPinStatement"]
-modules = ["RB31EndToEnd.lean", "RB31EndToEnd/Target.lean"]
+modules = []
+status = "deviation"
+verified = true
+note = "The paper's headline statement, about generic rigidity in the usual sense. Lean proves its maximum-rank form (Thm A.1); the remaining step is the Asimow-Roth citation. Carries no lean anchor of its own on purpose: the anchor belongs to formal_statement."
+
+[[entry]]
+paper = "Thm A.1"
+title = "Formally verified body-pin theorem (ROOT THEOREM)"
+chapter = "Statement"
+label = "formal_statement"
+lean = ["RB31E2E.EndToEndBodyPinStatement", "RB31E2E.endToEndBodyPinStatement"]
+modules = ["RB31EndToEnd.lean", "RB31EndToEnd/Target.lean", "RB31EndToEnd/Specification.lean"]
 status = "mapped"
 verified = true
+note = "Appendix A.1 also reconciles this with Thm 1.1 in a paragraph; that reconciliation is prose on this node, not a separate entry."
 
 [[entry]]
 paper = "§1"
 title = "Asimow-Roth: maximum rank implies generic rigidity"
 chapter = "Statement"
+label = "asimow_roth"
 status = "gap"
+verified = true
 note = "Cited, not formalized. The Lean theorem is the max-rank form throughout."
 
 [[entry]]
@@ -308,6 +330,7 @@ status = "mapped"
 paper = "(4.2)-(4.3)"
 title = "Direction complex; Sigma_s(F) as determinantal loci"
 chapter = "Strata"
+label = "direction_complex"
 status = "informal"
 
 [[entry]]
@@ -320,6 +343,7 @@ status = "informal"
 paper = "Thm 4.2"
 title = "codim Sigma_s >= s; N_F is LCI, Cohen-Macaulay, pure"
 chapter = "Strata"
+label = "stress_strata_codimension"
 status = "informal"
 note = "Not load-bearing: Theorem 1.1 never depends on the scheme statements."
 
@@ -460,14 +484,6 @@ modules = ["RB31EndToEnd/Algebra/ComplexRealSpecialization.lean", "RB31EndToEnd/
 status = "mapped"
 
 # ---------------------------------------------------------------- appendix
-
-[[entry]]
-paper = "A.1"
-title = "Formal statement; equivalence with the informal one"
-chapter = "Statement"
-modules = ["RB31EndToEnd/Specification.lean", "RB31EndToEnd/Target.lean"]
-status = "mapped"
-verified = true
 
 [[entry]]
 paper = "A.2"

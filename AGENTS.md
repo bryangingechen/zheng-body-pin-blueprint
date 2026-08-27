@@ -151,6 +151,21 @@ The paper was distributed as a PDF; no LaTeX source exists to obtain. Therefore:
   `source/paper.txt` (the `pdftotext -layout` output), not by eye from a
   rendered page, and treat "witness matches the paper" as an explicit review
   item — no script will check it for you.
+- A witness must sit *immediately* after its node: `check_blueprint_node_kinds.py`
+  pairs positionally, not by label. Label it anyway, so it attaches to the node
+  in the manifest.
+- The text inside a witness is the paper's; the environment around it is a
+  reconstruction, because there is no LaTeX to copy. Where the paper really has
+  a numbered environment, use that exact kind. Where it defines something in
+  running prose, wrap the paper's own sentences in `definition` — the node-kind
+  checker requires a graph-visible environment next to a graph-visible node, and
+  a reconstructed wrapper is the honest way to satisfy it. Say so in the
+  chapter's leading comment.
+- Do not invent `\label{...}` in a witness. We do not know the paper's labels,
+  and an invented one would make `check_source_label_grounding.py` compare our
+  node ids against fiction. No label means no comparison, which is correct here.
+- Nodes tagged `gap` or `lean-only` carry no witness: there is no paper
+  statement to quote. Every `paper`-tagged node has one.
 - `source/` is gitignored apart from its README: the paper is not ours to
   redistribute. Run `bash ./scripts/check-source.sh` before writing prose; it
   verifies `source/paper.pdf` against the hash in `correspondence.toml` and
@@ -187,8 +202,15 @@ correspondence table.
 - `informal-only` — in the paper, deliberately not formalized (all of paper §4)
 - `lean-only` — in Lean, no paper counterpart
 - `deviation` — mapped, but by a different route; has a register entry
+- `gap` — cited by the paper, not formalized, and not ours to prove
+  (Asimow--Roth is the only one)
 - `unwritten` — node stubbed, prose not drafted. Removing the last `unwritten`
   is the definition of done.
+
+The tag vocabulary deliberately mirrors the `status` values of
+`correspondence.toml` one-for-one, so the table and the rendered graph can be
+read against each other. Add a tag only by adding the matching status, and vice
+versa.
 
 ## Imports
 
@@ -251,6 +273,61 @@ repo, or commit changes inside the submodule.
 - **Inline math is `$`...`` — one backtick to close**, and it overlaps with
   Markdown code spans. Do not "fix" valid `$`...`` into `$`...`$`. Run
   `check_verso_math_delimiters.py` after editing math.
+- **Titles and headings are plain ASCII.** Every one of them — the document
+  title, chapter titles, in-chapter headings — becomes part of a URL, and every
+  non-alphanumeric character turns into `___`: "The body–pin model" becomes
+  `The-body___pin-model`, and "Assembly: the body–pin theorem" becomes
+  `Assembly___-the-body___pin-theorem`. The document title is not exempt: it
+  prefixes every section anchor on the site. Write them with letters, digits,
+  spaces and hyphens only, and save en dashes, colons and quotation marks for
+  the prose.
+- **A node body is the statement and nothing else.** It is what the graph and the
+  hover previews show, so a reader following an edge should land on the claim,
+  not on an essay about it. Rationale, Lean's representation choices, what a
+  convention costs, cross-references — all of that is chapter prose *after* the
+  node's `tex` witness. A node keeps one located citation, at the end.
+- **Cite; do not narrate provenance you have not established.** "The paper cites
+  X at this point, and the definition there agrees" is checkable. "The term
+  comes from X", "the notation is inherited from X", "this is not a workaround"
+  are claims about coinage, transmission and intent that a citation does not
+  support and that we are usually in no position to make. When in doubt, give
+  the reference and stop.
+- **Mention a Lean declaration with the `name` role, not a bare code span.**
+  `{name RB31E2E.BodyPinIncidence.privateCoreVertex}`privateCoreVertex`` renders
+  the short name but carries the full one, so the reader gets the signature and
+  docstring on hover; a plain `` `privateCoreVertex` `` is dead text. The role
+  needs `open Verso.Genre.Manual.InlineLean` in the chapter header, and it fails
+  the build on an unknown constant, which is the point — it keeps prose
+  references as honest as `(lean := ...)` ones. Only for real constants: `sorry`
+  and `admit` are not, and file paths and option names stay plain code spans.
+- **Every `paper`-tagged node ends with a located citation, never a bare tag.**
+  `{Informal.citep "zheng2026" (kind := "lemma") (index := "3.4")}[]` renders
+  "(Zheng, 2026, Lemma 3.4)" — and, more usefully, turns the bibliography page
+  into a reverse index, because its usage panel then reads "Chapter 5:
+  Collinearity flags, Lemma 5.5 - Cites Lemma 3.4". Do not write
+  "Paper Lemma 3.4.": it renders as prose and carries no metadata.
+  `kind` accepts only `chapter`, `section`, `theorem`, `lemma`, `corollary`,
+  `page`, `equation`, `figure`. The paper's definitions, propositions and
+  examples have no matching kind — drop `kind` and put the whole locator in
+  `index`, as `(index := "Proposition 3.3")`. See `notes/upstream.md` §6.
+- **In running prose, spell the reference out and use `citet`:** "Section 2.1 of
+  {Informal.citet "zheng2026"}[] is two paragraphs". Every chapter opening does
+  this. Do not open a sentence with a locator tag — "Paper §2.1 of Zheng (2026)"
+  is not a sentence.
+- **`citep` brings its own parentheses; `citet` does not.**
+  `{Informal.citep "laman1970"}[]` renders `(Laman, 1970)` and
+  `{Informal.citet "laman1970"}[]` renders `Laman (1970)`. So never wrap a
+  `citep` in literal parentheses — that gives `((Laman, 1970))` — and never put
+  a `citet` inside them either, which gives `(Laman (1970))`. Parenthetical
+  aside: use a bare `citep`. Citation as part of the sentence: use `citet`.
+- **`--` is not an en dash.** Verso passes it through literally, so
+  `body--pin` renders as "body--pin". Use the character `–` in prose. Inside a
+  `tex` witness `--` is correct LaTeX and must stay.
+- **Module docstrings in a chapter are Verso documents.** With
+  `set_option doc.verso true`, a `/-! ... -/` header block is elaborated as
+  Verso markup, so every backticked path or word in it draws a
+  "Code element could be more specific" warning. Use a plain `/- ... -/`
+  comment for chapter headers; keep `/-- ... -/` for real docstrings.
 - **TeX prelude macros must use `\providecommand`, not `\newcommand`.** The
   prelude is re-evaluated per math span into a persistent KaTeX macro map, so
   `\newcommand` fails from the second span onward and KaTeX then rejects the

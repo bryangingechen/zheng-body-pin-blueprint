@@ -18,6 +18,13 @@ deleted.
 - Licence on the formalization repository (see `notes/attribution.md`).
 - Whether an arXiv version of the paper is planned (see
   `notes/attribution.md`).
+- Cosmetic, very low priority: docstrings in `RB31EndToEnd` write "body--pin"
+  and "bar--joint" with TeX-style double hyphens. Lean docstrings are rendered
+  as Markdown rather than TeX, so these come out literally in any generated
+  documentation — including the external-declaration panels of this blueprint,
+  where they are the only remaining `--` on the site. Affects at least
+  `Specification.lean`, `Target.lean`, `TargetReduction.lean`,
+  `Rigidity/BodyPinGraph.lean`.
 
 ## Resolved
 
