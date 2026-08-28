@@ -86,6 +86,8 @@ def main() -> int:
             print(f"[preview] FAILED: {' '.join(cmd)}", file=sys.stderr)
             return result.returncode
 
+    subprocess.run([sys.executable, "scripts/check-fresh.py", "--write",
+                    "_out/preview/html-multi"], cwd=ROOT)
     print(f"[preview] _out/preview/html-multi/index.html  ({time.monotonic() - started:.0f}s)")
     return 0
 

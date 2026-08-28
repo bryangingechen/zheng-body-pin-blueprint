@@ -124,6 +124,41 @@ does not apply here (see above); what follows is the half that does.
 - If using `lean-beam`, avoid parallel `sync` calls against the same project
   root unless the target repo is known to tolerate it.
 
+# Background the full build; never read a stale one
+
+`scripts/ci-pages.sh` takes about ten minutes and is the only gate that checks
+everything. Run it in the background and keep working — the two fast loops above
+cover most questions in the meantime, and a second `lake` invocation during a
+background build completed cleanly in testing, so the preview can run while the
+gate is in flight.
+
+The hazard is not concurrency. It is reading output that no longer matches the
+source, and it is easy to miss because stale HTML looks completely normal. This
+project has drawn wrong conclusions from it more than once: a chapter edited
+while `ci-pages.sh` was running produced a site rendered from the *previous*
+elaboration, which was then inspected and reported on as if it were current.
+
+So both builds stamp their output with a hash of every input that can affect a
+rendered page — the blueprint sources, the entry points, the lakefile, the
+toolchain, and the pinned formalization SHA. Before believing anything about a
+page:
+
+```bash
+python3 scripts/check-fresh.py      # exits 1 if any output is stale
+```
+
+Rules that follow, and they are cheap to keep:
+
+- Never quote, measure, or claim anything about a rendered page without
+  `check-fresh.py` reporting `current` for that output.
+- A build in flight is not a result. Wait for its exit line *and* the stamp.
+- If you edit a source file after launching a build, that build is dead to you.
+  Relaunch it; do not read what it produces.
+
+A git worktree would isolate the sources, but it does not address this failure
+mode and costs a second `.lake` of several gigabytes plus a cold build. Stamping
+is the cheaper fix for the problem that actually occurs.
+
 # Build costs (measured 2026-08-27, M-series mac, cold)
 
 - `lake update` + mathlib cache fetch: ~1 min (8,232 cached files).

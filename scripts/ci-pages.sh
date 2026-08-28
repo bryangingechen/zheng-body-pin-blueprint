@@ -22,3 +22,6 @@ python3 tools/verso-harness/scripts/ensure_dependency_cache.py --project-root .
 
 step "checking generated site"
 python3 tools/verso-harness/scripts/check_generated_site.py --project-root . --site-dir _out/site/html-multi
+
+step "stamping the output with the source state it was built from"
+python3 scripts/check-fresh.py --write _out/site/html-multi
