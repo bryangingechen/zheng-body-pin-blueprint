@@ -18,6 +18,11 @@ Paper §5, plus the Lean-only weight and initial-ideal apparatus.  Phase 4.
 
 #doc (Manual) "The Split-Klein isotropic-difference ideal" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 Section 5 of {Informal.citet "zheng2026"}[] moves the problem into commutative
 algebra. Twists are points of $`k \oplus k^3` carrying the Split–Klein
 quadratic form $`q(\omega, b) = \omega \cdot b`; the ideal $`I_F` is generated

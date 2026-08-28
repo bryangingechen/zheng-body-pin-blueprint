@@ -19,14 +19,18 @@ at the top of this chapter: every name in §3 is different in Lean.
 
 #doc (Manual) "Collinearity flags" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 This is the chapter the paper is named for. A collinearity flag records the
 collinear neighbour triple produced by a degree-three deletion, a distinguished
 missing edge, and an auxiliary vertex; the simultaneous $`K_4`-completion of all
 flags is required to stay $`(2,2)`-sparse. Deletion, certified response edges,
 switching the distinguished missing edge, and creating or removing a flag all
-preserve that sparsity while reducing the base-graph vertex count, which is what
-turns the local classification of {bpref "low_degree_classification"}[] into an
-induction. See §3 of {Informal.citet "zheng2026"}[].
+preserve that sparsity while reducing the base-graph vertex count, which is what turns
+{bpref "low_degree_classification"}[the local classification] into an induction. See §3 of {Informal.citet "zheng2026"}[].
 
 The chapter opens with a vocabulary table, because the Lean development renames
 every object in §3: collinearity flag becomes provenance flag, the support

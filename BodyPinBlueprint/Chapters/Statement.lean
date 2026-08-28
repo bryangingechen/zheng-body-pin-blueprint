@@ -34,13 +34,19 @@ Where the paper defines something in running prose, the witness wraps the
 paper's sentences in `definition`.  Nodes with no paper counterpart at all
 (`gap`, `lean-only`) carry no witness, because there is nothing to quote.  A
 witness must stay immediately adjacent to its node; commentary goes after it.
+
+Quoted Lean bodies are verbatim from the file named in the block's first line,
+with one exception: an `open ... in` line is added where the quoted text needs
+one to elaborate here, since these blocks are elaborated for syntax
+highlighting.  `scripts/check-snippets.py` strips that line before comparing
+against the submodule.
 -/
 
 #doc (Manual) "Statement of the theorem" =>
 
 This chapter states what is claimed and what was proved. Everything in it comes
 from §1 and Appendix A.1 of {Informal.citet "zheng2026"}[]; the argument starts
-in {bpref "sparse22"}[].
+in {bpref "sparse22"}[the sparsity chapter].
 
 Two statements are involved, and they are not the same statement. Theorem 1.1
 is about generic rigidity in the usual sense. Theorem A.1 is about a
@@ -81,6 +87,10 @@ Write a finite loopless multigraph as
 Here $E$ is the edge set; parallel edges are distinct elements of $E$.
 \end{definition}
 ```
+
+Quoted Lean below and in the rest of this chapter is verbatim from the file its
+first line names, except for an `open ... in` line where one is needed to make
+the fragment elaborate on its own.
 
 The formalization represents $`H` as a type of pins together with two endpoint
 maps and a proof that the two endpoints of a pin differ, which is the
@@ -199,7 +209,7 @@ formulation requires.
 
 {name RB31E2E.BarJoint.rigidityOperator}`RB31E2E.BarJoint.rigidityOperator` is the appendix's real form. The
 field-extension form appears in the Lean development as the direction matrix and
-its stress space; see {bpref "stress_exact_sequence"}[].
+its stress space; see {bpref "stress_exact_sequence"}[the deletion chapter].
 
 :::definition "generic_rigidity_max_rank" (parent := "statement_data") (lean := "RB31E2E.BarJoint.genericRigidityRank, RB31E2E.BarJoint.IsGenericallyRigidInR3, RB31E2E.BodyPinIncidence.GenericallyRigidInR3") (tags := "paper") (uses := "rigidity_matrix, bodypin_expansion")
 The generic rank $`\rho_3(G)` is the greatest rank attained by the real rigidity
@@ -223,24 +233,14 @@ Define
 \end{definition}
 ```
 
-```
+```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Rigidity/BarJoint.lean
-def RankIsAttained {V : Type} [Fintype V] (G : SimpleGraph V) (d r : ℕ) : Prop :=
-  ∃ p : Placement V d, rigidityRank G p = r
-
+open RB31E2E.BarJoint in
 noncomputable def genericRigidityRank {V : Type} [Fintype V] (G : SimpleGraph V)
     (d : ℕ) : ℕ := by
   classical
   exact Nat.findGreatest (RankIsAttained G d)
     (Module.finrank ℝ (Velocity V d))
-
-def IsGenericallyRigidInDimension {V : Type} [Fintype V]
-    (G : SimpleGraph V) (d : ℕ) : Prop :=
-  genericRigidityRank G d =
-    genericRigidityRank (SimpleGraph.completeGraph V) d
-
-def IsGenericallyRigidInR3 {V : Type} [Fintype V] (G : SimpleGraph V) : Prop :=
-  IsGenericallyRigidInDimension G 3
 ```
 
 No generic configuration is chosen in this statement, and no genericity
@@ -317,7 +317,7 @@ Define also $c : \mathbb{N} \to \mathbb{N}$ by
 \end{definition}
 ```
 
-```
+```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Specification.lean
 def pinCapacity : ℕ → ℕ
   | 0 => 0
@@ -363,8 +363,9 @@ For every $t \in \mathbb{N}$ and every surjection $\pi : W \twoheadrightarrow [t
 \end{definition}
 ```
 
-```
+```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Specification.lean
+open RB31E2E in
 def BodyPinIncidence.PartitionCondition (H : BodyPinIncidence) : Prop :=
   ∀ (t : ℕ) (π : H.Body → Fin t), Function.Surjective π →
     6 * (t - 1) ≤ H.partitionCapacity π
@@ -417,8 +418,8 @@ This is the paper's headline result: Conjecture 5 of
 {Informal.citet "jacksonJordanVillanyi2026"}[] as of July 2026.
 
 It is not the proposition the formalization proves. The formalization proves
-{bpref "formal_statement"}[], its maximum-rank form; the remaining step is
-{bpref "asimow_roth"}[]. The dependency edges on this node record that.
+{bpref "formal_statement"}[Theorem A.1], its maximum-rank form; the remaining step is
+{bpref "asimow_roth"}[the Asimow–Roth step]. The dependency edges on this node record that.
 
 :::theorem "formal_statement" (parent := "statement_theorem") (lean := "RB31E2E.EndToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement_iff_sufficiency") (tags := "paper") (uses := "bodypin_expansion, partition_condition, generic_rigidity_max_rank")
 For every finite loopless body–pin multigraph $`H` and every $`r : W \to \N`,
@@ -455,7 +456,7 @@ def EndToEndBodyPinStatement : Prop :=
 This is the root theorem of the formalization: a closed proposition, universally
 quantified over $`H` and $`r`, proved in both directions, with axiom closure
 exactly {name propext}`propext`, {name Classical.choice}`Classical.choice`, {name Quot.sound}`Quot.sound`. See
-{bpref "trust_boundary"}[].
+{bpref "trust_boundary"}[the trust boundary].
 
 The appendix reconciles it with Theorem 1.1 in a paragraph. The cases
 $`W = \emptyset` and $`|W| = 1` are included; for $`W \ne \emptyset` a
@@ -471,5 +472,5 @@ direction alone: that the partition condition implies maximum-rank generic
 rigidity. The formalization records that trivial consequence as
 {name RB31E2E.endToEndBodyPinStatement_iff_sufficiency}`endToEndBodyPinStatement_iff_sufficiency`
 and uses it once, in the final assembly, to avoid restating both directions
-there. Necessity is proved separately, in {bpref "necessity"}[]; everything from
-{bpref "sparse22"}[] onwards serves the other direction.
+there. Necessity is proved separately, in {bpref "necessity"}[the necessity chapter]; everything from
+{bpref "sparse22"}[the sparsity chapter] onwards serves the other direction.

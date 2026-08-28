@@ -18,14 +18,19 @@ Paper §6, plus the universal and provenance chart layer.  Phase 4.
 
 #doc (Manual) "Assembling the body-pin theorem" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 Section 6 of {Informal.citet "zheng2026"}[] assembles the pieces. Motions within
 a body are twists; a pin is a fibre condition on a pair of twists, and three
 pins force collinearity. The twist-equality relation partitions the bodies, the
-partition condition supplies a $`(2,2)`-sparse subgraph, and the height theorem
-{bpref "isotropic_ideal_height"}[] then bounds the dimension of the bad locus.
+partition condition supplies a $`(2,2)`-sparse subgraph, and {bpref "isotropic_ideal_height"}[the height theorem] then bounds the dimension
+of the bad locus.
 Exceptional pin parameters form a proper closed subset for each nontrivial
 partition; avoiding finitely many of them gives generic infinitesimal rigidity,
-and {bpref "asimow_roth"}[] finishes.
+and {bpref "asimow_roth"}[the Asimow–Roth step] finishes.
 
 The one deviation worth watching is Lemma 6.3. The paper extracts the sparse
 subgraph with Nash-Williams and Edmonds' matroid-union rank formula; the Lean
@@ -71,7 +76,7 @@ see `lt-source-deviations.toml`.
 
 :::lemma_ "sufficiency_assembly" (parent := "bodypin_spine") (tags := "paper, unwritten") (uses := "sparse_subgraph_selection, exceptional_pin_parameters, stress_codim")
 Specialization from $`\mathbb{C}` to $`\R`, rational certificate descent, and
-the final assembly of {bpref "formal_statement"}[]. {Informal.citep "zheng2026" (kind := "section") (index := "6.4")}[]
+the final assembly of {bpref "formal_statement"}[Theorem A.1]. {Informal.citep "zheng2026" (kind := "section") (index := "6.4")}[]
 :::
 
 :::lemma_ "lean_chart_layer" (parent := "bodypin_infrastructure") (tags := "lean-only, unwritten")

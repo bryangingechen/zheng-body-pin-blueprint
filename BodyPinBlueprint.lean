@@ -39,7 +39,7 @@ vertex shared by the two bodies it joins, and the resulting graph is generically
 rigid exactly when every partition of the bodies into $`t` blocks satisfies
 $`\sum_{i<j} \ell_H(P_i, P_j) \ge 6(t-1)`, where a bundle of one, two, or three
 or more pins between two blocks contributes $`3`, $`5`, or $`6`. The precise
-statement is {bpref "bodypin_partition_characterization"}[].
+statement is {bpref "bodypin_partition_characterization"}[the body–pin partition characterization].
 
 Generic rigidity of finite graphs has combinatorial characterizations in
 dimensions one and two. In dimension three none is known, not even for the rank
@@ -89,9 +89,21 @@ A reader new to the material should start with the author's own research note,
 [Stress Degeneracy, Collinearity Flags, and Three-Dimensional Body–Pin
 Rigidity](https://denzelzheng.com/blog/body-pin-rigidity-collinearity-flags/),
 which walks the same argument informally in six sections
-{Informal.citep "zheng2026note"}[]. Then read {bpref "bodypin_partition_characterization"}[]
+{Informal.citep "zheng2026note" (index := "research note")}[]. Then read {bpref "bodypin_partition_characterization"}[the body–pin partition characterization]
 here, and follow the dependency graph. Note that the note's wording differs from
 the paper's throughout; where this blueprint quotes, it quotes the paper.
+
+Only the statement chapter is written. The other eight are stubs: their nodes
+exist, are tagged, and match the correspondence table, but the mathematics is
+not drafted, and each such chapter says so at its head.
+
+Two numbering systems appear on these pages and they are not the same. Headings
+such as "Definition 1.1.1" or "Theorem 1.4.2" are the blueprint's own numbering,
+assigned by position in this document. The paper's numbers — Theorem 1.1,
+Lemma 2.3, equation (1.1) — appear only inside citations, as "(Zheng, 2026,
+Theorem 1.1)". A cross-reference in the prose is written out in words rather
+than as a number, so that nothing in a sentence can be mistaken for a paper
+result.
 
 Node tags say what state the *exposition* is in, not what state a proof is in:
 

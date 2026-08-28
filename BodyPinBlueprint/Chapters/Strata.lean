@@ -20,6 +20,11 @@ not formalized and should not be worked through.
 
 #doc (Manual) "Degeneracy strata and the route not taken" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 Section 4 of {Informal.citet "zheng2026"}[] recasts the stress–codimension
 inequality geometrically: the direction complex, the determinantal degeneracy
 loci $`\Sigma_s(F)`, the universal infinitesimal-motion cone, and the

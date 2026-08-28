@@ -18,11 +18,16 @@ Paper §2.2.  Phase 2.
 
 #doc (Manual) "Vertex deletion and self-stress" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 Section 2.2 of {Informal.citet "zheng2026"}[] compares the self-stress spaces of
 $`F` and $`F - v` by an exact sequence, records the change in a four-term
 ledger, and classifies what can happen at a low-degree vertex. One case is not
 covered by the local estimate: a degree-three vertex whose three neighbours are
-collinear. That case is what {bpref "collinearity_flag"}[] is introduced for.
+collinear. That case is what {bpref "collinearity_flag"}[the flags chapter] is introduced for.
 
 :::group "deletion_spine"
 The exact sequence, the ledger, and the local classification.

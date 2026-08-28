@@ -21,6 +21,11 @@ index from Lean module to blueprint node.
 
 #doc (Manual) "Correspondence and audit" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 The rest of this blueprint reads the paper forwards. This chapter reads the
 formalization backwards: it asks, of every module reachable from the root
 theorem, which node accounts for it.
@@ -36,7 +41,7 @@ gap, or Lean-only. The machine-readable source is `correspondence.toml`.
 # Glossary
 
 The paper and the Lean development do not share names. The vocabulary table
-from {bpref "collinearity_flag"}[] is repeated here in full, together with the
+from {bpref "collinearity_flag"}[the flags chapter] is repeated here in full, together with the
 naming conventions of the development.
 
 # Deviations register
@@ -52,7 +57,7 @@ What is and is not covered by the formal verification: no `sorry`, no `admit`,
 no opaque declarations, no custom axioms; axiom closure exactly
 {name propext}`propext`, {name Classical.choice}`Classical.choice`,
 {name Quot.sound}`Quot.sound`; Lean 4.29.0 against a pinned mathlib. What
-remains outside is {bpref "asimow_roth"}[]. {Informal.citep "zheng2026" (kind := "section") (index := "A.2")}[]
+remains outside is {bpref "asimow_roth"}[the Asimow–Roth step]. {Informal.citep "zheng2026" (kind := "section") (index := "A.2")}[]
 :::
 
 # Reverse index

@@ -19,6 +19,11 @@ but not drafted; `correspondence.toml` holds the module inventory for each.
 
 #doc (Manual) "Necessity" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 Necessity takes one paragraph in {Informal.citet "zheng2026"}[] and 894 lines in
 the formalization. Assign a common block twist to every body in a block and
 count degrees of freedom modulo the six-dimensional diagonal; the capacity

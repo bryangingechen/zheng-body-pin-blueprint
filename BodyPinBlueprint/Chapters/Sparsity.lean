@@ -18,13 +18,18 @@ Paper §2.1, plus the largest Lean-only cluster in the development.  Phase 2.
 
 #doc (Manual) "Sparse graphs and addable edges" =>
 
+*This chapter is a stub.* Its nodes are titled, tagged and mapped to the
+correspondence table, but the mathematics is not written yet: each body is a
+one-line placeholder naming the result it will state. See `PLAN.md` for the
+phase that covers it.
+
 Section 2.1 of {Informal.citet "zheng2026"}[] is two paragraphs: supermodularity
 of the edge-count function gives uncrossing, uncrossing gives the addable-edge
 criterion, and Lemma 2.1 follows. The formalization needs about 3,500 lines for
 the same ground, because the uncrossing arguments are invoked in situations
 where a construction theorem for $`(2,2)`-tight graphs has to be available.
 That material is covered here by a single cluster node,
-{bpref "lean_nixon_owen_reduction"}[].
+{bpref "lean_nixon_owen_reduction"}[the Nixon–Owen construction theorem].
 
 :::group "sparsity_spine"
 The paper's sparsity vocabulary.
