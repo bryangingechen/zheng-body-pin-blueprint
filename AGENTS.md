@@ -140,3 +140,8 @@ does not apply here (see above); what follows is the half that does.
   under 10 s. See the import-granularity rule in `BodyPinBlueprint/AGENTS.md`,
   which now has a measured payoff and not just an auditability one.
 - Only CI pays the full cold cost, so the workflow's dependency cache matters.
+- For iteration, do not use `lake build` at all: the `lean-lsp` MCP server in
+  `.mcp.json` holds the imports open, and re-checks a chapter in ~8 s against
+  169 s, including unresolvable `(lean := ...)` names. See
+  `BodyPinBlueprint/AGENTS.md`. It checks elaboration only — rendering questions
+  still need `scripts/ci-pages.sh`.

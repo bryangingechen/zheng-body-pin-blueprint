@@ -11,7 +11,24 @@ like, calibrated against the papers themselves, with the failure modes that have
 actually occurred here. Read it before writing prose, and run
 `python3 scripts/style-check.py` before committing.
 
-After editing a chapter:
+While editing, use the Lean language server rather than `lake build`. The
+`lean-lsp` MCP server (`.mcp.json`) keeps the imports loaded, so after one cold
+start a chapter re-checks in about 8 seconds instead of 169:
+
+    lean_diagnostic_messages(file_path = "BodyPinBlueprint/Chapters/<Chapter>.lean")
+
+It catches the failure this repo cares most about. Under `strictResolve` a wrong
+`(lean := "...")` name is an error, and the server reports it with label, line
+and column:
+
+    Label pin_capacity: external Lean name 'RB31E2E.pinCapacityTypo' could not
+    be resolved in current namespace/open declarations
+
+That matters because most `lean` names in `correspondence.toml` outside
+Chapter 01 are still unverified claims. Check them as you cite them; it now
+costs seconds.
+
+Then, before committing:
 
 ```bash
 python3 tools/verso-harness/scripts/check_blueprint_node_kinds.py --project-root . <chapter.lean>
@@ -22,9 +39,10 @@ python3 scripts/style-check.py
 lake build BodyPinBlueprint.Chapters.<Chapter>
 ```
 
-and `bash ./scripts/ci-pages.sh` after a coherent batch. The harness's LT
-(source-fidelity) scripts are not in that list on purpose — see the root
-`AGENTS.md`, "No TeX source".
+and `bash ./scripts/ci-pages.sh` after a coherent batch — the language server
+checks elaboration, not rendering, so anything about how a page *looks* still
+needs a site build. The harness's LT (source-fidelity) scripts are not in that
+list on purpose — see the root `AGENTS.md`, "No TeX source".
 
 ---
 
