@@ -11,7 +11,31 @@ like, calibrated against the papers themselves, with the failure modes that have
 actually occurred here. Read it before writing prose, and run
 `python3 scripts/style-check.py` before committing.
 
-While editing, use the Lean language server rather than `lake build`. The
+Two fast loops, for two different questions.
+
+**How does it render?** `python3 scripts/preview.py` builds the whole document
+without the formalization and writes it to `_out/preview/html-multi`:
+
+| | |
+|---|---|
+| nothing changed | 6 s |
+| one chapter changed | 9 s |
+| from scratch | 26 s |
+
+against about ten minutes for `scripts/ci-pages.sh`. It generates a stripped
+copy of every chapter under `BodyPinBlueprint/Preview/` — both generated and
+gitignored — with the `RB31EndToEnd` imports, `(lean := ...)` options, `name`
+roles and elaborated Lean fences removed. Everything else is the real document,
+so slugs, numbering, citation rendering, cross-reference text, math, the graph,
+the summary and the bibliography are all exactly what the site will show.
+
+It cannot show what it has removed: external declaration panels, hovers,
+highlighting in quoted Lean, and node Lean-status — the graph and summary paint
+every node unformalized. It also cannot catch a wrong `(lean := ...)` name,
+because it strips them rather than resolving them. So the preview is for
+looking, never for believing a node is wired up.
+
+**Does it elaborate?** Use the Lean language server rather than `lake build`. The
 `lean-lsp` MCP server (`.mcp.json`) keeps the imports loaded, so after one cold
 start a chapter re-checks in about 8 seconds instead of 169:
 
@@ -39,9 +63,10 @@ python3 scripts/style-check.py
 lake build BodyPinBlueprint.Chapters.<Chapter>
 ```
 
-and `bash ./scripts/ci-pages.sh` after a coherent batch — the language server
-checks elaboration, not rendering, so anything about how a page *looks* still
-needs a site build. The harness's LT (source-fidelity) scripts are not in that
+and `bash ./scripts/ci-pages.sh` after a coherent batch. Neither fast loop
+replaces it: the language server checks elaboration but renders nothing, and the
+preview renders but drops every link to the formalization. Anything you intend
+to claim about a finished page has to come from a full build. The harness's LT (source-fidelity) scripts are not in that
 list on purpose — see the root `AGENTS.md`, "No TeX source".
 
 ---
