@@ -147,6 +147,13 @@ page:
 python3 scripts/check-fresh.py      # exits 1 if any output is stale
 ```
 
+Background anything slow, and then *do not foreground a wait for it*. A loop
+that polls a log until the build finishes is just the ten minutes again, wearing
+a disguise — it blocks the session, and it hits the tool timeout. Launch the
+build, go do something else, and check the log when you next have a reason to.
+This is the most frequently broken rule here; it was broken several times while
+Phase 1 was being written.
+
 Rules that follow, and they are cheap to keep:
 
 - Never quote, measure, or claim anything about a rendered page without

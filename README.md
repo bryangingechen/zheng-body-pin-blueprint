@@ -56,6 +56,13 @@ python3 tools/verso-harness/scripts/check_harness.py --project-root .
 bash ./scripts/ci-pages.sh       # ~5 min warm, ~45 min cold
 ```
 
+Iterating is faster than that gate suggests. `python3 scripts/preview.py`
+renders the whole document without the formalization in 6–26 s, which covers
+everything except declaration panels, hovers, highlighted Lean and node status;
+`scripts/ci-pages.sh` remains the check before committing, and
+`python3 scripts/check-fresh.py` says whether a rendered page still matches the
+working tree.
+
 Source-independent per-chapter checks:
 
 ```bash

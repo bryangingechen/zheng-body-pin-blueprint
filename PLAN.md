@@ -126,9 +126,8 @@ Six nodes, eight declaration references resolving under `strictResolve`, root
 theorem rendering its kernel-checked signature and a *complete* status. Two
 upstream template gaps found and written up in `notes/upstream.md`.
 
-**Phase 1 — statement, front matter, scaffolding. DONE** (commit `d051f78`).
-Chapter 01 written in
-full: 10 nodes, each `paper`-tagged one carrying a hand-transcribed `tex`
+**Phase 1 — statement, front matter, scaffolding. DONE** (commits `d051f78`
+through `c0d9165`). Chapter 01 written in full: 10 nodes, each `paper`-tagged one carrying a hand-transcribed `tex`
 witness. Front matter on the index page — conjecture history, scope statement,
 tag legend, provenance caveats, and the research note as the reader's on-ramp.
 `README.md` rewritten. `Bibliography.lean` holds all 31 of the paper's
@@ -161,10 +160,32 @@ also drops the harness's LT source-fidelity instructions, which cannot apply
 without a TeX source and previously had to be read before the section explaining
 that they do not apply.
 
+A reader-facing pass then fixed three things that would have misled anyone
+checking the blueprint against the paper: blueprint numbering was leaking into
+prose that talks about paper results, so every cross-reference is now written
+out in words; nothing marked a stub chapter as a stub; and quoted Lean carries
+an `open ... in` line that upstream does not have. `BodyPinBlueprint/STYLE.md`
+and `scripts/style-check.py` came out of the same pass.
+
+Phase 1's original exit criterion said "deployed to Pages". That has been
+deferred deliberately: publishing waits until a first full version of the
+blueprint exists, so the site is not deployed and there is no git remote. It
+blocks nothing. Everything the workflow would do passes locally — `ci-pages.sh`
+green at 8609 jobs, submodule pins correct for a fresh clone — so deployment
+should be a matter of adding a remote when the time comes.
+
 **Phase 2 — necessity, sparsity, deletion. NEXT.** Chapters 02–04. Establishes the two
 habits that carry the rest: the adjacent-witness pattern, and cluster nodes for
 Lean-only infrastructure. Chapter 03 is the first real test of describing 3,500
 lines the paper never mentions. Write `scripts/coverage.py` here.
+
+Two things worth knowing before starting, both measured in Phase 1 and detailed
+in `BodyPinBlueprint/AGENTS.md`. Every module Chapter 03 needs is
+Mathlib-blanket-free, so that chapter can build in about 47 s rather than 169;
+check before adding an import. And most `lean` names in `correspondence.toml`
+outside Chapter 01 are still unverified claims — the language server resolves
+one in about 8 s, so verify each as the node citing it is drafted rather than
+discovering it at the end.
 
 As of the end of Phase 1 the blueprint's 54 nodes and the 54 labelled entries of
 `correspondence.toml` are in exact one-to-one correspondence, chapter for
@@ -190,13 +211,18 @@ named by some node.
 
 ## Practical notes
 
-Build costs and the slow authoring loop are in `AGENTS.md`. The short version:
-~37 min for a cold formalization build, ~5 min for a warm `ci-pages.sh`, and
-about 10 min for any rebuild that touches an import everything shares. Batch
-edits; use the harness's focused chapter build; do not expect fast feedback.
+Build costs and the authoring loop are in `AGENTS.md`. The short version: do not
+iterate with `ci-pages.sh`. `python3 scripts/preview.py` renders the whole
+document without the formalization in 6–26 s, and the `lean-lsp` MCP server
+re-checks a chapter's elaboration in about 8 s. `ci-pages.sh` is the ten-minute
+gate that checks everything the fast loops cannot — declaration panels, hovers,
+highlighted Lean, node status — so background it, and never read a rendered page
+without `python3 scripts/check-fresh.py` reporting `current` for it.
 
 ## Open, not blocking
 
+- Pages deployment, deferred until the first full version of the blueprint
+  exists. Needs a git remote and someone with the account.
 - Licence on the formalization repository, and whether an arXiv version of the
   paper is planned. Both are questions for the author; see
   `notes/attribution.md`. Bryan has an open thread with him.
