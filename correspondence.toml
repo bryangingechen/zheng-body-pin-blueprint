@@ -48,9 +48,10 @@ title = "Loopless body-pin multigraph H"
 chapter = "Statement"
 label = "bodypin_incidence"
 lean = ["RB31E2E.BodyPinIncidence"]
-modules = ["RB31EndToEnd/Specification.lean", "RB31EndToEnd/Graph/LooplessMultiGraph.lean"]
+modules = ["RB31EndToEnd/Specification.lean"]
 status = "mapped"
 verified = true
+note = "Graph/LooplessMultiGraph.lean was listed here until scripts/reachable.lean showed that none of its 36 declarations is reachable from the root theorem. BodyPinIncidence is a standalone structure; the conversion BodyPinIncidence.toLooplessMultiGraph exists but is never used. See notes/reachability.md."
 
 [[entry]]
 paper = "§1"
@@ -68,9 +69,10 @@ title = "Capacity l_H = 0, 3, 5, 6"
 chapter = "Statement"
 label = "pin_capacity"
 lean = ["RB31E2E.pinCapacity"]
-modules = ["RB31EndToEnd/Specification.lean", "RB31EndToEnd/Combinatorics/BodyPinCapacity.lean"]
+modules = ["RB31EndToEnd/Specification.lean"]
 status = "mapped"
 verified = true
+note = "Combinatorics/BodyPinCapacity.lean was listed here until scripts/reachable.lean showed that none of its 10 declarations is reachable from the root theorem; the capacity bounds the proof uses are in Linear/PinRank.lean. See notes/reachability.md."
 
 [[entry]]
 paper = "(1.2)/(A.2)"
@@ -151,55 +153,104 @@ label = "sparse22"
 lean = ["RB31E2E.Sparse22", "RB31E2E.Tight22"]
 modules = ["RB31EndToEnd/Combinatorics/Sparse22/Basic.lean"]
 status = "mapped"
+verified = true
 
 [[entry]]
 paper = "§2.1"
-title = "Uncrossing; addable-edge criterion"
+title = "Uncrossing of intersecting tight sets"
 chapter = "Sparsity"
 label = "uncrossing"
+lean = ["RB31E2E.card_edgesInside_supermodular", "RB31E2E.tight22_union_inter"]
 modules = ["RB31EndToEnd/Combinatorics/Sparse22/Uncrossing.lean"]
 status = "mapped"
+verified = true
+
+[[entry]]
+paper = "§2.1"
+title = "Addable-edge criterion"
+chapter = "Sparsity"
+label = "addable_edge_criterion"
+lean = ["RB31E2E.exists_tight22_of_not_sparse22_insert"]
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/Basic.lean"]
+status = "deviation"
+verified = true
+note = "The paper derives this from the same supermodularity argument as uncrossing. Lean proves it directly from the induced-edge count, in Basic.lean, before Uncrossing.lean exists."
 
 [[entry]]
 paper = "Lem 2.1"
 title = "Addable edge among three vertices"
 chapter = "Sparsity"
 label = "addable_edge_triple"
+lean = ["RB31E2E.degree_three_neighbour_triangle_complete_or_addable"]
 modules = ["RB31EndToEnd/Combinatorics/Sparse22/DegreeThreeAugmentation.lean"]
 status = "mapped"
+verified = true
+note = "Lean states a dichotomy -- the neighbour triangle is already complete, or an absent neighbour edge is insertable after deleting v -- rather than a conclusion under the hypothesis that the triangle is incomplete."
+
+[[entry]]
+paper = "§2.2"
+title = "Direction rows and the self-stress space over a coefficient field"
+chapter = "Deletion"
+label = "rigidity_row"
+lean = ["RB31E2E.DirectionStress.directionRow", "RB31E2E.DirectionStress.directionEquilibrium", "RB31E2E.DirectionStress.directionStressDim"]
+modules = ["RB31EndToEnd/Linear/DirectionStress.lean"]
+status = "mapped"
+verified = true
+note = "The field-extension form of (1.4). Separate from the rigidity_matrix entry, which is the real form of Appendix A.1: they are two objects in the development, not two renderings of one."
+
+[[entry]]
+paper = "§2.2"
+title = "Retained coordinate field L and the extension degree delta_v"
+chapter = "Deletion"
+label = "retained_coordinate_field"
+lean = ["RB31E2E.DirectionStress.retainedCoordinateField", "RB31E2E.DirectionStress.outsideExtensionTrdeg"]
+modules = ["RB31EndToEnd/Linear/OutsideLocalPayment.lean", "RB31EndToEnd/Algebra/CoordinateFieldTower.lean"]
+status = "mapped"
+verified = true
 
 [[entry]]
 paper = "(2.1)-(2.3)"
 title = "Block form and the self-stress exact sequence"
 chapter = "Deletion"
 label = "stress_exact_sequence"
+lean = ["RB31E2E.BlockKernelExact.connectingMap", "RB31E2E.DirectionStress.deletedConnectingClass", "RB31E2E.DirectionStress.directionStressDim_eq_delete_add_outsideResponseKernelDim"]
 modules = ["RB31EndToEnd/Linear/BlockKernelExact.lean", "RB31EndToEnd/Linear/DirectionStressDeletion.lean"]
 status = "mapped"
+verified = true
+note = "Exactness of (2.3) is never asserted. What is proved is the block-kernel dimension formula, from which s = t + u follows directly."
 
 [[entry]]
 paper = "(2.4)-(2.6)"
 title = "The (s,t,u,delta) ledger and the defect Delta"
 chapter = "Deletion"
 label = "deletion_ledger"
-modules = ["RB31EndToEnd/Linear/OutsideLocalPayment.lean"]
-status = "mapped"
+lean = ["RB31E2E.CoordinateFieldTower.trdeg_deletion_ledger", "RB31E2E.DirectionStress.outsideResponseKernelDim"]
+modules = ["RB31EndToEnd/Linear/OutsideLocalPayment.lean", "RB31EndToEnd/Algebra/CoordinateFieldTower.lean"]
+status = "deviation"
+verified = true
+note = "Both halves of (2.5) are theorems. The defect Delta of (2.6) is not a named quantity anywhere; the inequality Delta <= 0 appears only as ProvenanceFlag.FunctionFieldBranch.SemismallBudget, in its flagged form."
 
 [[entry]]
-paper = "Ex 2.2"
-title = "Collinear two-edge path; certified response edge"
+paper = "§2.2, Ex 2.2"
+title = "Certified response edge; the collinear two-edge path"
 chapter = "Deletion"
 label = "certified_response_edge"
+lean = ["RB31E2E.DirectionStress.directionRowSpace", "RB31E2E.DirectionStress.stress_augmentation_of_virtual_response"]
 modules = ["RB31EndToEnd/Linear/DirectionResponse.lean", "RB31EndToEnd/Linear/DirectionResponseBaseChange.lean", "RB31EndToEnd/Linear/DirectionResponseVertexDeletion.lean"]
 status = "mapped"
+verified = true
+note = "Lean's augmentation lemma asks only that the edge be absent and its row already in the row space; sparsity of H + xy is the caller's obligation."
 
 [[entry]]
 paper = "Lem 2.3"
 title = "Low-degree local classification"
 chapter = "Deletion"
 label = "low_degree_classification"
-lean = ["RB31E2E.outsideExceptional_linear_dichotomy"]
+lean = ["RB31E2E.DirectionStress.outsideExceptional_linear_dichotomy", "RB31E2E.DirectionStress.outsideExceptional_classification"]
 modules = ["RB31EndToEnd/Linear/OutsideLocalClassification.lean", "RB31EndToEnd/Linear/OutsideLocalGeometry.lean"]
 status = "mapped"
+verified = true
+note = "The name in this entry was RB31E2E.outsideExceptional_linear_dichotomy until a build resolved it; the declaration is in the DirectionStress namespace."
 
 [[entry]]
 paper = "Lem 2.4"
@@ -209,14 +260,17 @@ label = "affine_coefficient_descent"
 lean = ["RB31E2E.AffineSpanDescent.affineCoefficients_mem_span"]
 modules = ["RB31EndToEnd/Algebra/AffineSpanDescent.lean", "RB31EndToEnd/Algebra/AlgebraicIndependentAffine.lean"]
 status = "mapped"
+verified = true
 
 [[entry]]
 paper = "Lem 2.5"
 title = "Rigidity rows among the three neighbours"
 chapter = "Deletion"
 label = "neighbour_rigidity_rows"
+lean = ["RB31E2E.DirectionStress.outsideExceptional_fullResponse"]
 modules = ["RB31EndToEnd/Linear/OutsideExceptionalFullResponse.lean"]
 status = "mapped"
+verified = true
 
 # ---------------------------------------------------------------- section 3
 
@@ -277,7 +331,7 @@ paper = "Lem 3.6"
 title = "Local classification at a private support vertex"
 chapter = "Flags"
 label = "private_local_classification"
-lean = ["RB31E2E.private_nonexceptional_or_exceptional", "RB31E2E.private_local_payment"]
+lean = ["RB31E2E.DirectionStress.private_nonexceptional_or_exceptional", "RB31E2E.DirectionStress.private_local_payment"]
 modules = ["RB31EndToEnd/Linear/PrivateLocalClassification.lean"]
 status = "mapped"
 
@@ -360,7 +414,7 @@ paper = "(5.1)"
 title = "Split-Klein quadratic form and twists"
 chapter = "SplitKlein"
 label = "split_klein_form"
-lean = ["RB31E2E.Vec3Twist.splitKlein"]
+lean = ["RB31E2E.Twist.splitKlein"]
 modules = ["RB31EndToEnd/Linear/Vec3Twist.lean"]
 status = "mapped"
 
@@ -414,24 +468,6 @@ status = "mapped"
 # ---------------------------------------------------------------- section 6
 
 [[entry]]
-paper = "Lem 6.1"
-title = "Twist description of motions within a body"
-chapter = "BodyPin"
-label = "twist_description"
-lean = ["RB31E2E.exists_unique_twist_of_tetrahedronMotion"]
-modules = ["RB31EndToEnd/Rigidity/BodyTwistBridge.lean", "RB31EndToEnd/Linear/TwistSystem.lean"]
-status = "mapped"
-
-[[entry]]
-paper = "Lem 6.2"
-title = "The fibre of a pin; three pins imply collinear"
-chapter = "BodyPin"
-label = "pin_fibre"
-lean = ["RB31E2E.PinFibres.three_pin_solutions_collinear"]
-modules = ["RB31EndToEnd/Linear/PinFibres.lean"]
-status = "mapped"
-
-[[entry]]
 paper = "§6.1"
 title = "The twist-equality partition"
 chapter = "BodyPin"
@@ -467,13 +503,47 @@ status = "mapped"
 note = "Cluster node in the first pass; the Incidence chart layer sits under it. See PLAN.md on going deeper later."
 
 [[entry]]
+paper = "§6.1"
+title = "Rigid-body twists and the pin compatibility equation"
+chapter = "Necessity"
+label = "twist_system"
+lean = ["RB31E2E.Twist", "RB31E2E.Twist.eval", "RB31E2E.IsTwistMotion", "RB31E2E.TwistRigidAt"]
+modules = ["RB31EndToEnd/Linear/Vec3Twist.lean", "RB31EndToEnd/Linear/TwistSystem.lean"]
+status = "mapped"
+verified = true
+
+[[entry]]
+paper = "Lem 6.1"
+title = "Twist description of motions within a body"
+chapter = "Necessity"
+label = "twist_description"
+lean = ["RB31E2E.BodyPinIncidence.exists_unique_twist_of_tetrahedronMotion", "RB31E2E.BodyPinIncidence.twistMotionToBarMotion_bijective_of_allCores"]
+modules = ["RB31EndToEnd/Rigidity/BodyTwistBridge.lean", "RB31EndToEnd/Linear/TwistSystem.lean"]
+status = "mapped"
+verified = true
+note = "Moved here from the BodyPin chapter with the rest of paper section 6.1: it is what the necessity argument of section 6.4 invokes."
+
+[[entry]]
+paper = "Lem 6.2"
+title = "The fibre of a pin; three pins imply collinear"
+chapter = "Necessity"
+label = "pin_fibre"
+lean = ["RB31E2E.Twist.three_pin_solutions_collinear", "RB31E2E.Twist.splitKlein_eq_zero_of_pin_solution", "RB31E2E.Twist.pin_sub_eq_smul_angular"]
+modules = ["RB31EndToEnd/Linear/PinFibres.lean"]
+status = "mapped"
+verified = true
+note = "The name in this entry was RB31E2E.PinFibres.three_pin_solutions_collinear until a build resolved it; the declaration is in the Twist namespace."
+
+[[entry]]
 paper = "§6.4"
 title = "Necessity"
 chapter = "Necessity"
 label = "necessity"
-lean = ["RB31E2E.BodyPinIncidence.partitionCondition_of_genericallyRigidInR3"]
+lean = ["RB31E2E.BodyPinIncidence.partitionCondition_of_genericallyRigidInR3", "RB31E2E.BodyPinIncidence.partitionCondition_of_twistRigidAt"]
 modules = ["RB31EndToEnd/Rigidity/GraphNecessity.lean", "RB31EndToEnd/Rigidity/TwistNecessity.lean", "RB31EndToEnd/Linear/PinRank.lean"]
 status = "mapped"
+verified = true
+note = "The paper argues by contraposition, constructing a flex from a violated partition. Lean proves the implication directly: twist rigidity makes the grouped cross-block operator injective, so its rank is 6(t-1), and that rank is at most the partition capacity."
 
 [[entry]]
 paper = "§6.4"
@@ -499,12 +569,24 @@ note = "Axiom closure is exactly propext, Classical.choice, Quot.sound. Checked 
 # the label survives a later split onto child nodes.
 
 [[entry]]
-title = "Nixon-Owen construction theorem for (2,2)-tight graphs"
+title = "Construction theorem for (2,2)-tight graphs"
 chapter = "Sparsity"
 label = "lean_nixon_owen_reduction"
-modules = ["RB31EndToEnd/Combinatorics/Sparse22/Construction.lean", "RB31EndToEnd/Combinatorics/Sparse22/GraphExtension.lean", "RB31EndToEnd/Combinatorics/Sparse22/TriangleSequence.lean", "RB31EndToEnd/Combinatorics/Sparse22/TightCompletion.lean", "RB31EndToEnd/Combinatorics/Sparse22/Transport.lean"]
+lean = ["RB31E2E.HasNixonOwenReduction", "RB31E2E.isK4Base_or_hasNixonOwenOrGraphExtensionReduction", "RB31E2E.exists_tight22_completion"]
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/Construction.lean", "RB31EndToEnd/Combinatorics/Sparse22/GraphExtension.lean", "RB31EndToEnd/Combinatorics/Sparse22/TriangleSequence.lean", "RB31EndToEnd/Combinatorics/Sparse22/TightCompletion.lean"]
 status = "lean-only"
-note = "~3500 lines supporting the short uncrossing arguments of Lem 2.1, 3.7, 3.8."
+verified = true
+note = "2811 lines with no paper counterpart. Not what Lem 2.1, 3.7 and 3.8 rest on: scripts/reachable.lean shows the reduction disjunction, the graph-extension quotient and the tight completion are all unreachable from the root theorem, and what the rest of the development uses from these four modules is edge-set vocabulary plus eight counting facts. See notes/reachability.md."
+
+[[entry]]
+title = "Transport of sparsity along an injective vertex map"
+chapter = "Sparsity"
+label = "lean_sparsity_transport"
+lean = ["RB31E2E.Sparse22Transport.mapEdgeSet", "RB31E2E.Sparse22Transport.sparse22_of_mapEdgeSet_subset"]
+modules = ["RB31EndToEnd/Combinatorics/Sparse22/Transport.lean"]
+status = "lean-only"
+verified = true
+note = "Split out of lean_nixon_owen_reduction: deletion and flag registration change the live-vertex type, which the paper never has to say anything about."
 
 [[entry]]
 title = "Provenance weight and initial-ideal apparatus"
@@ -532,13 +614,27 @@ status = "lean-only"
 title = "Base-change and field-tower plumbing"
 chapter = "Deletion"
 label = "lean_base_change"
+lean = ["RB31E2E.FiniteFamilyBaseChange.finrank_span_range_mapVector", "RB31E2E.DirectionStress.directionStressDim_mapPlacement", "RB31E2E.DirectionStress.directionStressDim_restrictedLiveEdges"]
+verified = true
 modules = ["RB31EndToEnd/Linear/DirectionStressBaseChange.lean", "RB31EndToEnd/Linear/DirectionStressVertexDeletion.lean", "RB31EndToEnd/Linear/FiniteFamilyBaseChange.lean", "RB31EndToEnd/Linear/FiniteRowSystem.lean", "RB31EndToEnd/Linear/FiniteRowSpanStress.lean", "RB31EndToEnd/Linear/DirectionStress.lean", "RB31EndToEnd/Algebra/CoordinateFieldTower.lean", "RB31EndToEnd/Algebra/FractionQuotientCoordinates.lean", "RB31EndToEnd/Algebra/FiniteOpenIntersection.lean", "RB31EndToEnd/Algebra/FiniteChartCertificates.lean", "RB31EndToEnd/Algebra/CoefficientLinearFibre.lean", "RB31EndToEnd/Algebra/LinearFormIdeal.lean", "RB31EndToEnd/Algebra/MinimalPrimeLinearFibre.lean", "RB31EndToEnd/Algebra/HomogeneousDenominatorContradiction.lean", "RB31EndToEnd/NullCellule/SelectedDirectionFibre.lean", "RB31EndToEnd/NullCellule/SelectedDirectionHeight.lean", "RB31EndToEnd/Linear/OutsideRegistrationStress.lean"]
 status = "lean-only"
+
+[[entry]]
+title = "Grouped cross-block bundle operator"
+chapter = "Necessity"
+label = "lean_block_bundle_operator"
+lean = ["RB31E2E.BodyPinIncidence.groupedGroundedBlockOperator", "RB31E2E.BodyPinIncidence.six_mul_pred_le_groupedGroundedBlockOperator_rank", "RB31E2E.BodyPinIncidence.groupedGroundedBlockOperator_rank_le_partitionCapacity"]
+modules = ["RB31EndToEnd/Rigidity/TwistNecessity.lean", "RB31EndToEnd/Algebra/GroundedTwist.lean"]
+status = "lean-only"
+verified = true
+note = "The two inequalities the necessity theorem is the composite of. Signed pin evaluations are used so that the two occurrences of a bundle need not be oriented alike."
 
 [[entry]]
 title = "Genericity machinery for the necessity direction"
 chapter = "Necessity"
 label = "lean_genericity"
-modules = ["RB31EndToEnd/Rigidity/BodyTwistGenericBridge.lean"]
+lean = ["RB31E2E.BarJoint.isOpen_setOf_le_rigidityRank", "RB31E2E.BodyPinIncidence.exists_allCores_rigidityRank_eq_genericRigidityRank", "RB31E2E.BodyPinIncidence.coreLineDetPolynomial"]
+modules = ["RB31EndToEnd/Rigidity/BodyTwistGenericBridge.lean", "RB31EndToEnd/Rigidity/GraphNecessity.lean"]
 status = "lean-only"
-note = "isOpen_setOf_le_rigidityRank, AllCoresAffinelyIndependent, coreLineDetPolynomial. The paper's necessity proof is one paragraph."
+verified = true
+note = "The paper says 'a generic realization'. Lean has no genericity theory, so it constructs the placement by a one-parameter finite-root avoidance argument inside the rank-open set."

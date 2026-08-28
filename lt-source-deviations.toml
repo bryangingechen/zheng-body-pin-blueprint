@@ -4,43 +4,103 @@
 # this records where Verso prose deviates from upstream TeX; here it is turned
 # on the paper/Lean seam instead, since there is no TeX source.
 #
-# `fingerprint` is a SHA-256 over the reviewed text, so an entry expires as soon
-# as what it excuses changes. Entries below have no fingerprint yet because the
-# chapters they refer to are not written — add one when the chapter lands.
+# `fingerprint` is the SHA-256 the harness computes over a canonicalized `tex`
+# witness body, so an entry expires as soon as the witness it excuses changes.
+# An entry carries one when there is a single witness it is about. Three kinds
+# of entry cannot:
+#
+#   - the node has no witness at all, as `asimow_roth` deliberately does not;
+#   - the entry is about a whole chapter or several results at once;
+#   - the chapter is still a stub, so the witness does not exist yet. Add the
+#     fingerprint when the chapter lands.
+#
+# Recompute with:
+#   python3 - <<'EOF'
+#   import re, sys; sys.path.insert(0, "tools/verso-harness/scripts")
+#   from pathlib import Path
+#   from check_lt_source_freshness import witness_fingerprint
+#   B = re.compile(r'^```tex "([^"]+)"[^\n]*\n(.*?)^```$', re.M | re.S)
+#   for p in sorted(Path("BodyPinBlueprint/Chapters").glob("*.lean")):
+#       for label, body in B.findall(p.read_text()):
+#           print(p.name, label, witness_fingerprint(body))
+#   EOF
 
 version = 1
 
-[[witness]]
-paper = "Lem 6.3"
-chapter = "BodyPinBlueprint/Chapters/BodyPin.lean"
-reason = "The paper argues through Nash-Williams forest decomposition and Edmonds' matroid-union rank formula. Lean uses no matroid API at all: exists_sparse22_of_all_partition_terms extracts the subgraph directly from a maximum sparse subset and an explicit tight partition, and says so in a source comment at OptimalPartition.lean:370."
-
-[[witness]]
-paper = "Lem 2.1, 3.7, 3.8"
-chapter = "BodyPinBlueprint/Chapters/Sparsity.lean"
-reason = "Short uncrossing arguments on paper; formally they rest on ~3500 lines with no paper counterpart -- a Nixon-Owen construction theorem for (2,2)-tight graphs, proper tight modules, triangle sequences, same-vertex tight completion."
-
-[[witness]]
-paper = "§4, Thm 4.2"
-chapter = "BodyPinBlueprint/Chapters/Strata.lean"
-reason = "Expository only. The determinantal, local-complete-intersection and Cohen-Macaulay statements have no Lean counterpart; the formalization uses the field-theoretic inequality throughout, so Theorem 1.1 does not depend on section 4."
-
-[[witness]]
-paper = "§1 (Asimow-Roth)"
-chapter = "BodyPinBlueprint/Chapters/Statement.lean"
-reason = "The Lean theorem is the maximum-rank form. The step from attained maximum rank to generic rigidity in the usual sense is a literature citation, not a formalized result. Checked against Asimow-Roth 1978 directly (see notes/attribution.md): their 'regular point' is exactly a maximum-rank placement, so the Lean definition uses the literature's own notion; what is not formalized is the theorem of their section 3 and its Corollary 2, which is what turns a rank equality into rigidity."
+# ---------------------------------------------------------------- statement
 
 [[witness]]
 paper = "§1, A.1"
 chapter = "BodyPinBlueprint/Chapters/Statement.lean"
+fingerprint = "d374c4c2975bfb387e328d5e27d4c4dc141cfbeb3724cf1b7de8ba0b8d4996e5"
 reason = "Pins are occurrences, not multiset edges: BodyPinIncidence carries a pin type with two endpoint maps, so parallel pins stay distinct. Partitions are surjections W -> [t] rather than set partitions, which makes the empty body set and the one-block case fall out of the definition."
 
 [[witness]]
 paper = "(1.2)"
 chapter = "BodyPinBlueprint/Chapters/Statement.lean"
+fingerprint = "0ec6b6c72beeaaddcdfd707b37da1a3a1b6c541869a3647cf061bc2f1abf263b"
 reason = "Lean carries two capacity conventions: partitionCapacity over unordered pairs, and orderedPartitionCapacity counting each pair twice with bound 12(t-1) as an audit form. The paper has only the unordered one."
+
+[[witness]]
+paper = "§1 (Asimow-Roth)"
+chapter = "BodyPinBlueprint/Chapters/Statement.lean"
+reason = "The Lean theorem is the maximum-rank form. The step from attained maximum rank to generic rigidity in the usual sense is a literature citation, not a formalized result. Checked against Asimow-Roth 1978 directly (see notes/attribution.md): their 'regular point' is exactly a maximum-rank placement, so the Lean definition uses the literature's own notion; what is not formalized is the theorem of their section 3 and its Corollary 2, which is what turns a rank equality into rigidity. No fingerprint: the node carries no witness, because the statement is not the paper's to quote."
+
+# ---------------------------------------------------------------- necessity
+
+[[witness]]
+paper = "§6.4 (necessity)"
+chapter = "BodyPinBlueprint/Chapters/Necessity.lean"
+fingerprint = "eeb3bc731e196ad7366c9bd7543c2be1a2a7efb2131ea43ff9a216c68da1d38e"
+reason = "The paper argues by contraposition: a partition violating the inequality leaves a nontrivial block twist, which Lemma 6.1 turns into a flex. Lean proves the implication directly, and constructs no flex: twist rigidity makes groupedGroundedBlockOperator injective, so its rank is 6(t-1), and finrank_range_pi_le_sum bounds that rank by the sum of the bundle capacities. Grounding is done by fixing one block's twist to zero rather than by quotienting by the diagonal."
+
+# ---------------------------------------------------------------- sparsity
+
+[[witness]]
+paper = "§2.1 (addable-edge criterion)"
+chapter = "BodyPinBlueprint/Chapters/Sparsity.lean"
+fingerprint = "22c5f3bf3310ee9f9941282fd97ce37571a814ddd72839c177882eff3e5d2e00"
+reason = "The paper derives the criterion from the same supermodularity argument as uncrossing. Lean proves it directly from the induced-edge count, in Sparse22/Basic.lean, before Sparse22/Uncrossing.lean exists; supermodularity is never invoked."
+
+[[witness]]
+paper = "Lem 2.1, 3.7, 3.8"
+chapter = "BodyPinBlueprint/Chapters/Sparsity.lean"
+fingerprint = "6bb06f10a21f2857f812539008cd8b225b460f95fb22fb31a7a50f1bbc503fc5"
+reason = "Short uncrossing arguments on paper; formally, Sparse22/ additionally contains 2811 lines developing a construction theorem for (2,2)-tight graphs, with no paper counterpart and no citation in the paper's reference list. It is not what these lemmas rest on: scripts/reachable.lean shows HasNixonOwenReduction, the graph-extension quotient and exists_tight22_completion are all unreachable from the root theorem, and Lemma 2.1's own proof is a tight-set obstruction argument. What the development takes from those modules is edge-set vocabulary and eight counting facts. See notes/reachability.md."
+
+# ---------------------------------------------------------------- deletion
+
+[[witness]]
+paper = "(2.1)-(2.3)"
+chapter = "BodyPinBlueprint/Chapters/Deletion.lean"
+fingerprint = "fce2b3a712b9532847562da522ea5a234c2611e18d6bb69c828acea39c2acef0"
+reason = "Exactness of the sequence (2.3) is never asserted in Lean. BlockKernelExact proves the kernel dimension formula for a lower-triangular block map directly, by exhibiting the surjection onto the connecting kernel and identifying its fibre, and the induction is given s = t + u rather than exactness."
+
+[[witness]]
+paper = "(2.4)-(2.6)"
+chapter = "BodyPinBlueprint/Chapters/Deletion.lean"
+fingerprint = "12b4fab37dfe30bfbf2f9ab2c6a1ddad521bd29fdd8fd8cab9ee2e354e6073d4"
+reason = "Both halves of (2.5) are theorems, but the defect Delta of (2.6) is not a named quantity anywhere in the development, and no declaration has its shape. The inequality Delta <= 0 appears only as ProvenanceFlag.FunctionFieldBranch.SemismallBudget, in the flagged form s + trdeg + 2|Gamma| <= 3|V|; the flag-free case is its specialization to Gamma empty. The bookkeeping of (2.6) is done at the point of use with the local increment."
+
+[[witness]]
+paper = "§2.2 (certified response edge)"
+chapter = "BodyPinBlueprint/Chapters/Deletion.lean"
+fingerprint = "12d7b53223b4b91a140210a78f95b581ef084028ba55fd982ad443de9d427959"
+reason = "The paper's definition requires H + xy to remain (2,2)-sparse. Lean's stress_augmentation_of_virtual_response requires only that the edge be absent and its direction row already in the row space; sparsity is the caller's obligation, discharged by the addable-edge lemma at each use."
+
+# ---------------------------------------------------------------- later chapters
+
+[[witness]]
+paper = "Lem 6.3"
+chapter = "BodyPinBlueprint/Chapters/BodyPin.lean"
+reason = "The paper argues through Nash-Williams forest decomposition and Edmonds' matroid-union rank formula. Lean uses no matroid API at all: exists_sparse22_of_all_partition_terms extracts the subgraph directly from a maximum sparse subset and an explicit tight partition, and says so in a source comment at OptimalPartition.lean:370. No fingerprint yet: the chapter is a stub."
+
+[[witness]]
+paper = "§4, Thm 4.2"
+chapter = "BodyPinBlueprint/Chapters/Strata.lean"
+reason = "Expository only. The determinantal, local-complete-intersection and Cohen-Macaulay statements have no Lean counterpart; the formalization uses the field-theoretic inequality throughout, so Theorem 1.1 does not depend on section 4. No fingerprint yet: the chapter is a stub."
 
 [[witness]]
 paper = "Prop 3.3, Prop 6.5"
 chapter = "BodyPinBlueprint/Chapters/Flags.lean"
-reason = "The v4.29.0 line has no :::proposition directive, but the harness rule is to preserve environment kind faithfully. Paper Propositions are rendered with :::lemma_ and the word Proposition in the node title. This entry expires on a port to a release line that has the directive."
+reason = "The v4.29.0 line has no :::proposition directive, but the harness rule is to preserve environment kind faithfully. Paper Propositions are rendered with :::lemma_ and the word Proposition in the node title. This entry expires on a port to a release line that has the directive. No fingerprint: the entry is about a rendering convention, not about one witness."

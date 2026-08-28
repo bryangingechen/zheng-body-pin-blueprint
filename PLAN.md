@@ -51,20 +51,35 @@ audit. Node counts are targets. See `correspondence.toml` for what goes where.
 
 | # | Chapter | Paper | ~Nodes | Notes |
 |---|---|---|---|---|
-| 01 | `Statement` | §1, A.1 | 12 | **Written (Phase 1):** 10 nodes, all with witnesses. Asimow–Roth is a `gap`. |
-| 02 | `Necessity` | §6.4 first half, §6.1 | 8 | **Stubbed:** 2 nodes. One paragraph on paper, 894 Lean lines. |
-| 03 | `Sparsity` | §2.1 + Lean-only | 10 | **Stubbed:** 4 nodes. ~3,500 lines with no paper counterpart. |
-| 04 | `Deletion` | §2.2 | 12 | **Stubbed:** 7 nodes. Exact sequence, ledger, defect Δ. |
+| 01 | `Statement` | §1, A.1 | 12 | **Written (Phase 1):** 9 nodes, all with witnesses. Asimow–Roth is a `gap`. |
+| 02 | `Necessity` | §6.1, §6.4 first half | 8 | **Written (Phase 2):** 6 nodes. One paragraph on paper, 894 Lean lines, two thirds of them genericity. |
+| 03 | `Sparsity` | §2.1 + Lean-only | 10 | **Written (Phase 2):** 6 nodes. 2,811 lines with no paper counterpart, and the root theorem uses almost none of them. |
+| 04 | `Deletion` | §2.2 | 12 | **Written (Phase 2):** 9 nodes. Exact sequence, ledger, the missing defect Δ. |
 | 05 | `Flags` | §3 | 16 | **Stubbed:** 12 nodes. The heart. Vocabulary table first — every Lean name here is renamed. |
 | 06 | `Strata` | §4 | 3 | **Stubbed:** 3 nodes. **Deliberately short.** See below. |
 | 07 | `SplitKlein` | §5 | 14 | **Stubbed:** 7 nodes. Plus the Lean-only weight apparatus. |
-| 08 | `BodyPin` | §6 | 14 | **Stubbed:** 8 nodes. Matroid-union deviation shown beside Lean's substitute. |
+| 08 | `BodyPin` | §6.2 onwards | 14 | **Stubbed:** 6 nodes. Matroid-union deviation shown beside Lean's substitute. |
 | 09 | `Correspondence` | — | 6 | **Stubbed:** 1 node + section skeleton. Table, glossary, deviations, trust boundary, reverse index. |
 
-Stubs carry no `(lean := ...)`. The `lean` names in `correspondence.toml` outside
-Chapter 01 are still unverified claims, and `strictResolve` turns a wrong one
-into a build error the moment a node cites it — which is the right time to find
-out, i.e. when that chapter is written, not now.
+Node counts in the fourth column are the original targets. Chapters 02 to 04
+came in under them, at 6, 6 and 9 against 8, 10 and 12, because §2.1 and §2.2
+have fewer separable statements than the estimate assumed and because the
+Lean-only material there is two clusters rather than four. Coverage is what
+matters, not the count.
+
+Paper §6.1 moved from Chapter 08 to Chapter 02 during Phase 2: its two lemmas
+are what §6.4's necessity argument is stated in, and the chapter table above
+already assigned §6.1 to `Necessity`. The twist-equality partition stays in
+Chapter 08 with §6.2 to §6.4, which is the only part of §6.1 the sufficiency
+direction needs.
+
+Stubs carry no `(lean := ...)`. The `lean` names in `correspondence.toml` for
+chapters 05 to 09 are still unverified claims, and `strictResolve` turns a wrong
+one into a build error the moment a node cites it — which is the right time to
+find out, i.e. when that chapter is written, not now. Three of them turned out
+to be wrong about namespaces while Phase 2 was checking neighbouring entries;
+the `verified = true` flag in the table is what separates a resolved name from
+a claim.
 
 ### Chapter 06 is a route comparison, not a summary of §4
 
@@ -174,29 +189,57 @@ blocks nothing. Everything the workflow would do passes locally — `ci-pages.sh
 green at 8609 jobs, submodule pins correct for a fresh clone — so deployment
 should be a matter of adding a remote when the time comes.
 
-**Phase 2 — necessity, sparsity, deletion. NEXT.** Chapters 02–04. Establishes the two
-habits that carry the rest: the adjacent-witness pattern, and cluster nodes for
-Lean-only infrastructure. Chapter 03 is the first real test of describing 3,500
-lines the paper never mentions. Write `scripts/coverage.py` here.
+**Phase 2 — necessity, sparsity, deletion. DONE.** Chapters 02–04 written in
+full: 21 nodes, every `paper`-tagged one carrying a hand-transcribed witness,
+four proof blocks, and every `lean` name resolved under `strictResolve`. The two
+habits the rest of the blueprint runs on are established: a witness adjacent to
+its node, and cluster nodes for Lean-only infrastructure.
 
-Two things worth knowing before starting, both measured in Phase 1 and detailed
-in `BodyPinBlueprint/AGENTS.md`. Every module Chapter 03 needs is
-Mathlib-blanket-free, so that chapter can build in about 47 s rather than 169;
-check before adding an import. And most `lean` names in `correspondence.toml`
-outside Chapter 01 are still unverified claims — the language server resolves
-one in about 8 s, so verify each as the node citing it is drafted rather than
-discovering it at the end.
+`scripts/coverage.py` was written here and is in CI, as its own fast workflow
+ahead of the Pages build. It enforces the node/entry correspondence, agreement
+between node tags and table statuses, existence of every module named, and that
+every fingerprint in `lt-source-deviations.toml` still matches its witness. The
+register now has twelve entries, eight of them fingerprinted; the four without
+are the ones that cannot have one, and the file says which and why.
+`scripts/checks.sh` collects the whole no-build check list.
 
-As of the end of Phase 1 the blueprint's 54 nodes and the 54 labelled entries of
+The phase's real find was that module inventories cannot be assembled by
+reading imports. `scripts/reachable.lean` walks the constant dependencies of the
+root theorem through the kernel environment and reports what it actually uses:
+1,385 of 2,555 declarations, with ten modules contributing nothing. That caught
+two wrong module lists in Chapter 01, and it corrected this plan's own
+description of the sparsity chapter. The 2,811 lines of construction theorem
+under `Sparse22/` are not what Lemmas 2.1, 3.7 and 3.8 rest on — the reduction
+disjunction, the graph-extension quotient and the tight completion are
+unreachable from the root theorem, and Lemma 2.1's Lean proof is an independent
+tight-set obstruction argument. `notes/reachability.md` has the method, the
+table, and the seven `NullCellule` modules that Phase 4 will have to account
+for.
+
+Three `lean` names in `correspondence.toml` were wrong about namespaces and are
+now fixed, two of them in chapters not yet written. Two further deviations were
+found and registered: the addable-edge criterion is proved in Lean without
+supermodularity, and the paper's defect Δ has no counterpart at all — the
+inequality it defines appears only as the flagged semismallness budget.
+
+*Exit met:* deviations register populated; coverage checker in CI.
+
+As of the end of Phase 2 the blueprint's 59 nodes and the 59 labelled entries of
 `correspondence.toml` are in exact one-to-one correspondence, chapter for
-chapter. That invariant is the first thing `scripts/coverage.py` should check,
-and it is cheap to keep true if it is never allowed to break.
+chapter. `scripts/coverage.py` checks that on every run, so it can no longer
+drift silently.
 
-*Exit:* deviations register populated; coverage checker in CI.
-
-**Phase 3 — collinearity flags.** Chapter 05. Vocabulary table first, then flag
+**Phase 3 — collinearity flags. NEXT.** Chapter 05. Vocabulary table first, then flag
 definitions, forest, selection, pivot, classification, augmentations, Thm 3.9.
 Longest chapter, heaviest translation load.
+
+Two things carried over from Phase 2. `Deletion.lean` describes the semismallness
+budget as the only home of the paper's defect, so Chapter 05 has to state it
+properly and the deviation entry on `(2.4)-(2.6)` points at it. And Chapter 03's
+`lean_nixon_owen_reduction` node claims that Lemmas 3.7 and 3.8 do not rest on
+the construction theorem either; the flags chapter is where that gets checked
+against the actual proofs rather than against the reachability table.
+
 *Exit:* the induction in `provenanceFlag_semismallness` is readable from the
 blueprint alone.
 
@@ -212,7 +255,8 @@ named by some node.
 ## Practical notes
 
 Build costs and the authoring loop are in `AGENTS.md`. The short version: do not
-iterate with `ci-pages.sh`. `python3 scripts/preview.py` renders the whole
+iterate with `ci-pages.sh`. `bash ./scripts/checks.sh` is the fifteen-second
+check list and is what CI runs. `python3 scripts/preview.py` renders the whole
 document without the formalization in 6–26 s, and the `lean-lsp` MCP server
 re-checks a chapter's elaboration in about 8 s. `ci-pages.sh` is the ten-minute
 gate that checks everything the fast loops cannot — declaration panels, hovers,

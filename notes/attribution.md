@@ -129,7 +129,22 @@ arXiv HTML.
 
 *Still unchecked.* Everything else in the reference list. Nothing currently
 turns on it — the four above are the ones the front matter and Chapter 01 lean
-on.
+on. Chapters 02 to 04 (Phase 2) added no new citations: every result they state
+is the paper's, and the only outside work they touch is the construction
+theorem the formalization carries, which the paper does not cite and which this
+repository therefore does not cite either. See `notes/questions.md` on its
+naming.
+
+## What the root theorem uses
+
+`scripts/reachable.lean` walks the constant dependencies of
+`RB31E2E.endToEndBodyPinStatement` and reports, per module, what the root
+theorem reaches. Run once against submodule `afdfb9f` on 2026-08-27: 1,385 of
+2,555 declarations, with ten modules contributing nothing. The full table, the
+method, and the two `correspondence.toml` errors it caught are in
+`notes/reachability.md`. This matters for attribution in one direction only —
+it says what the formalization's proof rests on, and so what a reader auditing
+the artifact has to read — and it says nothing about what any module is worth.
 
 ## Citation keys
 

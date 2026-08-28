@@ -35,6 +35,10 @@ paper's sentences in `definition`.  Nodes with no paper counterpart at all
 (`gap`, `lean-only`) carry no witness, because there is nothing to quote.  A
 witness must stay immediately adjacent to its node; commentary goes after it.
 
+Because §1 and A.1 are merged, most witnesses here join a §1 sentence to its
+A.1 counterpart.  `scripts/check-witness-prose.py` reports one unmatched word
+window at each such join; in this chapter they are all that merge.
+
 Quoted Lean bodies are verbatim from the file named in the block's first line,
 with one exception: an `open ... in` line is added where the quoted text needs
 one to elaborate here, since these blocks are elaborated for syntax

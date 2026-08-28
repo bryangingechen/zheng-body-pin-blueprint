@@ -13,7 +13,9 @@ set_option doc.verso true
 /-
 # Assembling the body-pin theorem  (stub)
 
-Paper §6, plus the universal and provenance chart layer.  Phase 4.
+Paper §6 from the twist-equality partition onwards, plus the universal and
+provenance chart layer.  Phase 4.  Lemmas 6.1 and 6.2 are in `Necessity.lean`
+with the rest of §6.1.
 -/
 
 #doc (Manual) "Assembling the body-pin theorem" =>
@@ -23,10 +25,11 @@ correspondence table, but the mathematics is not written yet: each body is a
 one-line placeholder naming the result it will state. See `PLAN.md` for the
 phase that covers it.
 
-Section 6 of {Informal.citet "zheng2026"}[] assembles the pieces. Motions within
-a body are twists; a pin is a fibre condition on a pair of twists, and three
-pins force collinearity. The twist-equality relation partitions the bodies, the
-partition condition supplies a $`(2,2)`-sparse subgraph, and {bpref "isotropic_ideal_height"}[the height theorem] then bounds the dimension
+Section 6 of {Informal.citet "zheng2026"}[] assembles the pieces. Its first two
+lemmas, on twists and on the fibre of a pin, are stated in {bpref "twist_description"}[the necessity chapter],
+which is where the paper's necessity argument needs them. The twist-equality
+relation partitions the bodies, the partition condition supplies a
+$`(2,2)`-sparse subgraph, and {bpref "isotropic_ideal_height"}[the height theorem] then bounds the dimension
 of the bad locus.
 Exceptional pin parameters form a proper closed subset for each nontrivial
 partition; avoiding finitely many of them gives generic infinitesimal rigidity,
@@ -42,15 +45,6 @@ The paper's assembly argument.
 
 :::group "bodypin_infrastructure"
 The universal and provenance chart layer.
-:::
-
-:::lemma_ "twist_description" (parent := "bodypin_spine") (tags := "paper, unwritten")
-Motions within a rigid body are exactly the twists. {Informal.citep "zheng2026" (kind := "lemma") (index := "6.1")}[]
-:::
-
-:::lemma_ "pin_fibre" (parent := "bodypin_spine") (tags := "paper, unwritten") (uses := "twist_description")
-The fibre of a pin, and: three pins shared by two bodies force the three pin
-points to be collinear unless the relative twist vanishes. {Informal.citep "zheng2026" (kind := "lemma") (index := "6.2")}[]
 :::
 
 :::definition "twist_equality_partition" (parent := "bodypin_spine") (tags := "paper, unwritten") (uses := "twist_description")

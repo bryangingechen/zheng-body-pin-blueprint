@@ -8,7 +8,8 @@ Read in this order before doing anything:
 3. The rest of this file — repo-level policy.
 4. `notes/` — `attribution.md` (provenance and what has been checked against
    primary sources), `upstream.md` (harness/verso findings), `questions.md`
-   (open reading questions).
+   (open reading questions), `reachability.md` (what the root theorem actually
+   uses, and the module-inventory errors that measurement caught).
 
 Conventions are kept next to what they govern, so you can skip what is not
 relevant to the task in hand:
@@ -26,9 +27,14 @@ Quick sanity check that the repo is healthy:
 
 ```bash
 bash ./scripts/check-source.sh      # is the right paper revision present?
-python3 tools/verso-harness/scripts/check_harness.py --project-root .
-bash ./scripts/ci-pages.sh          # ~5 min warm, ~45 min cold
+bash ./scripts/checks.sh            # everything that does not need a build, ~15 s
+bash ./scripts/ci-pages.sh          # ~10 min warm, ~45 min cold; runs checks.sh first
 ```
+
+`scripts/checks.sh` is the whole no-build check list in one place: harness
+layout, node kinds, math delimiters, heading structure, quoted snippets against
+the pinned submodule, coverage and correspondence, and the prose register. CI
+runs it as its own workflow, ahead of the Pages build.
 
 ---
 
@@ -60,8 +66,12 @@ The paper was distributed as a PDF; no LaTeX source exists to obtain. Therefore:
   `check_harness.py`, `check_blueprint_node_kinds.py`,
   `check_verso_math_delimiters.py`, `check_blueprint_heading_structure.py`.
 - `tex` witness blocks are therefore hand-transcribed, and "witness matches the
-  paper" is a review item no script can do for you. The mechanics are in
-  `BodyPinBlueprint/AGENTS.md`.
+  paper" is a review item. `scripts/check-witness-prose.py` narrows it: it
+  checks that the words of every witness occur in `source/paper.txt`, which
+  catches a typo or an invented clause, and it reports the seams where a witness
+  joins two separated pieces of the paper. It cannot judge a transcription, and
+  every seam it reports should be named in its chapter's leading comment. The
+  mechanics are in `BodyPinBlueprint/AGENTS.md`.
 - `source/` is gitignored apart from its README: the paper is not ours to
   redistribute. Run `bash ./scripts/check-source.sh` before writing prose; it
   verifies `source/paper.pdf` against the hash in `correspondence.toml` and
@@ -75,6 +85,27 @@ carries **no licence**. Never vendor its sources, copy proof snippets into this
 repo, or commit changes inside the submodule. The same applies to
 `tools/verso-harness`: it is a submodule, so nothing — including an `AGENTS.md`
 — can be added inside either of them.
+
+# Coverage and correspondence
+
+`correspondence.toml` and the document are two halves of one claim, so they are
+checked against each other rather than kept in step by hand.
+
+- `python3 scripts/coverage.py` enforces one node per labelled entry and one
+  entry per node, chapter for chapter; that node tags and table statuses agree;
+  that every module named exists; and that every fingerprint in
+  `lt-source-deviations.toml` still matches the witness it excuses. It is in
+  `checks.sh`, so it runs before every build. Add a node and its entry in the
+  same commit.
+- `lake env lean scripts/reachable.lean` walks the constant dependencies of the
+  root theorem through the kernel environment and writes `_out/reachable.json`
+  (about three minutes, almost all olean loading — background it). Then
+  `python3 scripts/coverage.py --reachable` reports modules the root theorem
+  reaches that no entry names, and entries naming a module it reaches nothing
+  from. A `modules` list assembled by reading imports overstates dependency in
+  both directions; this is the check that catches it, and it has caught it
+  three times so far. Rerun when the submodule pin moves.
+  `notes/reachability.md` holds the standing result and what it changed.
 
 # Attribution
 
@@ -175,6 +206,8 @@ is the cheaper fix for the problem that actually occurs.
   spine 55–75 s each. Cost is spread evenly rather than concentrated, so there
   is no single file worth optimising around.
 - `lake exe vbp build` (cold, includes building Verso itself): ~8.5 min.
+- `lake env lean scripts/reachable.lean`: ~3 min warm, essentially all of it
+  loading the root module's oleans.
 - Warm, a chapter's build time is almost entirely olean loading, and is set by
   what it imports: 47 s for a Mathlib-blanket-free formalization module, 101 s
   for `Mathlib`, 169 s for the `RB31EndToEnd` root module. A chapter's own

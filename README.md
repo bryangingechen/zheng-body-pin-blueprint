@@ -32,7 +32,9 @@ correspondence are the deliverable; progress percentage is not.
   redistribute.
 - `tools/verso-harness/` — the shared harness, as a submodule.
 - `notes/` — attribution and provenance, upstream findings, open reading
-  questions.
+  questions, and what the root theorem actually uses.
+- `scripts/` — the check list (`checks.sh`), the coverage checker
+  (`coverage.py`), the fast preview build, and `reachable.lean`.
 
 ## There is no TeX source
 
@@ -45,6 +47,9 @@ Source-independent harness checks do apply and are used.
 The `tex` witness blocks next to blueprint nodes are therefore hand-transcribed
 from `source/paper.txt`, and no script can score them against an upstream file.
 "Does this witness match the paper?" is an explicit review item.
+`scripts/check-witness-prose.py` narrows it, by checking that the words of every
+witness occur in the paper and reporting the seams where a witness joins two
+separated passages.
 
 ## Working on it
 
@@ -52,8 +57,8 @@ Populate `source/` first (see `source/README.md`), then:
 
 ```bash
 bash ./scripts/check-source.sh   # right paper revision? regenerates paper.txt
-python3 tools/verso-harness/scripts/check_harness.py --project-root .
-bash ./scripts/ci-pages.sh       # ~5 min warm, ~45 min cold
+bash ./scripts/checks.sh         # everything that needs no build, ~15 s
+bash ./scripts/ci-pages.sh       # ~10 min warm, ~45 min cold
 ```
 
 Iterating is faster than that gate suggests. `python3 scripts/preview.py`
@@ -63,20 +68,23 @@ everything except declaration panels, hovers, highlighted Lean and node status;
 `python3 scripts/check-fresh.py` says whether a rendered page still matches the
 working tree.
 
-Source-independent per-chapter checks:
+`scripts/checks.sh` collects the source-independent audits — node kinds, math
+delimiters, heading structure — with the snippet check against the pinned
+submodule, `scripts/coverage.py`, and the two advisory prose checks. It is what
+the `Checks` workflow runs, and `ci-pages.sh` runs it before building.
 
-```bash
-python3 tools/verso-harness/scripts/check_blueprint_node_kinds.py --project-root . BodyPinBlueprint/Chapters/Statement.lean
-python3 tools/verso-harness/scripts/check_verso_math_delimiters.py --project-root . BodyPinBlueprint/Chapters/Statement.lean
-python3 tools/verso-harness/scripts/check_blueprint_heading_structure.py --project-root . BodyPinBlueprint/Chapters/Statement.lean
-```
+`scripts/coverage.py` keeps `correspondence.toml` and the document in one-to-one
+correspondence. Its `--reachable` mode compares each entry's module inventory
+against what the root theorem actually uses, which is computed by
+`lake env lean scripts/reachable.lean`; see `notes/reachability.md`.
 
 Local output lands in `_out/site/html-multi/index.html`.
 
 ## Pages
 
 - Public site: configure after GitHub Pages is enabled for this repo.
-- Workflow: `.github/workflows/blueprint.yml`, via the upstream
+- Workflows: `.github/workflows/checks.yml` for everything that needs no build,
+  and `.github/workflows/blueprint.yml` for the site, via the upstream
   `verso-blueprint` reusable workflow. The dependency cache matters: a cold
   formalization build is about 37 minutes.
 

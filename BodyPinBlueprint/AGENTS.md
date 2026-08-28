@@ -55,15 +55,15 @@ costs seconds.
 Then, before committing:
 
 ```bash
-python3 tools/verso-harness/scripts/check_blueprint_node_kinds.py --project-root . <chapter.lean>
-python3 tools/verso-harness/scripts/check_verso_math_delimiters.py --project-root . <chapter.lean>
-python3 tools/verso-harness/scripts/check_blueprint_heading_structure.py --project-root . <chapter.lean>
-python3 scripts/check-snippets.py
-python3 scripts/style-check.py
+bash ./scripts/checks.sh            # ~15 s, and it is what CI runs
 lake build BodyPinBlueprint.Chapters.<Chapter>
 ```
 
-and `bash ./scripts/ci-pages.sh` after a coherent batch. Neither fast loop
+`checks.sh` runs the node-kind, math-delimiter and heading-structure audits over
+every chapter, the snippet check against the pinned submodule,
+`scripts/coverage.py`, and the prose register check. Then
+`bash ./scripts/ci-pages.sh` after a coherent batch, which runs `checks.sh`
+first through its pre-build hook. Neither fast loop
 replaces it: the language server checks elaboration but renders nothing, and the
 preview renders but drops every link to the formalization. Anything you intend
 to claim about a finished page has to come from a full build. The harness's LT (source-fidelity) scripts are not in that
@@ -78,7 +78,14 @@ Nodes tagged `gap` or `lean-only` carry none: there is nothing to quote.
 
 - Transcribe from `source/paper.txt` (the `pdftotext -layout` output), never by
   eye from a rendered page. "Witness matches the paper" is an explicit review
-  item; no script will check it for you.
+  item. `scripts/check-witness-prose.py` narrows it to one: it verifies that
+  every four-word window of a witness occurs in the paper, so a typo or an
+  invented clause shows up, but it cannot tell you whether the witness is the
+  right passage.
+- Preserving the paper's order is the rule; a witness that joins two separated
+  passages is a departure, and the leading comment of the chapter has to say so.
+  The script reports one unmatched window at each such join, which is how you
+  find the ones you have not documented.
 - A witness sits *immediately* after its node — `check_blueprint_node_kinds.py`
   pairs positionally, not by label. Label it anyway so it attaches to the node
   in the manifest. Commentary goes after the witness, not between.
@@ -133,8 +140,9 @@ revisions). The paper number goes in the prose and the correspondence table.
   family, so the label survives a later split onto child nodes.
 
 Every node label matches a labelled `correspondence.toml` entry, one to one,
-chapter for chapter. That invariant currently holds at 54 for 54; do not break
-it silently.
+chapter for chapter, and `scripts/coverage.py` fails the build if it does not.
+Add a node and its entry in the same commit. The invariant currently holds at
+59 for 59.
 
 ## Tags carry blueprint state, not proof state
 
@@ -215,11 +223,20 @@ only by adding the matching status, and vice versa.
   ```
   ````
 
-  A plain block, not ```` ```lean ````: a labelled Lean block is *elaborated*,
-  so it would redeclare an imported name, and attaching local Lean code to a
-  node also feeds that node's proof-status computation. An unlabelled Lean block
-  is rejected outright. The plain block displays verbatim and has no side
-  effects.
+  Two fences are in use, and the choice is forced by whether the fragment can
+  elaborate on its own. Prefer ```` ```Verso.Genre.Manual.InlineLean.lean ````,
+  which elaborates the block and so highlights it, gives hovers, and fails the
+  build if the copy stops making sense. The declaration is elaborated in the
+  chapter's root namespace, so it does not redeclare the imported one, but names
+  it mentions have to resolve: add an `open ... in` line where they do not.
+  `check-snippets.py` strips that line before comparing.
+
+  Use a plain ```` ``` ```` fence when the declaration takes its binders from a
+  section `variable`, as everything in `Sparse22/Basic.lean` does. Supplying the
+  binders would make the copy no longer verbatim, and a `variable` command in a
+  chapter leaks into every later block. A plain block displays verbatim and has
+  no side effects. Never use ```` ```lean ````: an unlabelled Lean block is
+  rejected outright.
 
   `python3 scripts/check-snippets.py` verifies every such block against the file
   it names, chunk by chunk, so a copy cannot silently drift from the pinned
@@ -276,6 +293,26 @@ root module. Chapters 03 to 05 largely do have a choice; take it.
 Independently of speed, the rule earns its place through auditability: a
 chapter's import list states exactly which part of the formalization its prose
 depends on, which is the relationship this whole blueprint exists to document.
+
+## Proofs
+
+`:::proof "label"` attaches a proof to the node with that label. It is not a
+node: it has no label of its own, so it does not enter the one-to-one
+correspondence with `correspondence.toml`, and it does not change the node's
+Lean status, which is computed from associated code and not from the presence
+of prose. Use it where the paper gives a proof and the Lean route is worth
+comparing against it; keep it to the paper's argument, and put the comparison in
+the prose after.
+
+- Proof-only prerequisites go in `(uses := ...)` on the `:::proof` block.
+- A `:::proof` must not be immediately followed by a `tex` witness for the
+  *next* node: `check_blueprint_node_kinds.py` pairs positionally and would
+  compare the proof block against that witness. Put prose between them.
+- A witness can be attached to the proof instead of the statement, with
+  ```` ```tex "label" (slot := "proof") ```` and a `\begin{proof}` environment.
+  That is right when the paper gives an argument but no statement of its own —
+  the necessity direction of Theorem 1.1 is the one case so far, and the
+  chapter's leading comment says so.
 
 ## Dependency edges
 

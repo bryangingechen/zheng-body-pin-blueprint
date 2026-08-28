@@ -1,0 +1,36 @@
+name: Checks
+
+# Everything that can be checked without elaborating the document: harness
+# layout, blueprint node kinds, Verso math delimiters, heading structure,
+# quoted Lean snippets against the pinned submodule, and the coverage and
+# correspondence invariant. Seconds rather than the ten minutes the Pages
+# workflow takes, so it runs on its own and reports first.
+#
+# `coverage.py --reachable` is not run here: it consumes `_out/reachable.json`,
+# which needs a built formalization. Run it locally when the submodule pin
+# moves; see notes/reachability.md.
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run checks
+        run: bash ./scripts/checks.sh
