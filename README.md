@@ -78,7 +78,39 @@ correspondence. Its `--reachable` mode compares each entry's module inventory
 against what the root theorem actually uses, which is computed by
 `lake env lean scripts/reachable.lean`; see `notes/reachability.md`.
 
-Local output lands in `_out/site/html-multi/index.html`.
+## Reading it locally
+
+A built site has to be served over HTTP rather than opened from disk. Every page
+fetches `-verso-data/blueprint-html-cache.json` for the node preview panels and
+`xref.json` for the search box, and a browser refuses those fetches on a
+`file://` page. Open `index.html` from disk and the prose renders fine, but
+every preview panel reads "Preview HTML cache unavailable" and the search box
+returns nothing.
+
+Any static server will do, and this one needs no rebuild:
+
+```bash
+python3 -m http.server -d _out/site/html-multi 8000    # then open http://localhost:8000/
+```
+
+The generator has its own server, `lake exe vbp build --serve` (with
+`--port <n>` for a fixed port), but it builds before it serves, so it costs a
+full build to look at a page. It also writes to `_out/site` unless given
+`--output`, and it does not write the freshness stamp that `ci-pages.sh` adds —
+so a site served that way will read as stale afterwards. Prefer the static
+server above for reading, and `ci-pages.sh` for producing a site to quote.
+
+The fast preview build writes to a different directory and is served the same
+way:
+
+```bash
+python3 scripts/preview.py                             # 6-26 s, no formalization
+python3 -m http.server -d _out/preview/html-multi 8001
+```
+
+Before quoting or measuring anything on a page, `python3 scripts/check-fresh.py`
+says whether that output still matches the working tree. A page that renders
+perfectly can have been built from sources that no longer exist; see `AGENTS.md`.
 
 ## Pages
 
