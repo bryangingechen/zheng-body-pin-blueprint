@@ -37,10 +37,13 @@ are two nodes here because the formalization proves them separately and by
 different routes, which is a distinction a reader checking the correspondence
 needs to see.
 
-The one quoted Lean block is a plain fence rather than an elaborated one.  Its
-declarations take `V` and `[DecidableEq V]` from a section `variable`, so the
-fragment does not elaborate on its own, and adding the binders would make the
-copy no longer verbatim.  `scripts/check-snippets.py` checks it either way.
+The quoted Lean block is preceded by a hidden `-show` block carrying the
+section `variable` and the `open` it needs to elaborate.  Scopes carry from one
+block to the next, so the visible block is verbatim with no scaffolding in it at
+all.  It quotes `SimpleEdge.vertices` along with the two abbreviations and the three
+definitions, in the source's own order, because `edgesInside` uses field
+notation on a `SimpleEdge`: redeclaring the type without its accessor leaves
+the upstream accessor expecting the upstream type, and the notation fails.
 
 The imports are the whole `Sparse22` family and nothing else: none of those
 nine modules reaches a blanket `import Mathlib`.
@@ -110,15 +113,31 @@ edge set, which is
 delete a vertex and still have a sparse graph.
 
 The formalization carries the condition on a finite set of unordered pairs
-rather than on a `SimpleGraph`. An edge is a `Sym2` of two distinct vertices,
-so parallel pins and loops are absent by construction, and multiplicity stays
-in the body–pin layer where the paper also keeps it.
+rather than on a `SimpleGraph`. A
+{name RB31E2E.SimpleEdge}`SimpleEdge` is a `Sym2` of two distinct vertices and a
+{name RB31E2E.SimpleEdgeSet}`SimpleEdgeSet` is a `Finset` of those, so parallel
+pins and loops are absent by construction and multiplicity stays in the
+body–pin layer where the paper also keeps it. The accessor
+{name RB31E2E.SimpleEdge.vertices}`vertices` is quoted with them because
+{name RB31E2E.edgesInside}`edgesInside` uses it.
 
+```Verso.Genre.Manual.InlineLean.lean -show
+variable {V : Type*} [DecidableEq V]
+open RB31E2E hiding SimpleEdge SimpleEdgeSet edgesInside Sparse22 Tight22
 ```
+
+```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Combinatorics/Sparse22/Basic.lean
 abbrev SimpleEdge (V : Type*) := {e : Sym2 V // ¬e.IsDiag}
 
 abbrev SimpleEdgeSet (V : Type*) := Finset (SimpleEdge V)
+
+namespace SimpleEdge
+
+def vertices (e : SimpleEdge V) : Finset V :=
+  e.1.toFinset
+
+end SimpleEdge
 
 def edgesInside (F : SimpleEdgeSet V) (X : Finset V) : SimpleEdgeSet V :=
   F.filter fun e => e.vertices ⊆ X

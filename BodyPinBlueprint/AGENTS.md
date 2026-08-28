@@ -206,7 +206,10 @@ only by adding the matching status, and vice versa.
 - **A node must state the content of its Lean target, because the panel will
   not.** The external-declaration renderer emits the signature, the docstring,
   and — for a structure or an inductive — its fields or constructors. It cannot
-  show a definition's body, and there is no option to make it. So
+  show a definition's body, and there is no option to make it -- true of the
+  maintained release line as well as ours, and the panel's HTML comes out of a
+  private function no plugin can reach into, so this is not a gap an extension
+  can close. Checked and written up in `notes/upstream.md` §8. So
   `def RB31E2E.EndToEndBodyPinStatement : Prop` renders as exactly that, which
   tells a reader nothing. Every `Prop`-valued definition, every
   `pinCapacity`-style table of values, every graph construction: write the
@@ -223,20 +226,64 @@ only by adding the matching status, and vice versa.
   ```
   ````
 
-  Two fences are in use, and the choice is forced by whether the fragment can
-  elaborate on its own. Prefer ```` ```Verso.Genre.Manual.InlineLean.lean ````,
-  which elaborates the block and so highlights it, gives hovers, and fails the
-  build if the copy stops making sense. The declaration is elaborated in the
-  chapter's root namespace, so it does not redeclare the imported one, but names
-  it mentions have to resolve: add an `open ... in` line where they do not.
-  `check-snippets.py` strips that line before comparing.
+  Use ```` ```Verso.Genre.Manual.InlineLean.lean ````, which elaborates the
+  block and so highlights it, gives hovers, and fails the build if the copy
+  stops making sense. The declarations are elaborated in the chapter's root
+  namespace, so they do not redeclare the imported ones, but every name they
+  mention has to resolve.
 
-  Use a plain ```` ``` ```` fence when the declaration takes its binders from a
-  section `variable`, as everything in `Sparse22/Basic.lean` does. Supplying the
-  binders would make the copy no longer verbatim, and a `variable` command in a
-  chapter leaks into every later block. A plain block displays verbatim and has
-  no side effects. Never use ```` ```lean ````: an unlabelled Lean block is
-  rejected outright.
+  **Put whatever it takes to make that happen in a hidden block, not in the
+  quoted one.** A fence marked `-show` elaborates and renders nothing, and
+  Verso carries scopes from one block to the next, so a hidden block can set the
+  section `variable`s and the `open` that the next block needs:
+
+  ````
+  ```Verso.Genre.Manual.InlineLean.lean -show
+  variable {k W E : Type*} [CommRing k]
+  open RB31E2E hiding IsTwistMotion IsDiagonalTwist
+  ```
+
+  ```Verso.Genre.Manual.InlineLean.lean
+  -- RB31EndToEnd/Linear/TwistSystem.lean
+  def IsTwistMotion ...
+  ```
+  ````
+
+  `check-snippets.py` only looks at blocks whose first line is a source path, so
+  the hidden block is free-form while the visible one stays verbatim, with no
+  `open ... in` line of its own. Set up the scope the way the source file does:
+  open the namespace the declarations actually live in, not its parent, and
+  repeat the source's `noncomputable section` where it has one. Getting either
+  wrong fails loudly -- `Unknown constant RB31E2E.directionRow` when the `hiding`
+  list names a declaration that is really in `RB31E2E.DirectionStress`, which
+  then takes the whole `open` down with it, or `failed to compile definition,
+  consider marking it as 'noncomputable'`. Where two quoted files have different
+  section variables, give each its own `section ... end` in the hidden blocks so
+  the variable sets cannot collide; Chapter 04 quotes two files this way. Two
+  further gotchas, both already met:
+
+  - *Quoted declarations that refer to each other.* The local copies sit at the
+    root while the `open` brings the upstream ones into scope, so a
+    cross-reference is ambiguous: `Ambiguous term IsTwistMotion. Possible
+    interpretations: _root_.IsTwistMotion, RB31E2E.IsTwistMotion`. Name them in
+    the setup block's `open ... hiding`.
+  - *A quoted declaration that uses field notation on a quoted type.*
+    Redeclaring the type without its accessors breaks it -- `Invalid field
+    notation: Function SimpleEdge.vertices does not have a usable parameter of
+    type SimpleEdge` -- because the upstream accessor still expects the upstream
+    type. Quote the accessor too, in the source's own order; Chapter 03 quotes
+    `SimpleEdge.vertices` between the two abbreviations and the definitions that
+    use it. Where that would bloat the block, the alternative is to leave the
+    type out of the block and out of the `hiding` list and name it in prose with
+    a `{name ...}` role, which hovers anyway.
+
+  All six quoted bodies in the chapters use this pattern, and none of them
+  carries scaffolding a reader can see. `check-snippets.py` still strips a
+  leading `open ... in` line, which an earlier convention put inside the quoted
+  block itself; nothing relies on that now and a new block should not need it.
+  A plain ```` ``` ```` fence remains available for a fragment that cannot be
+  made to elaborate at all, at the cost of highlighting and hovers. Never use
+  ```` ```lean ````: an unlabelled Lean block is rejected outright.
 
   `python3 scripts/check-snippets.py` verifies every such block against the file
   it names, chunk by chunk, so a copy cannot silently drift from the pinned

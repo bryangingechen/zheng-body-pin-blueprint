@@ -231,3 +231,39 @@ Recording these because they cost time and will recur on this machine:
   file header draw "Code element could be more specific" warnings. Expected
   behaviour rather than a bug, but it is not obvious. Use `/- ... -/` for
   chapter headers.
+
+## 8. The external-declaration panel cannot show a definition's body
+
+Checked against both `v4.29.0` (our line) and `origin/v4.33.0` (maintained), on
+2026-08-28. `src/VersoBlueprint/ExternalDeclRender.lean` assembles the panel
+from exactly three things:
+
+- the signature, from `Verso.Genre.Manual.Signature.forName`;
+- the docstring, from `findDocString?`;
+- for a structure or an inductive, its constructor, parents, fields/methods and
+  constructors sections.
+
+The `ConstantInfo` is in scope and carries `value?`, but it is read only for the
+`unsafe`/`partial` badge and the keyword. Nothing in either branch renders a
+value, there is no option, and the HTML comes out of a `private def
+renderExternalDeclWrapper`, so no plugin can reach inside the panel.
+
+This is why every chapter that describes a `Prop`-valued definition has to
+restate its content in the node body and, where the body itself is the point,
+quote it in a separate code block. See `BodyPinBlueprint/AGENTS.md`.
+
+Two false leads, recorded so they are not chased again. The upstream commit
+`00b8458` "record retained-body prototype outcome" is about elaborating a Verso
+*directive's* body once and reusing it -- a build-time optimisation at the
+Blueprint directive boundary -- not about rendering a Lean definition's value.
+And `Source/Data.lean`, new on `4.33`, is the `:::source_document` layer for the
+*paper*, not for Lean source.
+
+If it were wanted, the routes are, cheapest first: a Blueprint-local block role
+of our own that reads the pinned submodule by the declaration's line range,
+which the renderer already computes for the panel's source link, and renders a
+panel-shaped box next to it; a patch to VersoBlueprint, which on the 4.29 line
+would be ours to carry indefinitely; or post-processing the generated HTML,
+which would break the property that a page is what Verso rendered. Upstream
+runs a roadmap card system under `doc/roadmap/cards/`, so a feature request has
+somewhere to go.

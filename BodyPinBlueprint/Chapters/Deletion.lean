@@ -104,6 +104,33 @@ $`a_{\text{source}} - a_{\text{target}}` and the target carries its negative, so
 exchanging the two gives back the same function of the vertices. The paper
 writes $`r_{xy}` and lets the symmetry pass without comment.
 
+```Verso.Genre.Manual.InlineLean.lean -show
+noncomputable section
+variable {k V : Type*} [Field k] [Fintype V] [DecidableEq V]
+open RB31E2E
+open RB31E2E.DirectionStress hiding edgeDirection directionRow DirectionStressSpace directionStressDim
+```
+
+```Verso.Genre.Manual.InlineLean.lean
+-- RB31EndToEnd/Linear/DirectionStress.lean
+def edgeDirection (a : V → Fin 3 → k) (e : SimpleEdge V) : Fin 3 → k :=
+  fun j ↦ a e.source j - a e.target j
+
+def directionRow (a : V → Fin 3 → k) (e : SimpleEdge V) :
+    V → Fin 3 → k :=
+  fun v j ↦
+    (if e.source = v then edgeDirection a e j else 0) +
+      (if e.target = v then -(edgeDirection a e j) else 0)
+
+abbrev DirectionStressSpace
+    (F : SimpleEdgeSet V) (a : V → Fin 3 → k) :=
+  LinearMap.ker (directionEquilibrium F a)
+
+def directionStressDim
+    (F : SimpleEdgeSet V) (a : V → Fin 3 → k) : ℕ :=
+  Module.finrank k (DirectionStressSpace F a)
+```
+
 # Deleting one vertex
 
 :::definition "retained_coordinate_field" (parent := "deletion_spine") (lean := "RB31E2E.DirectionStress.retainedCoordinateField, RB31E2E.DirectionStress.outsideExtensionTrdeg") (tags := "paper") (uses := "rigidity_row")
@@ -266,7 +293,9 @@ the local increment $u + \delta_v$.
 \end{definition}
 ```
 
-Both halves of (2.5) are theorems in the formalization. The stress half is
+Both halves of (2.5) are theorems in the formalization. The paper's $`u` is
+{name RB31E2E.DirectionStress.outsideResponseKernelDim}`outsideResponseKernelDim`,
+the dimension of the kernel of the connecting map. The stress half is
 {name RB31E2E.DirectionStress.directionStressDim_eq_delete_add_outsideResponseKernelDim}`directionStressDim_eq_delete_add_outsideResponseKernelDim`,
 and the transcendence-degree half is packaged with the bound
 $`\delta_v \le 3` as
@@ -285,10 +314,37 @@ register entry.
 
 The local increment is where the two branches of the induction part company. If
 $`u + \delta_v \le 3` the defect does not grow and the induction hypothesis
-finishes the step. The formalization makes that inequality a definition,
-{name RB31E2E.DirectionStress.OutsideNonexceptional}`OutsideNonexceptional`,
-and the exceptional branch its literal negation, so the case split is an
-excluded middle rather than a classification with a stored tag.
+finishes the step. The formalization makes that inequality a definition and the
+exceptional branch its literal negation, so the case split is an excluded middle
+rather than a classification with a stored tag.
+
+```Verso.Genre.Manual.InlineLean.lean -show
+end
+
+noncomputable section
+universe u v w
+variable {k : Type u} {K : Type v} {V : Type w}
+  [Field k] [Field K] [Algebra k K]
+  [Fintype V] [DecidableEq V]
+open RB31E2E
+open RB31E2E.DirectionStress hiding OutsideNonexceptional OutsideExceptional
+```
+
+```Verso.Genre.Manual.InlineLean.lean
+-- RB31EndToEnd/Linear/OutsideLocalPayment.lean
+def OutsideNonexceptional
+    (F : SimpleEdgeSet V) (a : V → Fin 3 → K) (v : V) : Prop :=
+  outsideResponseKernelDim F a v +
+      (outsideExtensionTrdeg (k := k) a v).toNat ≤ 3
+
+def OutsideExceptional
+    (F : SimpleEdgeSet V) (a : V → Fin 3 → K) (v : V) : Prop :=
+  ¬ OutsideNonexceptional (k := k) F a v
+```
+
+```Verso.Genre.Manual.InlineLean.lean -show
+end
+```
 
 # Certified response edges
 
@@ -319,8 +375,10 @@ same two-dimensional space; so $`xz` is a certified response edge whenever it
 can be added, and adding it raises the self-stress dimension by one without
 raising the rank.
 
-The formalization proves the second sentence of the definition rather than
-asserting it. Row-space invariance is
+The row space itself is
+{name RB31E2E.DirectionStress.directionRowSpace}`directionRowSpace`, the span of
+the direction rows of the edges of $`F`. The formalization proves the second
+sentence of the definition rather than asserting it. Row-space invariance is
 {name RB31E2E.DirectionStress.directionRowSpace_insert_eq_of_mem}`directionRowSpace_insert_eq_of_mem`,
 and the increment follows from it and the rank–nullity identity that already
 relates stress dimension, rank and edge count. The result is stated twice under

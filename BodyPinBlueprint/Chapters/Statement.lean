@@ -39,11 +39,11 @@ Because §1 and A.1 are merged, most witnesses here join a §1 sentence to its
 A.1 counterpart.  `scripts/check-witness-prose.py` reports one unmatched word
 window at each such join; in this chapter they are all that merge.
 
-Quoted Lean bodies are verbatim from the file named in the block's first line,
-with one exception: an `open ... in` line is added where the quoted text needs
-one to elaborate here, since these blocks are elaborated for syntax
-highlighting.  `scripts/check-snippets.py` strips that line before comparing
-against the submodule.
+Quoted Lean bodies are verbatim from the file named in the block's first line.
+What they need in order to elaborate here -- the `open` that brings the
+formalization's names into scope -- is set once in a hidden `-show` block before
+the first of them, and Verso carries that scope to the rest, so the reader sees
+only the quoted text.
 -/
 
 #doc (Manual) "Statement of the theorem" =>
@@ -93,8 +93,7 @@ Here $E$ is the edge set; parallel edges are distinct elements of $E$.
 ```
 
 Quoted Lean below and in the rest of this chapter is verbatim from the file its
-first line names, except for an `open ... in` line where one is needed to make
-the fragment elaborate on its own.
+first line names.
 
 The formalization represents $`H` as a type of pins together with two endpoint
 maps and a proof that the two endpoints of a pin differ, which is the
@@ -211,9 +210,10 @@ change the rank, and the fixed target makes the ranks of different graphs on the
 same vertex set directly comparable, which is what the maximum-rank
 formulation requires.
 
-{name RB31E2E.BarJoint.rigidityOperator}`RB31E2E.BarJoint.rigidityOperator` is the appendix's real form. The
-field-extension form appears in the Lean development as the direction matrix and
-its stress space; see {bpref "stress_exact_sequence"}[the deletion chapter].
+{name RB31E2E.BarJoint.rigidityOperator}`RB31E2E.BarJoint.rigidityOperator` is the appendix's real form, built from
+{name RB31E2E.BarJoint.edgeConstraint}`edgeConstraint`, the single number one
+edge contributes. The field-extension form appears in the Lean development as
+the direction matrix and its stress space; see {bpref "stress_exact_sequence"}[the deletion chapter].
 
 :::definition "generic_rigidity_max_rank" (parent := "statement_data") (lean := "RB31E2E.BarJoint.genericRigidityRank, RB31E2E.BarJoint.IsGenericallyRigidInR3, RB31E2E.BodyPinIncidence.GenericallyRigidInR3") (tags := "paper") (uses := "rigidity_matrix, bodypin_expansion")
 The generic rank $`\rho_3(G)` is the greatest rank attained by the real rigidity
@@ -237,9 +237,12 @@ Define
 \end{definition}
 ```
 
+```Verso.Genre.Manual.InlineLean.lean -show
+open RB31E2E RB31E2E.BarJoint
+```
+
 ```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Rigidity/BarJoint.lean
-open RB31E2E.BarJoint in
 noncomputable def genericRigidityRank {V : Type} [Fintype V] (G : SimpleGraph V)
     (d : ℕ) : ℕ := by
   classical
@@ -255,6 +258,11 @@ without first developing a theory of generic points. The Lean definition takes
 the maximum as a {name Nat.findGreatest}`Nat.findGreatest` bounded by the dimension of the velocity
 space, with {name RB31E2E.BarJoint.rigidityRank_le_velocityFinrank}`rigidityRank_le_velocityFinrank` proving that no placement is
 thereby omitted.
+
+Two predicates carry that condition: {name RB31E2E.BarJoint.IsGenericallyRigidInR3}`IsGenericallyRigidInR3`
+states it of a graph, and {name RB31E2E.BodyPinIncidence.GenericallyRigidInR3}`GenericallyRigidInR3`
+of a body–pin multigraph together with a choice of private vertices, by applying
+the first to its expansion.
 
 A maximum-rank placement is precisely what
 {Informal.citet "asimowRoth1978"}[] call a _regular point_, and their theorem is
@@ -369,7 +377,6 @@ For every $t \in \mathbb{N}$ and every surjection $\pi : W \twoheadrightarrow [t
 
 ```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Specification.lean
-open RB31E2E in
 def BodyPinIncidence.PartitionCondition (H : BodyPinIncidence) : Prop :=
   ∀ (t : ℕ) (π : H.Body → Fin t), Function.Surjective π →
     6 * (t - 1) ≤ H.partitionCapacity π
@@ -451,7 +458,6 @@ every $r : W \to \mathbb{N}$, the following conditions are equivalent:
 
 ```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Target.lean
-open RB31E2E in
 def EndToEndBodyPinStatement : Prop :=
   ∀ (H : BodyPinIncidence) (extra : H.Body → ℕ),
     H.GenericallyRigidInR3 extra ↔ H.PartitionCondition

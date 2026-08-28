@@ -30,6 +30,15 @@ statement, with the paper's `proof` environment reconstructed around the
 paper's own sentences.  Every other witness here is a numbered environment in
 the paper except the twist definition, which §6.1 gives in a display and two
 sentences of running prose.
+
+Two files are quoted here, `Vec3Twist.lean` for the twist and its evaluation and
+`TwistSystem.lean` for the three motion predicates, so there are two visible
+blocks.  Each is preceded by a hidden `-show` block carrying what it needs: the
+`open ... hiding` in the first, the section `variable` in the second.  The
+`hiding` list names every declaration the visible blocks redeclare and then
+refer to; without it those references are ambiguous between the copies in the
+chapter's root namespace and the upstream ones the `open` brings in.  The reader
+sees none of it: both visible blocks are verbatim.
 -/
 
 #doc (Manual) "Necessity" =>
@@ -80,13 +89,37 @@ induced by this motion at $p$.
 \end{definition}
 ```
 
+Both halves of the display are declarations. A twist is the pair itself, with
+the angular part first and the translational part second, and the velocity is
+its evaluation at a point.
+
+```Verso.Genre.Manual.InlineLean.lean -show
+open RB31E2E hiding Twist IsTwistMotion IsDiagonalTwist
+```
+
+```Verso.Genre.Manual.InlineLean.lean
+-- RB31EndToEnd/Linear/Vec3Twist.lean
+abbrev Twist (k : Type*) := Vec3 k × Vec3 k
+
+namespace Twist
+
+def eval {k : Type*} [CommRing k] (X : Twist k) (p : Vec3 k) : Vec3 k :=
+  X.2 + Vec3.cross X.1 p
+
+end Twist
+```
+
 The formalization states the twist system on a type of pin occurrences with two
 endpoint maps, not on a graph. A twist assignment $`X : W \to \mathfrak{t}_3` is
 a motion when every pin receives the same velocity from both of its bodies, it
 is diagonal when it is constant, and a pin placement is _twist rigid_ when every
 motion at it is diagonal.
 
+```Verso.Genre.Manual.InlineLean.lean -show
+variable {k W E : Type*} [CommRing k]
 ```
+
+```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Linear/TwistSystem.lean
 def IsTwistMotion (src dst : E → W) (p : E → Vec3 k)
     (X : W → Twist k) : Prop :=
