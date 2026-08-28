@@ -223,6 +223,26 @@ Define
 \end{definition}
 ```
 
+```
+-- RB31EndToEnd/Rigidity/BarJoint.lean
+def RankIsAttained {V : Type} [Fintype V] (G : SimpleGraph V) (d r : ℕ) : Prop :=
+  ∃ p : Placement V d, rigidityRank G p = r
+
+noncomputable def genericRigidityRank {V : Type} [Fintype V] (G : SimpleGraph V)
+    (d : ℕ) : ℕ := by
+  classical
+  exact Nat.findGreatest (RankIsAttained G d)
+    (Module.finrank ℝ (Velocity V d))
+
+def IsGenericallyRigidInDimension {V : Type} [Fintype V]
+    (G : SimpleGraph V) (d : ℕ) : Prop :=
+  genericRigidityRank G d =
+    genericRigidityRank (SimpleGraph.completeGraph V) d
+
+def IsGenericallyRigidInR3 {V : Type} [Fintype V] (G : SimpleGraph V) : Prop :=
+  IsGenericallyRigidInDimension G 3
+```
+
 No generic configuration is chosen in this statement, and no genericity
 hypothesis appears anywhere in it. A maximum over all placements is attained
 because the rank takes finitely many values, so the condition is
@@ -297,6 +317,15 @@ Define also $c : \mathbb{N} \to \mathbb{N}$ by
 \end{definition}
 ```
 
+```
+-- RB31EndToEnd/Specification.lean
+def pinCapacity : ℕ → ℕ
+  | 0 => 0
+  | 1 => 3
+  | 2 => 5
+  | _ => 6
+```
+
 One shared pin forces two bodies to agree at a point, which is three
 constraints. Two distinct shared pins leave a relative rotation about the line
 through them, so five. Three noncollinear shared pins remove all six relative
@@ -332,6 +361,13 @@ For every $t \in \mathbb{N}$ and every surjection $\pi : W \twoheadrightarrow [t
   \tag{A.2}
 \end{equation}
 \end{definition}
+```
+
+```
+-- RB31EndToEnd/Specification.lean
+def BodyPinIncidence.PartitionCondition (H : BodyPinIncidence) : Prop :=
+  ∀ (t : ℕ) (π : H.Body → Fin t), Function.Surjective π →
+    6 * (t - 1) ≤ H.partitionCapacity π
 ```
 
 The formalization indexes partitions by surjections $`\pi : W \to [t]` rather than by set
@@ -384,7 +420,7 @@ It is not the proposition the formalization proves. The formalization proves
 {bpref "formal_statement"}[], its maximum-rank form; the remaining step is
 {bpref "asimow_roth"}[]. The dependency edges on this node record that.
 
-:::theorem "formal_statement" (parent := "statement_theorem") (lean := "RB31E2E.EndToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement") (tags := "paper") (uses := "bodypin_expansion, partition_condition, generic_rigidity_max_rank")
+:::theorem "formal_statement" (parent := "statement_theorem") (lean := "RB31E2E.EndToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement_iff_sufficiency") (tags := "paper") (uses := "bodypin_expansion, partition_condition, generic_rigidity_max_rank")
 For every finite loopless body–pin multigraph $`H` and every $`r : W \to \N`,
 the expanded graph $`G(H, r)` attains the rigidity rank of the complete graph on
 its vertex set if and only if the capacity inequality holds for every $`t` and
@@ -408,6 +444,13 @@ every $r : W \to \mathbb{N}$, the following conditions are equivalent:
 \end{theorem}
 ```
 
+```
+-- RB31EndToEnd/Target.lean
+def EndToEndBodyPinStatement : Prop :=
+  ∀ (H : BodyPinIncidence) (extra : H.Body → ℕ),
+    H.GenericallyRigidInR3 extra ↔ H.PartitionCondition
+```
+
 This is the root theorem of the formalization: a closed proposition, universally
 quantified over $`H` and $`r`, proved in both directions, with axiom closure
 exactly {name propext}`propext`, {name Classical.choice}`Classical.choice`, {name Quot.sound}`Quot.sound`. See
@@ -422,16 +465,10 @@ $`r(w) = |V(B_w)| - d_H(w) - 4` identifies any expansion of the main text with
 some $`G(H, r)` after relabelling private vertices, and conversely. So the two
 statements differ only in the reading of "generically rigid".
 
-:::lemma_ "reduction_to_sufficiency" (parent := "statement_theorem") (lean := "RB31E2E.endToEndBodyPinStatement_iff_sufficiency") (tags := "lean-only") (uses := "formal_statement")
-Because necessity is a theorem, {bpref "formal_statement"}[] is equivalent to
-its sufficiency direction alone: that the partition condition implies
-maximum-rank generic rigidity.
-:::
-
-This has no counterpart in the paper, and it is proved without assuming
-sufficiency. The sufficiency assembly is then written against it:
-{name RB31E2E.endToEndBodyPinStatement_of_sparseNullIncidenceProperness}`endToEndBodyPinStatement_of_sparseNullIncidenceProperness`
-opens by rewriting with this equivalence, so every step after that point has
-only the one implication to discharge. Necessity is proved separately, in
-{bpref "necessity"}[]; everything from {bpref "sparse22"}[] onwards serves the
-other direction.
+Since necessity is a theorem, the equivalence is equivalent to its sufficiency
+direction alone: that the partition condition implies maximum-rank generic
+rigidity. The formalization records that trivial consequence as
+{name RB31E2E.endToEndBodyPinStatement_iff_sufficiency}`endToEndBodyPinStatement_iff_sufficiency`
+and uses it once, in the final assembly, to avoid restating both directions
+there. Necessity is proved separately, in {bpref "necessity"}[]; everything from
+{bpref "sparse22"}[] onwards serves the other direction.

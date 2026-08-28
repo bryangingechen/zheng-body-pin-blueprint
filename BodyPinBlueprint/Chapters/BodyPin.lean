@@ -69,7 +69,7 @@ lie in a proper closed subset. {Informal.citep "zheng2026" (index := "Propositio
 see `lt-source-deviations.toml`.
 :::
 
-:::lemma_ "sufficiency_assembly" (parent := "bodypin_spine") (tags := "paper, unwritten") (uses := "sparse_subgraph_selection, exceptional_pin_parameters, stress_codim, reduction_to_sufficiency")
+:::lemma_ "sufficiency_assembly" (parent := "bodypin_spine") (tags := "paper, unwritten") (uses := "sparse_subgraph_selection, exceptional_pin_parameters, stress_codim")
 Specialization from $`\mathbb{C}` to $`\R`, rational certificate descent, and
 the final assembly of {bpref "formal_statement"}[]. {Informal.citep "zheng2026" (kind := "section") (index := "6.4")}[]
 :::

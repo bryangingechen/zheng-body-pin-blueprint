@@ -135,12 +135,11 @@ note = "Cited, not formalized. The Lean theorem is the max-rank form throughout.
 [[entry]]
 title = "Equivalence reduces to the sufficiency direction"
 chapter = "Statement"
-label = "reduction_to_sufficiency"
 lean = ["RB31E2E.endToEndBodyPinStatement_iff_sufficiency"]
 modules = ["RB31EndToEnd/TargetReduction.lean"]
 status = "lean-only"
 verified = true
-note = "Load-bearing, not a remark: endToEndBodyPinStatement_of_sparseNullIncidenceProperness (Incidence/SmallBundleCertificate.lean:795) opens by rewriting with it, so the whole sufficiency assembly is written against it. Both modules are in the root theorem's 126-module import closure."
+note = "No node: a trivial consequence of necessity, used once by endToEndBodyPinStatement_of_sparseNullIncidenceProperness (Incidence/SmallBundleCertificate.lean:795) to avoid restating both directions. The use site could inline it. Covered in prose under formal_statement, whose lean list names the declaration."
 
 # ---------------------------------------------------------------- section 2
 

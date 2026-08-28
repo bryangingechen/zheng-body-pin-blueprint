@@ -17,6 +17,8 @@ After editing a chapter:
 python3 tools/verso-harness/scripts/check_blueprint_node_kinds.py --project-root . <chapter.lean>
 python3 tools/verso-harness/scripts/check_verso_math_delimiters.py --project-root . <chapter.lean>
 python3 tools/verso-harness/scripts/check_blueprint_heading_structure.py --project-root . <chapter.lean>
+python3 scripts/check-snippets.py
+python3 scripts/style-check.py
 lake build BodyPinBlueprint.Chapters.<Chapter>
 ```
 
@@ -146,10 +148,10 @@ only by adding the matching status, and vice versa.
   build on an unknown constant — which is the point, it keeps prose references
   as honest as `(lean := ...)` ones. Only for real constants: `sorry` and
   `admit` are not, and file paths and option names stay plain code spans.
-- Prefer a `(lean := ...)` link to duplicating Lean code in a blueprint module.
-  For this repo that is not only a preference: `formalization/` carries no
-  licence, so copying a definition or a proof into a labelled ```` ```lean ````
-  block would vendor unlicensed source. Do not.
+- Prefer a `(lean := ...)` link to reproducing Lean code, and never reproduce a
+  proof. `formalization/` carries no licence, so what is quoted here is limited
+  to short definition bodies, quoted because they are what the blueprint is
+  describing.
 - **A node must state the content of its Lean target, because the panel will
   not.** The external-declaration renderer emits the signature, the docstring,
   and — for a structure or an inductive — its fields or constructors. It cannot
@@ -157,8 +159,29 @@ only by adding the matching status, and vice versa.
   `def RB31E2E.EndToEndBodyPinStatement : Prop` renders as exactly that, which
   tells a reader nothing. Every `Prop`-valued definition, every
   `pinCapacity`-style table of values, every graph construction: write the
-  content out in the node body. Chapter 01 does this throughout; check yours
-  against it.
+  content out in the node body. Chapter 01 does this throughout.
+- **For a key definition, quote the body as well**, in a plain fenced block
+  after the witness, first line a comment giving the source path:
+
+  ````
+  ```
+  -- RB31EndToEnd/Target.lean
+  def EndToEndBodyPinStatement : Prop :=
+    ∀ (H : BodyPinIncidence) (extra : H.Body → ℕ),
+      H.GenericallyRigidInR3 extra ↔ H.PartitionCondition
+  ```
+  ````
+
+  A plain block, not ```` ```lean ````: a labelled Lean block is *elaborated*,
+  so it would redeclare an imported name, and attaching local Lean code to a
+  node also feeds that node's proof-status computation. An unlabelled Lean block
+  is rejected outright. The plain block displays verbatim and has no side
+  effects.
+
+  `python3 scripts/check-snippets.py` verifies every such block against the file
+  it names, chunk by chunk, so a copy cannot silently drift from the pinned
+  submodule. Run it with the other checks. Keep quotes to definitions that the
+  prose is actually about; each one is a maintenance obligation.
 - The panel does carry a source link, pinned to the submodule SHA and anchored
   to the declaration's line range — e.g. `Target.lean#L12-L20`. That is how a
   reader checks our restatement against the real definition, and it is why the
