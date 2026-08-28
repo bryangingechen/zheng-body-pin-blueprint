@@ -26,7 +26,10 @@ import re
 import sys
 from pathlib import Path
 
-BLOCK = re.compile(r"^```\n-- (\S+)\n(.*?)^```$", re.M | re.S)
+# Plain fences and Verso Manual Lean fences alike; the latter are elaborated for
+# highlighting, which is why they may carry a leading `open ... in`.
+BLOCK = re.compile(r"^```(?:Verso\.Genre\.Manual\.InlineLean\.lean)?[^\n]*\n-- (\S+)\n(.*?)^```$", re.M | re.S)
+OPEN_IN = re.compile(r"^open [\w.]+ in\n", re.M)
 
 
 def main() -> int:
@@ -49,7 +52,8 @@ def main() -> int:
                 failed += 1
                 continue
             text = src.read_text(encoding="utf-8")
-            stale = [c for c in snippet.split("\n\n") if c.strip() and c not in text]
+            chunks = [OPEN_IN.sub("", c) for c in snippet.split("\n\n")]
+            stale = [c for c in chunks if c.strip() and c not in text]
             if stale:
                 print(f"{where}: {len(stale)} chunk(s) not verbatim in {rel}")
                 for chunk in stale:

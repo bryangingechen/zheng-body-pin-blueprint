@@ -193,18 +193,46 @@ Chapters import the **specific** formalization modules they reference
 (`import RB31EndToEnd.Rigidity.BarJoint`), never the library root — except where
 a node genuinely references the root theorem, which lives in the root module.
 
-Two honest caveats on the cost argument. Five of the formalization's 125 modules
-(`Specification`, `Rigidity/BarJoint`, `Linear/Vec3Twist`,
-`Graph/LooplessMultiGraph`, `Incidence/Arithmetic`) do a blanket
-`import Mathlib`, and they are the foundational ones — so *any* chapter
-referencing *any* formalization declaration transitively imports all of Mathlib.
-That floor is upstream's choice and cannot be avoided here. What granularity
-buys is not loading the formalization's own 126 oleans, which are heavy.
+The formalization is itself mostly granular: of its 126 modules, 92 import no
+Mathlib at all and 29 import specific `Mathlib.*` modules. Five do a blanket
+`import Mathlib`, and those five are foundational:
 
-The rule's more durable justification is therefore auditability rather than
-speed: a chapter's import list states exactly which part of the formalization
-its prose depends on, which is the relationship this whole blueprint exists to
-document.
+    RB31EndToEnd/Specification.lean
+    RB31EndToEnd/Rigidity/BarJoint.lean
+    RB31EndToEnd/Linear/Vec3Twist.lean
+    RB31EndToEnd/Graph/LooplessMultiGraph.lean
+    RB31EndToEnd/Incidence/Arithmetic.lean
+
+Reaching any of them transitively costs all of Mathlib. 86 modules do; **40 do
+not**, and they include whole families this blueprint needs — all nine
+`Combinatorics/Sparse22/*`, seven `Combinatorics/ProvenanceFlag*`, and much of
+`Linear/Direction*` and `Linear/Outside*`.
+
+That split is worth real time. Measured on this machine, warm, for a chapter
+containing one line of prose and nothing else:
+
+| Chapter imports | Jobs | Wall |
+|---|---|---|
+| `Combinatorics/Sparse22/Basic` (blanket-free) | 3517 | **47 s** |
+| `Mathlib` | 8471 | 101 s |
+| `RB31EndToEnd` (the root module) | 8598 | 169 s |
+
+So a chapter that stays inside the blanket-free set builds roughly four times
+faster, and the difference is olean loading rather than anything we write — all
+of Chapter 01's content costs about 9 s on top of its 169 s import floor.
+
+Before adding an import, check what it drags in:
+
+```bash
+lake env lean --deps RB31EndToEnd.Combinatorics.Sparse22.Basic 2>/dev/null | head
+```
+
+Chapter 01 has no choice — it references the root theorem, which lives in the
+root module. Chapters 03 to 05 largely do have a choice; take it.
+
+Independently of speed, the rule earns its place through auditability: a
+chapter's import list states exactly which part of the formalization its prose
+depends on, which is the relationship this whole blueprint exists to document.
 
 ## Dependency edges
 

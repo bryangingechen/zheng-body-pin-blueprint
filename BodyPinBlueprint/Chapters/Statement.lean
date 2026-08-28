@@ -444,8 +444,9 @@ every $r : W \to \mathbb{N}$, the following conditions are equivalent:
 \end{theorem}
 ```
 
-```
+```Verso.Genre.Manual.InlineLean.lean
 -- RB31EndToEnd/Target.lean
+open RB31E2E in
 def EndToEndBodyPinStatement : Prop :=
   ∀ (H : BodyPinIncidence) (extra : H.Body → ℕ),
     H.GenericallyRigidInR3 extra ↔ H.PartitionCondition

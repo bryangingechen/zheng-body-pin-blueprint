@@ -18,6 +18,17 @@ deleted.
 - Licence on the formalization repository (see `notes/attribution.md`).
 - Whether an arXiv version of the paper is planned (see
   `notes/attribution.md`).
+- Five modules do a blanket `import Mathlib`: `Specification.lean`,
+  `Rigidity/BarJoint.lean`, `Linear/Vec3Twist.lean`,
+  `Graph/LooplessMultiGraph.lean`, `Incidence/Arithmetic.lean`. They are small
+  — 667 lines between them — but foundational, so they pull all of Mathlib into
+  86 of the 126 modules. The other 40 are blanket-free, and on this machine a
+  consumer importing one of those loads in 47 s against 169 s for the root
+  module: roughly four times faster, entirely in olean loading. Replacing those
+  five blanket imports with the specific `Mathlib.*` modules they use — which is
+  what the other 121 files already do — would likely shorten every downstream
+  build, including the author's own CI. Offered as an observation, not a
+  complaint; we have not checked how much work it is.
 - Cosmetic, very low priority: docstrings in `RB31EndToEnd` write "body--pin"
   and "bar--joint" with TeX-style double hyphens. Lean docstrings are rendered
   as Markdown rather than TeX, so these come out literally in any generated

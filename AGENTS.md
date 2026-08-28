@@ -133,7 +133,10 @@ does not apply here (see above); what follows is the half that does.
   spine 55–75 s each. Cost is spread evenly rather than concentrated, so there
   is no single file worth optimising around.
 - `lake exe vbp build` (cold, includes building Verso itself): ~8.5 min.
-- Once the library is built, iterating on one chapter is cheap — which is the
-  practical reason for the import-granularity rule in
-  `BodyPinBlueprint/AGENTS.md`. Only CI pays the full cost, so the workflow's
-  dependency cache matters.
+- Warm, a chapter's build time is almost entirely olean loading, and is set by
+  what it imports: 47 s for a Mathlib-blanket-free formalization module, 101 s
+  for `Mathlib`, 169 s for the `RB31EndToEnd` root module. A chapter's own
+  content — nodes, witnesses, declaration references, quoted bodies — costs
+  under 10 s. See the import-granularity rule in `BodyPinBlueprint/AGENTS.md`,
+  which now has a measured payoff and not just an auditability one.
+- Only CI pays the full cold cost, so the workflow's dependency cache matters.
