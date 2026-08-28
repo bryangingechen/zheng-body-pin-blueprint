@@ -45,9 +45,9 @@ in {bpref "sparse22"}[].
 Two statements are involved, and they are not the same statement. Theorem 1.1
 is about generic rigidity in the usual sense. Theorem A.1 is about a
 realization attaining the same rigidity-matrix rank as the complete graph, and
-that is the one the Lean development proves. The bridge between them is the
+that is the statement the formalization proves. The two are related by the
 Asimow–Roth theorem, which the paper cites and the formalization does not
-contain. Making that seam visible is the first job of this blueprint.
+contain.
 
 :::group "statement_data"
 The combinatorial data of a body–pin framework, the rigidity operator, and the
@@ -82,10 +82,11 @@ Here $E$ is the edge set; parallel edges are distinct elements of $E$.
 \end{definition}
 ```
 
-Lean keeps pins as _occurrences_ rather than as a multiset of unordered pairs:
-a pin type together with two endpoint maps, plus looplessness. That is the
-appendix's presentation $`H = (W, E; \partial_0, \partial_1)`, not the main
-text's. No provenance is lost, and parallel pins stay distinguishable.
+The formalization represents $`H` as a type of pins together with two endpoint
+maps and a proof that the two endpoints of a pin differ, which is the
+appendix's presentation $`H = (W, E; \partial_0, \partial_1)` rather than the
+main text's. Two pins joining the same pair of bodies are then distinct
+elements of the pin type, so each can be referred to individually.
 
 :::definition "bodypin_expansion" (parent := "statement_data") (lean := "RB31E2E.BodyPinIncidence.bodyPinGraph, RB31E2E.BodyPinIncidence.bodyClique, RB31E2E.BodyPinIncidence.canonicalBodyPinGraph") (tags := "paper") (uses := "bodypin_incidence")
 Each body $`w` is expanded into a complete graph on its pins together with at
@@ -129,18 +130,19 @@ the $`d_H(w) + 4` bound.
 The appendix parametrizes the construction by a function $`r : W \to \N`
 counting private vertices _beyond_ the mandatory four, which is what makes
 $`G(H, r)` a function of $`H` and $`r` rather than of a sequence of choices.
-Lean follows the appendix: the vertex type is
+The formalization follows the appendix: the vertex type is
 $`E \sqcup \bigsqcup_{w \in W} \{w\} \times [4 + r(w)]`, adjacency is "belongs
 to a common body", and the graph is _definitionally_ the supremum of its body
 cliques.
 
 The bound $`|V(B_w)| \ge d_H(w) + 4` is exactly the requirement that four
 private vertices survive after the pins have taken theirs, so every body carries
-a $`K_4` of its own whatever its pin degree. Lean makes that $`K_4` explicit —
+a $`K_4` of its own whatever its pin degree. The formalization names that
+$`K_4` explicitly:
 {name RB31E2E.BodyPinIncidence.privateCoreVertex}`privateCoreVertex` picks the
-four out, {name RB31E2E.BodyPinIncidence.privateCore_adj}`privateCore_adj` proves them mutually
-adjacent — and {name RB31E2E.BodyPinIncidence.canonicalBodyPinGraph}`canonicalBodyPinGraph` is the $`r \equiv 0` case, with exactly
-four.
+four out, {name RB31E2E.BodyPinIncidence.privateCore_adj}`privateCore_adj` proves them mutually adjacent, and
+{name RB31E2E.BodyPinIncidence.canonicalBodyPinGraph}`canonicalBodyPinGraph` is
+the case $`r \equiv 0`.
 
 # Two readings of generic rigidity
 
@@ -186,13 +188,14 @@ forms are equal, so this map has the same rank as the usual rigidity matrix.
 \end{definition}
 ```
 
-The paper uses two forms of this matrix and so does Lean. Equation (1.4) is
+The paper uses two forms of this matrix, and so does the formalization.
+Equation (1.4) is
 stated over an arbitrary field extension $`K/k`, because §2 onwards needs to
 vary the coefficient field; Appendix A.1 uses the real form $`R_G(p)`, indexed
 by _all_ ordered vertex pairs with nonedges sent to zero. The doubling does not
 change the rank, and the fixed target makes the ranks of different graphs on the
-same vertex set directly comparable — which is what the maximum-rank
-formulation needs.
+same vertex set directly comparable, which is what the maximum-rank
+formulation requires.
 
 {name RB31E2E.BarJoint.rigidityOperator}`RB31E2E.BarJoint.rigidityOperator` is the appendix's real form. The
 field-extension form appears in the Lean development as the direction matrix and
@@ -231,9 +234,9 @@ thereby omitted.
 
 A maximum-rank placement is precisely what
 {Informal.citet "asimowRoth1978"}[] call a _regular point_, and their theorem is
-stated at regular points, so this definition coincides with theirs. What that
-buys is the next statement, which is the one thing in this chapter that Lean
-does not prove.
+stated at regular points, so this definition coincides with theirs. Their
+theorem is stated next. It is the one result in this chapter that the
+formalization does not prove.
 
 :::theorem "asimow_roth" (parent := "statement_theorem") (tags := "gap") (uses := "generic_rigidity_max_rank")
 Call a placement _regular_ when the rigidity matrix attains its maximal rank
@@ -251,10 +254,10 @@ at one regular placement it is rigid at every other.
 :::
 
 That right-hand side is the rank the complete graph attains at the same
-placement, which is what lets the paper state its criterion as
-$`\rho_3(G) = \rho_3(K_{V(G)})`; and the second half — rigid at one regular
-placement, rigid at all — is what makes rigidity a property of the graph rather
-than of a placement.
+placement, which is why the criterion can be stated as
+$`\rho_3(G) = \rho_3(K_{V(G)})`. The second half, rigidity at one regular
+placement implying rigidity at all of them, is what makes rigidity a property of
+the graph rather than of a placement.
 
 This is the one step of the paper's Theorem 1.1 that the formalization does not
 contain, and the only statement in this chapter given without a witness, since
@@ -331,7 +334,7 @@ For every $t \in \mathbb{N}$ and every surjection $\pi : W \twoheadrightarrow [t
 \end{definition}
 ```
 
-Lean indexes partitions by surjections $`\pi : W \to [t]` rather than by set
+The formalization indexes partitions by surjections $`\pi : W \to [t]` rather than by set
 partitions, and writes the right-hand side as `6 * (t - 1)` over $`\N`, where
 truncated subtraction supplies the paper's $`\max\{t - 1, 0\}` for free. Both
 moves are bookkeeping with a purpose: the empty body set and the one-block case
@@ -343,8 +346,7 @@ $`12(t-1)` — as an audit form. The paper has only the unordered one.
 
 For a two-block partition $`\{A, B\}` the inequality reduces to
 $`\ell_H(A, B) \ge 6`. So at least three pins must join the two blocks; one or
-two pins have capacities only $`3` or $`5`. That special case is worth keeping
-in mind, because it is the one the capacity function was designed around.
+two pins have capacities only $`3` or $`5`.
 
 # The theorem
 
@@ -378,9 +380,9 @@ This is the paper's headline result: Conjecture 5 of
 {Informal.citet "kiralyTanigawa2019"}[], still listed as Conjecture 7.6 by
 {Informal.citet "jacksonJordanVillanyi2026"}[] as of July 2026.
 
-It is _not_ the proposition the Lean development proves. What Lean proves is
+It is not the proposition the formalization proves. The formalization proves
 {bpref "formal_statement"}[], its maximum-rank form; the remaining step is
-{bpref "asimow_roth"}[]. The dependency edges on this node say exactly that.
+{bpref "asimow_roth"}[]. The dependency edges on this node record that.
 
 :::theorem "formal_statement" (parent := "statement_theorem") (lean := "RB31E2E.EndToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement") (tags := "paper") (uses := "bodypin_expansion, partition_condition, generic_rigidity_max_rank")
 For every finite loopless body–pin multigraph $`H` and every $`r : W \to \N`,
@@ -420,12 +422,16 @@ $`r(w) = |V(B_w)| - d_H(w) - 4` identifies any expansion of the main text with
 some $`G(H, r)` after relabelling private vertices, and conversely. So the two
 statements differ only in the reading of "generically rigid".
 
-:::theorem "reduction_to_sufficiency" (parent := "statement_theorem") (lean := "RB31E2E.endToEndBodyPinStatement_iff_sufficiency") (tags := "lean-only") (uses := "formal_statement")
-Because necessity is already a theorem, the full equivalence is equivalent to
-its sufficiency direction alone.
+:::lemma_ "reduction_to_sufficiency" (parent := "statement_theorem") (lean := "RB31E2E.endToEndBodyPinStatement_iff_sufficiency") (tags := "lean-only") (uses := "formal_statement")
+Because necessity is a theorem, {bpref "formal_statement"}[] is equivalent to
+its sufficiency direction alone: that the partition condition implies
+maximum-rank generic rigidity.
 :::
 
-This reduction has no counterpart in the paper; it is how the Lean development
-organizes the two directions, and it is proved without assuming sufficiency. The
-necessity half is {bpref "necessity"}[]; everything from {bpref "sparse22"}[]
-onwards serves the other one.
+This has no counterpart in the paper, and it is proved without assuming
+sufficiency. The sufficiency assembly is then written against it:
+{name RB31E2E.endToEndBodyPinStatement_of_sparseNullIncidenceProperness}`endToEndBodyPinStatement_of_sparseNullIncidenceProperness`
+opens by rewriting with this equivalence, so every step after that point has
+only the one implication to discharge. Necessity is proved separately, in
+{bpref "necessity"}[]; everything from {bpref "sparse22"}[] onwards serves the
+other direction.

@@ -140,6 +140,7 @@ lean = ["RB31E2E.endToEndBodyPinStatement_iff_sufficiency"]
 modules = ["RB31EndToEnd/TargetReduction.lean"]
 status = "lean-only"
 verified = true
+note = "Load-bearing, not a remark: endToEndBodyPinStatement_of_sparseNullIncidenceProperness (Incidence/SmallBundleCertificate.lean:795) opens by rewriting with it, so the whole sufficiency assembly is written against it. Both modules are in the root theorem's 126-module import closure."
 
 # ---------------------------------------------------------------- section 2
 

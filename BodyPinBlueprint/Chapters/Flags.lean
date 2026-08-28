@@ -43,7 +43,7 @@ Lean-only state transitions and budget bookkeeping.
 
 :::definition "collinearity_flag" (parent := "flags_spine") (tags := "paper, deviation, unwritten")
 A collinearity flag $`d < T < Q`: distinguished missing edge, support triple,
-$`K_4`-completion. {Informal.citep "zheng2026" (index := "Definition 3.1")}[] Renamed throughout in Lean.
+$`K_4`-completion. {Informal.citep "zheng2026" (index := "Definition 3.1")}[] Renamed throughout in the formalization.
 :::
 
 :::definition "flag_system" (parent := "flags_spine") (tags := "paper, deviation, unwritten") (uses := "collinearity_flag")
@@ -91,9 +91,8 @@ number of base-graph vertices. {Informal.citep "zheng2026" (kind := "theorem") (
 
 :::theorem "stress_codim" (parent := "flags_spine") (tags := "paper, deviation, unwritten") (uses := "stress_codim_flags")
 The stress–codimension inequality with no flags,
-$`\dim_K \ker D_F(a)^T + \trdeg_k K \le 3|V|`. {Informal.citep "zheng2026" (kind := "theorem") (index := "1.2")}[] In Lean it
-appears as the grounded hypothesis of the assembly theorem rather than as a
-standalone statement.
+$`\dim_K \ker D_F(a)^T + \trdeg_k K \le 3|V|`. {Informal.citep "zheng2026" (kind := "theorem") (index := "1.2")}[] In the formalization it appears as the grounded hypothesis of the assembly
+theorem rather than as a standalone statement.
 :::
 
 :::lemma_ "lean_flag_moves" (parent := "flags_infrastructure") (tags := "lean-only, unwritten")

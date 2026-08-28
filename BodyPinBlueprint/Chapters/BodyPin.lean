@@ -55,8 +55,8 @@ The partition of the bodies induced by equality of block twists. {Informal.citep
 :::lemma_ "sparse_subgraph_selection" (parent := "bodypin_spine") (tags := "paper, deviation, unwritten") (uses := "twist_equality_partition, partition_condition")
 Selecting a $`(2,2)`-sparse subgraph from the partition capacities.
 {Informal.citep "zheng2026" (kind := "lemma") (index := "6.3")}[] proves it
-by matroid union; Lean proves it directly from a maximum sparse subset and an
-explicit tight partition, with no matroid API.
+by matroid union. The formalization proves it directly from a maximum sparse
+subset and an explicit tight partition, with no matroid API.
 :::
 
 :::lemma_ "orbit_dimension_drop" (parent := "bodypin_spine") (tags := "paper, unwritten")

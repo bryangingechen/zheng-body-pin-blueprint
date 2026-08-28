@@ -42,17 +42,17 @@ or more pins between two blocks contributes $`3`, $`5`, or $`6`. The precise
 statement is {bpref "bodypin_partition_characterization"}[].
 
 Generic rigidity of finite graphs has combinatorial characterizations in
-dimensions one and two. In dimension three none is known — not even for the rank
+dimensions one and two. In dimension three none is known, not even for the rank
 function of the rigidity matroid of an arbitrary graph
 {Informal.citep "laman1970" "lovaszYemini1982" "graverServatiusServatius1993" "jordan2016" "cruickshankJacksonJordanTanigawa2026" "jacksonJordanVillanyi2026"}[],
 and the difficulty persists for graphs covered by large complete subgraphs.
-Body–pin graphs are exactly such a class. Two neighbouring models do have
-characterizations — body–bar frameworks, by a packing of spanning trees, and
+Body–pin graphs form such a class. Two neighbouring models do have
+characterizations: body–bar frameworks, by a packing of spanning trees, and
 body–hinge frameworks with their molecular variants
-{Informal.citep "tay1984" "whiteley1988" "tay1989" "katohTanigawa2011" "kiralyTanigawa2019"}[] —
-but a pin is a shared joint rather than a bar between two bodies, so the
-expanded graph lands back in the ordinary three-dimensional bar–joint rigidity
-matroid and the packing theorems do not transfer.
+{Informal.citep "tay1984" "whiteley1988" "tay1989" "katohTanigawa2011" "kiralyTanigawa2019"}[].
+A pin, however, is a shared joint rather than a bar between two bodies, so the
+expanded graph lies in the ordinary three-dimensional bar–joint rigidity
+matroid and those packing theorems do not transfer.
 
 This is Conjecture 5 of {Informal.citet "kiralyTanigawa2019"}[]. According to
 the historical account in
@@ -76,15 +76,14 @@ that the collinear triple is not prescribed in advance. It arises during vertex
 deletion, and has to be carried along.
 
 The formalization is already complete: no `sorry`, no custom axioms, axiom
-closure exactly `propext`, `Classical.choice`, `Quot.sound`. So this is not a
-coordination blueprint, and its progress percentage is not the point. Its job is
-to let a reader check, statement by statement, that the Lean development proves
-*the paper's theorem*, and to make visible where the Lean route departs from the
-written argument. Coverage and correspondence are the deliverable. Concretely,
-that means every node that corresponds to something in the paper carries the
-paper's own words as a hidden source witness, every divergence has an entry in a
-fingerprinted register, and the audit chapter asks of each of the development's
-125 modules which node accounts for it.
+closure exactly `propext`, `Classical.choice`, `Quot.sound`. This is therefore
+not a coordination blueprint, and it does not track a progress percentage. It is
+written so that a reader can check, statement by statement, that the
+formalization proves the paper's theorem, and can see where the formal route
+departs from the written one. Each node that corresponds to something in the
+paper carries the paper's own words as a hidden source witness; each divergence
+has an entry in a fingerprinted register; and the audit chapter asks, of each of
+the development's 125 modules, which node accounts for it.
 
 A reader new to the material should start with the author's own research note,
 [Stress Degeneracy, Collinearity Flags, and Three-Dimensional Body–Pin
@@ -109,11 +108,10 @@ of 27 August 2026, and result numbering shifts between revisions — so this
 blueprint pins a SHA-256 of the exact file it maps and labels its nodes
 semantically rather than by paper number. The formalization repository carries
 no licence, so it is referenced here as a pinned submodule and never vendored.
-And the author credits OpenAI Codex (GPT-5.6 Sol) in both the paper and the note
+The author credits OpenAI Codex (GPT-5.6 Sol), in both the paper and the note,
 with assisting the proof organization, the Lean formalization and its
-verification, the typesetting and the proofreading; the Lean development is
-nonetheless kernel-checked, which is the property that actually carries the
-weight.
+verification, the typesetting and the proofreading. The development is
+kernel-checked either way.
 
 {include 0 BodyPinBlueprint.Chapters.Statement}
 

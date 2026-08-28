@@ -19,12 +19,11 @@ but not drafted; `correspondence.toml` holds the module inventory for each.
 
 #doc (Manual) "Necessity" =>
 
-Necessity is the easy direction on paper and the long one in Lean: one paragraph
-of {Informal.citet "zheng2026"}[] against 894 lines of formalization. Assign a
-common block twist to every body in a block, count degrees of freedom modulo the
-six-dimensional diagonal, and the capacity inequality falls out. What the
-formalization has to supply is the genericity apparatus that the paragraph
-assumes.
+Necessity takes one paragraph in {Informal.citet "zheng2026"}[] and 894 lines in
+the formalization. Assign a common block twist to every body in a block and
+count degrees of freedom modulo the six-dimensional diagonal; the capacity
+inequality follows. The formalization additionally supplies the genericity
+apparatus that the paragraph assumes.
 
 :::group "necessity_spine"
 The paper's necessity argument.

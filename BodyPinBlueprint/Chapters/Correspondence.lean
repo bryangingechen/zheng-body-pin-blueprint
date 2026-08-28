@@ -57,6 +57,6 @@ remains outside is {bpref "asimow_roth"}[]. {Informal.citep "zheng2026" (kind :=
 
 # Reverse index
 
-Lean module to blueprint node, for the 125 modules of the development. This is
-also where the depth dial is visible: promoting a row of the index to a node of
-its own is what "going deeper" means here.
+Lean module to blueprint node, for the 125 modules of the development.
+Promoting a row of this index to a node of its own is how a cluster node is
+later split; see `PLAN.md`.

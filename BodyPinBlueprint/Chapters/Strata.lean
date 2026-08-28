@@ -29,8 +29,8 @@ Cohen–Macaulay and pure-dimensional.
 *None of this is formalized*, and none of it needs to be. The Lean development
 uses the field-theoretic inequality throughout, and Theorem A.1 never depends
 on the scheme statements. This chapter exists to say so in place: a reader
-meeting a scheme-theoretic section with no Lean beside it will ask whether it
-was skipped, and the answer belongs here rather than in a footnote. The one
+meeting a scheme-theoretic section with no formalization beside it will ask
+whether it was skipped, and the answer belongs here rather than in a footnote. The one
 mapped part is the equivalence the paper itself proves between (1.5) and (4.7).
 
 :::group "strata_comparison"

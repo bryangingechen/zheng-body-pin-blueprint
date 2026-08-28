@@ -17,6 +17,7 @@ relevant to the task in hand:
 |---|---|
 | this file | repo-level policy, the harness, the no-TeX-source situation, build costs |
 | `BodyPinBlueprint/AGENTS.md` | writing a chapter: witnesses, nodes, labels, tags, citations, imports, edges, markup |
+| `BodyPinBlueprint/STYLE.md` | the register blueprint prose is written in, and `scripts/style-check.py` |
 | `source/references/AGENTS.md` | third-party reference PDFs (local only, gitignored) |
 
 `BodyPinBlueprint/Chapters/Statement.lean` is the worked example: copy its shape.

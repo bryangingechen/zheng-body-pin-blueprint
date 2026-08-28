@@ -6,6 +6,11 @@ what the blueprint is for, why there is no TeX source, the harness, build costs
 
 `Chapters/Statement.lean` is the worked example. Copy its shape.
 
+`STYLE.md` next to this file is the register: what blueprint prose should sound
+like, calibrated against the papers themselves, with the failure modes that have
+actually occurred here. Read it before writing prose, and run
+`python3 scripts/style-check.py` before committing.
+
 After editing a chapter:
 
 ```bash
@@ -142,6 +147,22 @@ only by adding the matching status, and vice versa.
   as honest as `(lean := ...)` ones. Only for real constants: `sorry` and
   `admit` are not, and file paths and option names stay plain code spans.
 - Prefer a `(lean := ...)` link to duplicating Lean code in a blueprint module.
+  For this repo that is not only a preference: `formalization/` carries no
+  licence, so copying a definition or a proof into a labelled ```` ```lean ````
+  block would vendor unlicensed source. Do not.
+- **A node must state the content of its Lean target, because the panel will
+  not.** The external-declaration renderer emits the signature, the docstring,
+  and — for a structure or an inductive — its fields or constructors. It cannot
+  show a definition's body, and there is no option to make it. So
+  `def RB31E2E.EndToEndBodyPinStatement : Prop` renders as exactly that, which
+  tells a reader nothing. Every `Prop`-valued definition, every
+  `pinCapacity`-style table of values, every graph construction: write the
+  content out in the node body. Chapter 01 does this throughout; check yours
+  against it.
+- The panel does carry a source link, pinned to the submodule SHA and anchored
+  to the declaration's line range — e.g. `Target.lean#L12-L20`. That is how a
+  reader checks our restatement against the real definition, and it is why the
+  restatement has to be there to check.
 
 ## Imports
 

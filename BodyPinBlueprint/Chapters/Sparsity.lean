@@ -23,8 +23,8 @@ of the edge-count function gives uncrossing, uncrossing gives the addable-edge
 criterion, and Lemma 2.1 follows. The formalization needs about 3,500 lines for
 the same ground, because the uncrossing arguments are invoked in situations
 where a construction theorem for $`(2,2)`-tight graphs has to be available.
-That gap is the first real test of this blueprint's Lean-only cluster
-convention.
+That material is covered here by a single cluster node,
+{bpref "lean_nixon_owen_reduction"}[].
 
 :::group "sparsity_spine"
 The paper's sparsity vocabulary.
