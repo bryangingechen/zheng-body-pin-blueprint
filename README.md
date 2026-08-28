@@ -24,7 +24,8 @@ correspondence are the deliverable; progress percentage is not.
 - `correspondence.toml` — the paper → Lean map. The spine of the project.
 - `lt-source-deviations.toml` — where a result is mapped but proved by a
   different route.
-- `BodyPinBlueprint/` — the blueprint itself; chapters under `Chapters/`.
+- `BodyPinBlueprint/` — the blueprint itself; chapters under `Chapters/`, and
+  `Style.lean`, the project CSS both entry points pass as `extraCss`.
 - `formalization/` — the upstream Lean development, pinned as a submodule.
   **Read-only**: it carries no licence, so never vendor its sources or commit
   inside it.

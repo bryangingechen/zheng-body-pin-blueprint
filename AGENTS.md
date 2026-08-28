@@ -149,6 +149,11 @@ does not apply here (see above); what follows is the half that does.
   dependency in prose instead.
 - Port coherent chapter blocks rather than scattering small edits across
   unrelated chapters. Run `bash ./scripts/ci-pages.sh` after a batch.
+- Project CSS goes in `BodyPinBlueprint/Style.lean` and is passed by both entry
+  points as `RenderConfig.extraCss`, which Verso inlines into every page's
+  `<head>`. Style against VersoBlueprint's own `--bp-color-*` tokens rather than
+  literal colours, so the result matches the panels and survives an upstream
+  restyle. Do not patch the submodule and do not post-process the HTML.
 - If using sub-agents, prefer one per chapter or per clearly disjoint file set;
   do not split one chapter across agents unless one side is read-only; merge
   chapter edits before running shared validation.

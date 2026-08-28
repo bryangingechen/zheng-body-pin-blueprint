@@ -35,6 +35,17 @@ every node unformalized. It also cannot catch a wrong `(lean := ...)` name,
 because it strips them rather than resolving them. So the preview is for
 looking, never for believing a node is wired up.
 
+Project CSS does reach it. `BodyPinBlueprint/Style.lean` is passed as
+`extraCss` by both entry points, and its block rule names the preview's markup
+as well as the site's, so a quoted body sits and weighs the same in both. The
+one rule the preview cannot honour is the source-path caption, which needs the
+token spans that only elaboration produces.
+
+A `-show` block is dropped from the preview rather than rewritten like other
+Lean fences. Rewriting it would turn scaffolding the reader is never meant to
+see into visible code — which is what happened until it was caught, so if you
+add a fence flag, check what `preview.py` does with it.
+
 **Does it elaborate?** Use the Lean language server rather than `lake build`. The
 `lean-lsp` MCP server (`.mcp.json`) keeps the imports loaded, so after one cold
 start a chapter re-checks in about 8 seconds instead of 169:
@@ -214,8 +225,35 @@ only by adding the matching status, and vice versa.
   tells a reader nothing. Every `Prop`-valued definition, every
   `pinCapacity`-style table of values, every graph construction: write the
   content out in the node body. Chapter 01 does this throughout.
-- **For a key definition, quote the body as well**, in a plain fenced block
-  after the witness, first line a comment giving the source path:
+- **Every declaration a node names has to be understandable from the page.**
+  There are three ways to satisfy that, and each declaration needs one of them.
+  The panel does it by itself for a structure or an inductive, which get their
+  fields and constructors rendered. Otherwise either the prose states the
+  content, or the body is quoted.
+
+  *Quote the body* when the value is the mathematical content and is short: a
+  `Prop`-valued definition, a table of values, a formula. Quote it when a
+  convention is visible nowhere else -- which component of a pair is the angular
+  part, which endpoint of an edge carries the negative. And quote it when
+  something already quoted refers to it, because a quoted block that names an
+  unexplained function is worse than no block.
+
+  *Do not quote* a theorem: the blueprint states results and never reproduces a
+  proof, and `formalization/` carries no licence. Do not quote a body that is
+  bundling rather than content -- a `LinearMap` is mostly its `map_add'` and
+  `map_smul'` obligations, a `SimpleGraph` instance mostly its `symm` and
+  `loopless` ones. Quote the function underneath instead: Chapter 04 quotes
+  `directionEquilibriumCoordinate`, a four-line sum, and leaves
+  `directionEquilibrium` to a sentence saying it is that function bundled.
+  And do not quote where the node's statement already says it in full and the
+  body would add only notation.
+
+  The failure to watch for is a node whose `lean :=` names three declarations
+  and whose prose explains one. Read the rendered panel and ask what a reader
+  learns from it; for a `def` the answer is a signature and nothing else.
+
+- **When you do quote a body**, use a fenced block after the witness, first line
+  a comment giving the source path:
 
   ````
   ```
@@ -284,6 +322,12 @@ only by adding the matching status, and vice versa.
   A plain ```` ``` ```` fence remains available for a fragment that cannot be
   made to elaborate at all, at the cost of highlighting and hovers. Never use
   ```` ```lean ````: an unlabelled Lean block is rejected outright.
+
+  The `-- <path>` first line is a marker for the checker, not something the
+  reader sees: Verso's highlighter drops comments, so it renders on the site as
+  nothing at all. It is visible in the preview, which does not elaborate. A
+  reader who wants the file follows the source link on the declaration panel
+  beside the block.
 
   `python3 scripts/check-snippets.py` verifies every such block against the file
   it names, chunk by chunk, so a copy cannot silently drift from the pinned

@@ -44,6 +44,11 @@ STRIP = [
     (re.compile(r"^import RB31EndToEnd.*\n", re.M), ""),          # the 169 s
     (re.compile(r'\s*\(lean := "[^"]*"\)'), ""),                   # external decls
     (re.compile(r"\{name [\w.]+\}(?=`)"), ""),                     # keep the code span
+    # A `-show` block is scaffolding that the real build elaborates and never
+    # renders. Drop it whole: rewriting its fence like any other would turn the
+    # `open ... hiding` lines the reader is not meant to see into visible code.
+    (re.compile(r"^```Verso\.Genre\.Manual\.InlineLean\.lean[^\n]*-show[^\n]*\n.*?^```\n\n?",
+                re.M | re.S), ""),
     (re.compile(r"^```Verso\.Genre\.Manual\.InlineLean\.lean.*$", re.M), "```"),
 ]
 
@@ -79,7 +84,9 @@ def main() -> int:
     written += put(PKG / "Preview.lean", root)
     print(f"[preview] {written} of {len(chapters) + 1} file(s) changed")
 
-    for cmd in (["lake", "build", "BodyPinBlueprint.Preview"],
+    # `Style` is not in the document's import tree, but PreviewMain runs against
+    # it, and `lean --run` wants an olean rather than building one.
+    for cmd in (["lake", "build", "BodyPinBlueprint.Preview", "BodyPinBlueprint.Style"],
                 ["lake", "env", "lean", "--run", "PreviewMain.lean", "--output", "_out/preview"]):
         result = subprocess.run(cmd, cwd=ROOT)
         if result.returncode:

@@ -91,10 +91,13 @@ $r_{xy}(a_H)$, whereas $r_{vx}$ means $r_{vx}(a)$.
 
 The formalization takes the transpose as primary. A placement is a function
 $`V \to (\mathrm{Fin}\ 3 \to k)`, an edge weighting is a function on the edge
-set, and
-{name RB31E2E.DirectionStress.directionEquilibrium}`directionEquilibrium` sends
-a weighting to the load it produces, as a combination of direction rows. Its
-kernel is the self-stress space and
+set, and the load a weighting produces at one vertex coordinate is the sum of
+the direction rows against it.
+{name RB31E2E.DirectionStress.directionEquilibrium}`directionEquilibrium` is
+that function bundled as a linear map, which is why its body is mostly the
+additivity and homogeneity obligations rather than the mathematics; the
+mathematics is the coordinate function quoted below. Its kernel is the
+self-stress space, and
 {name RB31E2E.DirectionStress.directionStressDim}`directionStressDim` is the
 dimension the whole induction bounds.
 
@@ -108,7 +111,7 @@ writes $`r_{xy}` and lets the symmetry pass without comment.
 noncomputable section
 variable {k V : Type*} [Field k] [Fintype V] [DecidableEq V]
 open RB31E2E
-open RB31E2E.DirectionStress hiding edgeDirection directionRow DirectionStressSpace directionStressDim
+open RB31E2E.DirectionStress hiding edgeDirection directionRow directionEquilibriumCoordinate DirectionStressSpace directionStressDim
 ```
 
 ```Verso.Genre.Manual.InlineLean.lean
@@ -121,6 +124,11 @@ def directionRow (a : V → Fin 3 → k) (e : SimpleEdge V) :
   fun v j ↦
     (if e.source = v then edgeDirection a e j else 0) +
       (if e.target = v then -(edgeDirection a e j) else 0)
+
+def directionEquilibriumCoordinate
+    (F : SimpleEdgeSet V) (a : V → Fin 3 → k)
+    (weight : F → k) (v : V) (j : Fin 3) : k :=
+  ∑ e : F, weight e * directionRow a e.1 v j
 
 abbrev DirectionStressSpace
     (F : SimpleEdgeSet V) (a : V → Fin 3 → k) :=

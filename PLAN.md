@@ -271,4 +271,21 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   paper is planned. Both are questions for the author; see
   `notes/attribution.md`. Bryan has an open thread with him.
 - Whether the Incidence/Algebra chart layer ever needs per-module nodes.
-- Whether to port to `4.33` once the content exists.
+- Whether to port to `4.33` once the content exists. Note that it would not buy
+  declaration bodies in the panels: neither release line renders them, and
+  `notes/upstream.md` §8 has the evidence and the routes if it is ever wanted.
+- **Three decisions left open after the quoted-body pass**, none blocking, all
+  cheap to act on with `scripts/preview.py` at 15 s a round:
+  - *Which further definitions to quote.* `BodyPinBlueprint/AGENTS.md` now
+    states the criterion. Applying it strictly would add blocks for
+    `edgeConstraint`, `rigidityOperator`, `bodyPinGraph`, `partitionCapacity`,
+    `retainedCoordinateField` with `outsideExtensionTrdeg`, and
+    `directionRowSpace`. All are one line of real content each and are currently
+    paraphrased in prose. Six more blocks is a lot of set-apart code, so this is
+    a taste call rather than a defect.
+  - *Whether the prose should name each quoted body's source file.* Verso's
+    highlighter drops comments, so the `-- <path>` first line is invisible on
+    the site and a block is anonymous unless the surrounding sentence names the
+    file. Some already do; it is not consistent across the nine.
+  - *The block styling itself*, in `BodyPinBlueprint/Style.lean`. The left rule
+    is the opinionated part.
