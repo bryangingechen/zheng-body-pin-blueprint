@@ -29,10 +29,16 @@ STAMP = ".source-hash"
 OUTPUTS = ["_out/site/html-multi", "_out/preview/html-multi"]
 
 
+# `scripts/preview.py` generates these, and they are gitignored. They cannot
+# affect the site, so hashing them would report a freshly built site as stale
+# the moment anyone ran the fast preview loop.
+GENERATED = {"Preview", "Preview.lean"}
+
+
 def inputs() -> list[Path]:
     """Everything a rendered page can depend on, except the generated preview copy."""
     files = [p for p in sorted((ROOT / "BodyPinBlueprint").rglob("*.lean"))
-             if "Preview" not in p.relative_to(ROOT).parts[1:]]
+             if not GENERATED & set(p.relative_to(ROOT).parts[1:])]
     for name in ("BodyPinBlueprint.lean", "BlueprintMain.lean", "PreviewMain.lean",
                  "lakefile.lean", "lean-toolchain", "verso-harness.toml"):
         p = ROOT / name
