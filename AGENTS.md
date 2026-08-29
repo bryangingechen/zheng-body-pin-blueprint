@@ -149,11 +149,25 @@ does not apply here (see above); what follows is the half that does.
   dependency in prose instead.
 - Port coherent chapter blocks rather than scattering small edits across
   unrelated chapters. Run `bash ./scripts/ci-pages.sh` after a batch.
-- Project CSS goes in `BodyPinBlueprint/Style.lean` and is passed by both entry
-  points as `RenderConfig.extraCss`, which Verso inlines into every page's
-  `<head>`. Style against VersoBlueprint's own `--bp-color-*` tokens rather than
-  literal colours, so the result matches the panels and survives an upstream
-  restyle. Do not patch the submodule and do not post-process the HTML.
+- Declaration bodies come from the pinned submodule, not from copies. A chapter
+  names a declaration in a ```BodyPinBlueprint.bodies fence;
+  `BodyPinBlueprint/Bodies.lean` reads the body out of
+  `.lake/build/highlighted/`, which `scripts/extract-bodies.sh` fills by running
+  SubVerso's `subverso-extract-mod` over the modules the nodes name. Nothing is
+  copied into this repo and no copy can go stale. The older mechanism — a
+  verbatim `lean` fence with `-show` scaffolding, checked by
+  `scripts/check-snippets.py` — still carries eight blocks and is being retired;
+  prefer the fence for anything new.
+- Project CSS and JavaScript both go in `BodyPinBlueprint/Style.lean` and are
+  passed by both entry points as `RenderConfig.extraCss` and
+  `RenderConfig.extraJs`, which Verso inlines into every page's `<head>`. Style
+  against VersoBlueprint's own `--bp-color-*` tokens rather than literal
+  colours, so the result matches the panels and survives an upstream restyle,
+  and check specificity against the rule you are competing with: a bare class
+  loses to `code.hl.lean.block`. Script against what Verso rendered and let it
+  fail safe, leaving the page as it was, rather than assuming a structure.
+  `quotedBodyJs` is the worked example. Do not patch the submodule and do not
+  post-process the HTML.
 - If using sub-agents, prefer one per chapter or per clearly disjoint file set;
   do not split one chapter across agents unless one side is read-only; merge
   chapter edits before running shared validation.
@@ -215,6 +229,17 @@ is the cheaper fix for the problem that actually occurs.
   spine 55–75 s each. Cost is spread evenly rather than concentrated, so there
   is no single file worth optimising around.
 - `lake exe vbp build` (cold, includes building Verso itself): ~8.5 min.
+- `scripts/extract-bodies.sh` (declaration bodies): **~47 min cold**, ~6 s warm.
+  Measured 2026-08-28 over the 15 modules that hold a `def` or an `abbrev` a
+  node names: mean 189 s per module, max 312 s, and the cost is dominated by
+  importing the module's dependencies rather than by its size — so it does not
+  fall much by extracting fewer declarations, only by extracting fewer
+  *modules*. Lake traces each extract on the module's olean, so this is a no-op
+  until the submodule pin moves. `scripts/ci-pre-build.sh` runs it, which is
+  what makes a cold `ci-pages.sh` roughly twice what it was.
+- `lake env lean scripts/body-modules.lean` (which modules hold those
+  declarations): ~3 min, olean loading. Cached in `_out/body-modules.json`;
+  rerun when the pin moves or a node names a new declaration.
 - `lake env lean scripts/reachable.lean`: ~3 min warm, essentially all of it
   loading the root module's oleans.
 - Warm, a chapter's build time is almost entirely olean loading, and is set by

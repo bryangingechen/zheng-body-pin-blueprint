@@ -274,8 +274,58 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
 - Whether to port to `4.33` once the content exists. Note that it would not buy
   declaration bodies in the panels: neither release line renders them, and
   `notes/upstream.md` §8 has the evidence and the routes if it is ever wanted.
-- **Three decisions left open after the quoted-body pass**, none blocking, all
-  cheap to act on with `scripts/preview.py` at 15 s a round:
+- **Declaration bodies: what is built, and what is left.** The quoted-body pass
+  below has been largely overtaken. A body no longer has to be copied into a
+  chapter: `scripts/extract-bodies.sh` runs SubVerso's `subverso-extract-mod`
+  over the 15 modules holding a `def` or `abbrev` a node names, and a
+  ```BodyPinBlueprint.bodies fence names declarations instead of quoting them.
+  `BodyPinBlueprint.quotedBodyJs` then splices each body's *value* onto the end
+  of the panel's generated signature, so the panel keeps the full name, universe
+  levels and `variable`-supplied binders and gains the value, which is the only
+  part the signature lacks. `notes/upstream.md` §8 has the mechanism and why it
+  is not post-processing.
+
+  Done: the machinery, and one chapter (Sparsity) converted. Left, in order —
+
+  1. **Convert the remaining eight blocks.** Delete each `-show` scaffolding
+     block and its verbatim copy; list the names. Sparsity is the worked
+     example. `scripts/check-snippets.py` then falls from 8 towards 0.
+  2. **Take the value boundary from the syntax tree.** `valueFrom` in
+     `quotedBodyJs` finds it by scanning for `:=` at bracket depth zero, which
+     is wrong for a `where` declaration — its first depth-zero `:=` belongs to a
+     field, so the rendering silently drops `where` and the field name. Latent
+     today (no quoted declaration uses `where`) but twelve declarations in the
+     extracted modules do. Fix it in Lean, not JS:
+     `Lean.Parser.Command.declValSimple`, `declValEqns` and `whereStructInst`
+     name the three forms, and all 119 definitions in the extracted modules
+     reparse from `code.toString`, so the tree is available. Slicing the
+     `Highlighted` by character offset is sound because `toString` reproduces
+     the source exactly. This also deletes `slices`, `resolve` and the bracket
+     counting from the JS.
+  3. **Elide proof obligations, the way `pp.proofs` does.** A `where` field is
+     an obligation exactly when its projection's result type is a `Prop`
+     (checked: `SimpleGraph.Adj` data, `symm`/`loopless` Prop). Rendering those
+     as `⋯` turns `directionEquilibrium` from eighteen lines into three that
+     show the mathematics. This *cannot* live in the JS — `isProp` needs the
+     environment — so it depends on step 2. Do **not** elide by syntax:
+     `rigidityOperator` and `genericRigidityRank` are data defined by `by`
+     blocks, and eliding tactics would delete their content. Field names resolve
+     through the parent chain (`toFun`/`map_add'` are on `AddHom`, not
+     `LinearMap`). With this, the "except proof terms" criterion stops excluding
+     declarations and starts showing them honestly.
+
+  Facts worth not re-deriving, several of which corrected a first guess:
+  extraction is ~47 min cold, mean 189 s per module, dominated by imports rather
+  than module size; `defSite := true` in `Bodies.lean` is load bearing, because
+  it is what emits the `id` the splice joins on; the extracted bodies omit the
+  binders a `variable` block supplied, the universe levels and the namespace
+  qualification, but *not* the explicit arguments — which is why the value is
+  spliced onto the generated signature rather than replacing it; and extracted
+  blocks carry their docstrings, where hand-quoted ones did not.
+
+- **Three decisions left open after the quoted-body pass**, largely overtaken by
+  the above; the first is now a question of which names to list rather than how
+  much to type:
   - *Which further definitions to quote.* `BodyPinBlueprint/AGENTS.md` now
     states the criterion. Applying it strictly would add blocks for
     `edgeConstraint`, `rigidityOperator`, `bodyPinGraph`, `partitionCapacity`,

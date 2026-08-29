@@ -267,3 +267,49 @@ would be ours to carry indefinitely; or post-processing the generated HTML,
 which would break the property that a page is what Verso rendered. Upstream
 runs a roadmap card system under `doc/roadmap/cards/`, so a feature request has
 somewhere to go.
+
+**What this repo does instead**, and it is a fourth route the list above missed:
+`BodyPinBlueprint.quotedBodyJs`, inlined into every page's `<head>` through
+`RenderConfig.extraJs`, splices each quoted body's *value* onto the end of the
+panel's generated signature, and takes the run it came from out of the prose.
+That is not post-processing — the generated file still holds the block where the
+chapter put it, and the move happens in the reader's browser — so the property
+survives.
+
+Splicing rather than replacing is the point. The signature is generated from the
+pinned environment and carries the full name, the universe levels, the qualified
+types, and every binder a `variable` block supplied; the quoted source carries
+the value and, because it is written against those `variable`s, a partial binder
+list. `RB31E2E.Sparse22.{u_1} {V : Type u_1} [DecidableEq V] (F :
+RB31E2E.SimpleEdgeSet V) : Prop` against `def Sparse22 (F : SimpleEdgeSet V) :
+Prop` is the shape of it. Joining them costs nothing; swapping one for the other
+would trade a generated guarantee for a hand-made copy.
+
+That solves *placement*. **Sourcing** is solved separately, and by a route none
+of the above lists: SubVerso's `subverso-extract-mod`, which is already in the
+dependency tree. It re-elaborates a module of the formalization and emits, per
+command, a `ModuleItem` carrying `defines : Array Name` and `code : Highlighted`
+— Verso's own type, so it renders with the same colours, hovers and links as any
+other Lean block. `BodyPinBlueprint/Bodies.lean` reads that back and a
+```BodyPinBlueprint.bodies fence names declarations instead of copying them.
+
+Three things make it the right route rather than merely a working one. It needs
+no change to the submodule: SubVerso's *anchor* mechanism would want
+`-- ANCHOR:` comments in the source, which is out of the question here, but
+module extraction needs none. Its `defines` names are fully qualified, so the
+join to a panel is exact rather than a dotted-suffix guess. And it is a proper
+Lake facet — `module_facet highlighted`, traced on the module's olean, writing
+to the *workspace root* build dir — so it caches, and it never writes inside the
+submodule. Measured against the eleven hand-quoted declarations that could be
+compared, it reproduced every one byte for byte.
+
+The cost is real and is recorded in `AGENTS.md`: about 47 minutes cold for the
+15 modules that hold a `def` or an `abbrev` a node names, roughly doubling a
+cold CI build, and a no-op once warm.
+
+It joins on the panel's `data-decl`, on the `id` Verso puts on a block's
+defining occurrence of a constant (`Token.Kind.idAttr`, which emits one only for
+a definition site), and on the `kw-occ-Lean.Parser.Command.<kind>` binding that
+marks each command start — so an upstream restyle that renamed any of those
+would stop it. It is written to leave the page alone whenever it cannot resolve,
+so what a restyle costs is the feature, not the page.

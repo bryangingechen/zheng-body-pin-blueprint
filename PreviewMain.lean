@@ -11,4 +11,6 @@ def main (args : List String) : IO UInt32 :=
     (%doc BodyPinBlueprint.Preview)
     args
     (extensionImpls := by exact extension_impls%)
-    (config := { extraCss := [BodyPinBlueprint.quotedBodyCss] })
+    (config :=
+      { extraCss := [BodyPinBlueprint.quotedBodyCss]
+        extraJs := [BodyPinBlueprint.quotedBodyJs] })
