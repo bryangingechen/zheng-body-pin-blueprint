@@ -93,9 +93,9 @@ which walks the same argument informally in six sections
 here, and follow the dependency graph. Note that the note's wording differs from
 the paper's throughout; where this blueprint quotes, it quotes the paper.
 
-Only the statement chapter is written. The other eight are stubs: their nodes
-exist, are tagged, and match the correspondence table, but the mathematics is
-not drafted, and each such chapter says so at its head.
+Not every chapter is drafted. One that is not says so at its head: its nodes
+exist, are tagged, and match the correspondence table, but the prose does not
+yet follow the argument.
 
 Two numbering systems appear on these pages and they are not the same. Headings
 such as "Definition 1.1.1" or "Theorem 1.4.2" are the blueprint's own numbering,
