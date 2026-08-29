@@ -251,6 +251,24 @@ plain predicates the sources give it: *is*, *has*, *satisfies*, *equals*,
 vertex has degree at most three" says everything "sparsity supplies the
 vertex" gestured at, and every clause of it can be checked.
 
+This family does not stay fixed by removing the instances: after *supplies*
+and *reaches* were rewritten, the same instinct returned in the flags chapter
+with fresh verbs — "the deletion ledger *prices* each step", "the induction
+*remembers* the triple", "a selection lemma *produces* a low-degree vertex".
+Every one of those verbs, and *yields*, *consumes*, *tracks*, *records*,
+*carries*, *handles* and *packages* with them, occurs **zero** times in the
+50,748 words of the human references. Where this document reaches for one of
+them, the references write *gives* (61), *shows* (20), *implies* (83), *we
+obtain* (11), *there exists* (38), or a passive. The verb list in
+`style-check.py` is an **error**, extended whenever a new instance is found;
+the fix is never to find a synonym the grep misses but to apply the
+restatement test. Two verbs stay out of the ban because their uses here are
+literal rather than agentive: *descends* (descent of scalars is the
+mathematical term) and *forces* (logical consequence, the paper's own proof
+vocabulary). Agents that may act remain what the rules below say: the paper,
+the formalization, a named declaration — and a chapter or section of either
+document, when the sentence is about the organization of the material.
+
 ## Proof-engineering idiom is not mathematics
 
 Compare:
@@ -314,6 +332,9 @@ failure modes to watch for, not hypotheticals.
 | "…a reader meeting a scheme-theoretic section with no formalization will ask whether it was skipped, and the answer belongs here rather than in a footnote." | narrating the blueprint's design inside a chapter | "This chapter records what §4 claims and which part of it the formal argument uses." |
 | "The rest is short." | clipped closer for cadence, no step stated | fused into the next sentence |
 | "The estimate is proved one vertex at a time, and sparsity supplies the vertex." | animated abstraction | "A $(2,2)$-sparse graph on $n$ vertices has at most $2n - 2$ edges, so some vertex has degree at most three." |
+| "The deletion ledger prices each step by the local increment." | animated abstraction, second generation | "By the deletion ledger, the change in the defect at each step is the local increment less three." |
+| "The induction instead remembers the triple: it records the three collinear neighbours … as a collinearity flag." | animated abstraction, second generation | "The paper instead strengthens the statement being proved: the triple is retained as a collinearity flag …" |
+| "A selection lemma produces a low-degree vertex." | animated abstraction — *produces* is 0-for-50,748 in the references | "A selection lemma gives a low-degree vertex." |
 | "…and the class reaches the main theorem through the selection lemma of §6.2 … the sufficiency argument bounds self-stresses" | animated abstraction, then *the sufficiency argument* with no antecedent | the sufficiency direction stated in full first, then the lemma's place in it |
 | "The chapter opens with a vocabulary table, because…" | narrating a layout — one that did not exist | the table, or nothing |
 | "The paper changes coefficient field constantly and silently." | scorekeeping flourish | the comparison, with both sides stated |
@@ -386,8 +407,11 @@ Three moves, in this order, before reaching for a frame.
 `scripts/style-check.py` greps for the tells above and prints what it finds, at
 two severities, and `--report` prints the register metrics.
 
-An **error** is one of the two banned constructions. `checks.sh` runs the script
-with `--strict`, so one of those fails the fast check list and CI with it.
+An **error** is one of the two banned constructions, or an animated-abstraction
+verb from the measured list (promoted 2026-08-29 after the family recurred; see
+"The text is not the subject"). `checks.sh` runs the script with `--strict`, so
+one of those fails the fast check list and CI with it. Witness blocks are
+excluded from the scan, so the paper's own words cannot trip an error.
 
 A **warning** is everything else — idiom, proof-engineering vocabulary, the
 dodge synonyms, identifier captions, a clipped paragraph-final sentence, a

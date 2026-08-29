@@ -73,9 +73,9 @@ Lemma 2.3, shows that $`u + \delta_v \le 3` whenever $`\deg_F(v) \le 3`,
 except in one case: a degree-three vertex whose three neighbours are
 collinear. The last two lemmas of the chapter show that in this exceptional
 case the three rigidity rows on pairs of neighbours already lie in the row
-space of the deleted graph, and the induction of
-{bpref "collinearity_flag"}[the flags chapter] records the case as a
-collinearity flag and carries it through the remaining steps.
+space of the deleted graph; in {bpref "collinearity_flag"}[the flags
+chapter] the case is retained as a collinearity flag and carried through the
+remaining steps of the induction.
 
 :::group "deletion_spine"
 The direction matrix over a coefficient field, the exact sequence, the ledger,
@@ -109,20 +109,19 @@ $r_{xy}(a_H)$, whereas $r_{vx}$ means $r_{vx}(a)$.
 
 The formalization takes the transpose as primary. A placement is a function
 $`V \to (\mathrm{Fin}\ 3 \to k)`, an edge weighting is a function on the edge
-set, and the load a weighting produces at one vertex coordinate is the sum of
+set, and the load a weighting induces at one vertex coordinate is the sum of
 the direction rows against it.
 {name RB31E2E.DirectionStress.directionEquilibrium}`directionEquilibrium` is
 that assignment bundled as a linear map; in its quoted body the proofs of
 additivity and homogeneity render as `⋯`, leaving the underlying coordinate
 function. Its kernel is the self-stress space, and
 {name RB31E2E.DirectionStress.directionStressDim}`directionStressDim` is its
-dimension — the number $`s` that the ledger below tracks and the induction
-bounds.
+dimension — the number $`s` of the ledger below, which the induction bounds.
 
 An unordered edge has no distinguished source, so the formalization picks one
-and defines the row symmetrically: the chosen source carries
-$`a_{\text{source}} - a_{\text{target}}` and the target carries its negative, so
-exchanging the two gives back the same function of the vertices. The paper
+and defines the row symmetrically: the block at the chosen source is
+$`a_{\text{source}} - a_{\text{target}}` and the block at the target is its
+negative, so exchanging the two gives back the same function of the vertices. The paper
 writes $`r_{xy}` and lets the symmetry pass without comment.
 
 ```BodyPinBlueprint.bodies
@@ -315,7 +314,8 @@ the local increment $u + \delta_v$.
 
 Both halves of (2.5) are theorems in the formalization: the stress half is
 {name RB31E2E.DirectionStress.directionStressDim_eq_delete_add_outsideResponseKernelDim}`directionStressDim_eq_delete_add_outsideResponseKernelDim`,
-and the transcendence-degree half is packaged with the bound $`\delta_v \le 3`
+and the transcendence-degree half is stated together with the bound
+$`\delta_v \le 3`
 as {name RB31E2E.CoordinateFieldTower.trdeg_deletion_ledger}`trdeg_deletion_ledger`.
 The paper's $`u` is formalized as
 {name RB31E2E.DirectionStress.outsideResponseKernelDim}`outsideResponseKernelDim`,
@@ -332,8 +332,8 @@ in the form $`s + \operatorname{trdeg}_k K + 2|\Gamma| \le 3|V|`, where
 $`\Gamma` is the set of collinearity flags carried by the induction of
 {bpref "stress_codim_flags"}[the flags chapter] and the flag-free case is
 $`\Gamma = \emptyset`. Equation (2.6) therefore has no counterpart as an
-equation either; the arithmetic it records is carried out where the predicate
-is proved, using the local increment $`u + \delta_v`.
+equation either; its arithmetic is carried out where the predicate is
+proved, using the local increment $`u + \delta_v`.
 
 If $`u + \delta_v \le 3`, the defect does not increase and the induction
 hypothesis applies. The formalization defines this inequality as
@@ -469,8 +469,9 @@ statements agree here because both kernels are one-dimensional and one contains
 the other.
 
 The paper's hypothesis is a bound on the degree of $`v` in $`F`; the Lean
-hypothesis is the same bound plus injectivity of the placement, which the paper
-carries from the start of the section and the formalization passes explicitly.
+hypothesis is the same bound plus injectivity of the placement, which the
+paper assumes from the start of the section and the formalization takes as
+an explicit hypothesis.
 
 # Descent and the three neighbour rows
 
@@ -546,7 +547,7 @@ degree, the response dimension, the collinearity, and membership of all three
 neighbour rows in the row space of the deleted graph. The collinearity flag
 created at this point ({bpref "collinearity_flag"}[the flags chapter]) uses
 the same three vertices in every one of those roles, so the statement has to
-produce one triple rather than several.
+give one triple rather than several.
 
 The paper works with $`a_H` as an $`L`-valued configuration throughout, and
 its collinearity claims move between $`L` and $`K` without comment. The
@@ -575,7 +576,7 @@ field towers, finite row systems and localization arithmetic.
 
 The vertex type changes as well as the field. In the paper, $`H = F - v` is a
 graph on a subset of the same ambient vertex set, so nothing has to be
-transported. In the formalization, deleting $`v` from a graph on $`V` produces
+transported. In the formalization, deleting $`v` from a graph on $`V` leaves
 a graph on the subtype $`\{u : u \ne v\}`, so a stress space has to be moved
 along the inclusion and the two presentations proved to have the same
 dimension — the same convention that makes

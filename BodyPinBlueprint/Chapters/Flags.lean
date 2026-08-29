@@ -80,10 +80,11 @@ $$`
 \dim_K \ker D_F(a)^T + \trdeg_k K \le 3|V|.
 `
 
-The proof deletes one low-degree vertex at a time, and
-{bpref "deletion_ledger"}[the deletion ledger] prices each step by the local
-increment $`u + \delta_v`: the defect does not increase exactly when
-$`u + \delta_v \le 3`. In the exceptional case of
+The inequality is proved by deleting one low-degree vertex at a time, and by
+{bpref "deletion_ledger"}[the deletion ledger] the change in the defect at
+each step is the local increment $`u + \delta_v` less three, so the defect
+does not increase exactly when $`u + \delta_v \le 3`. In the exceptional
+case of
 {bpref "low_degree_classification"}[the local classification] that bound
 fails — the deleted vertex has exactly three neighbours, their configuration
 points are collinear, and $`u + \delta_v = 4` — but
@@ -91,28 +92,28 @@ points are collinear, and $`u + \delta_v = 4` — but
 neighbours] already lie in the row space of the deleted graph. When one of
 the three neighbour edges is absent and can be added, adding it restores the
 lost stress dimension and the induction continues. When all three are
-present, no edge can be added, and the induction instead remembers the
-triple: it records the three collinear neighbours, a chosen missing edge on
-them, and an auxiliary vertex as a _collinearity flag_, and it proves the
-stronger inequality
+present, no edge can be added, and the paper instead strengthens the
+statement being proved: the triple is retained as a _collinearity flag_,
+together with a chosen missing edge on it and an auxiliary vertex, and the
+inequality becomes
 
 $$`
 \dim_K \ker D_G(a)^T + \trdeg_k K + 2|\Gamma| \le 3|V|
 `
 
-for a graph carrying a family $`\Gamma` of such flags, each flag contributing
-the two dimensions that the collinearity of its triple cuts out. That
-statement is Theorem 3.9, this chapter's main result; the flag-free case
-$`\Gamma = \emptyset` is Theorem 1.2, the inequality above.
+for a graph carrying a family $`\Gamma` of such flags, with a term of two
+for each flag, the codimension of the collinearity condition on its triple.
+That statement is Theorem 3.9, this chapter's main result; the flag-free
+case $`\Gamma = \emptyset` is Theorem 1.2, the inequality above.
 
 We first state the flag vocabulary and the sparsity condition on the
 simultaneous completion, then the counting facts about how flags may overlap.
-A selection lemma produces a low-degree vertex that is in no flag or in
-exactly one; a pivot and a local classification handle the second case; two
-augmentation lemmas produce the edge that each exceptional branch adds back;
-and Theorem 3.9 assembles the induction. A closing section describes the
-transitions between flag states that the formalization builds and the paper
-performs inside one proof.
+A selection lemma then gives a low-degree vertex that is in no flag or in
+exactly one; for the second type there are a pivot and a local
+classification; two augmentation lemmas give the edge that is added back in
+each exceptional case; and the proof of Theorem 3.9 combines them into the
+induction. A closing section describes the transitions between flag states
+that the formalization builds and the paper performs inside one proof.
 
 The formalization renames every object of this section, so the two
 vocabularies are set side by side once, here, before either is used:
@@ -208,9 +209,10 @@ object representing one flag on its own. A flag is an inhabitant $`t` of a
 finite index type, and its data are the values at $`t` of the fields
 {name RB31E2E.ProvenanceFlag.State.terminals}`terminals` and
 {name RB31E2E.ProvenanceFlag.State.missing}`missing` of the
-system-level structure of the next node, which also carries conditions (3.1)
-and (3.2): each terminal set has three elements, the missing edge sits inside
-it, is absent from the live graph, and every other terminal pair is present.
+system-level structure of the next node, whose remaining fields are
+conditions (3.1) and (3.2): each terminal set has three elements, the
+missing edge lies inside it, is absent from the live graph, and every other
+terminal pair is present.
 The auxiliary vertex needs no name of its own, since the completion is built
 on the sum type $`V \oplus \Gamma` and the ghost vertex of the flag $`t` is
 the right summand $`t` itself. The realization condition is not part of the
@@ -350,8 +352,8 @@ and (3.4) is
 {name RB31E2E.ProvenanceFlag.State.two_mul_card_add_one_le_card_terminalUnion}`two_mul_card_add_one_le_card_terminalUnion`;
 both are derived from the actual finite edge unions, with the six-edge count
 and the pairwise disjointness proved as {name Finset}`Finset` identities.
-The bipartite graph $`B_{\mathcal{T}}` is never constructed: what the
-selection lemma below consumes is the quantified inequality itself, recorded
+The bipartite graph $`B_{\mathcal{T}}` is never constructed: the proof of
+the selection lemma below uses only the quantified inequality itself, stated
 as {name RB31E2E.ProvenanceFlag.State.TerminalHyperforest}`TerminalHyperforest`
 and proved from completion sparsity.
 
@@ -438,7 +440,7 @@ differ, so $`\deg_G(x) \ge h_x`.
 Suppose neither type of vertex exists. Then every vertex of $`O` has degree
 at least four and every vertex of $`P` at least three, so the degree sum
 gives $`2m \ge 4|O| + 2|P| + 3k`, using $`\sum_{x \in S} h_x = 3k - |P|`.
-Combining with the edge bound yields $`7k + 4 \le 2|P| + 4|S|`, while
+Combining this with the edge bound gives $`7k + 4 \le 2|P| + 4|S|`, while
 $`h_x \ge 2` on $`S` gives
 $`2|P| + 4|S| \le 2(|P| + \sum_{x \in S} h_x) = 6k`, a contradiction.
 :::
@@ -461,8 +463,8 @@ triple $`T_\gamma = \{v, p, q\}`. The three possible rigidity rows on three
 distinct collinear points span the same two-dimensional space —
 {bpref "certified_response_edge"}[the observation of Example 2.2] — so the
 distinguished missing edge can be moved to an edge incident with $`v`
-without changing the completion or the row space. The deletion step then
-removes $`v` and the flag $`\gamma` together, and the retained field $`L`,
+without changing the completion or the row space. The vertex $`v` and the
+flag $`\gamma` are then deleted together, and the retained field $`L`,
 configuration $`a_H`, and local numbers $`u`, $`\delta_v` of
 {bpref "retained_coordinate_field"}[the deletion chapter] apply verbatim.
 Flag collinearity places $`a_v` on the line through $`a_p` and $`a_q`, which
@@ -522,10 +524,10 @@ in the span of the other two, so exchanging one live terminal edge for the
 missing one preserves the row space, and rank–nullity turns the unchanged
 rank and edge count into an unchanged stress dimension.
 {name RB31E2E.ProvenanceFlag.State.exists_privatePivotData}`exists_privatePivotData`
-packages both halves: every private terminal admits an orientation with
-$`d_\gamma` incident to $`v`, produced either by renaming $`p` and $`q` or by
-the pivot above, together with the facts about the pivoted state that the
-private branch of the induction consumes.
+states both halves at once: every private terminal admits an orientation
+with $`d_\gamma` incident to $`v`, obtained either by renaming $`p` and $`q`
+or by the pivot above, together with the facts about the pivoted state that
+are used in the private case of the induction.
 
 :::lemma_ "private_local_classification" (parent := "flags_spine") (lean := "RB31E2E.DirectionStress.private_nonexceptional_or_exceptional, RB31E2E.DirectionStress.privateExceptional_classification, RB31E2E.DirectionStress.privateExceptional_bothVirtualRows_mem") (tags := "paper") (uses := "missing_edge_pivot, deletion_ledger")
 In the pivoted shape, if $`\deg_G(v) \le 2`, then either the local increment
@@ -566,8 +568,9 @@ If $\deg_G(v) \le 2$, then one of the following holds:
 
 This is the one-flag analogue of {bpref "low_degree_classification"}[the
 low-degree classification]: deleting a private support vertex also deletes
-its flag, which returns two of the three ambient dimensions, so the local
-allowance drops from $`u + \delta_v \le 3` to $`u + \delta_v \le 1`. The
+its flag, so the right-hand side of the budget falls by three while the flag
+term falls by two, and the local allowance is $`u + \delta_v \le 1` in place
+of $`u + \delta_v \le 3`. The
 formalization states the allowance as the predicate
 {name RB31E2E.DirectionStress.PrivateNonexceptional}`PrivateNonexceptional`
 and the exceptional case as its literal negation, exactly as the deletion
@@ -584,7 +587,7 @@ RB31E2E.DirectionStress.PrivateExceptional
 {name RB31E2E.DirectionStress.privateExceptional_classification}`privateExceptional_classification`
 proves that a failure of the allowance has one shape only. Its hypotheses
 are the pivoted flag data: $`vp` live, $`vq` missing, degree at most two,
-and $`a_v, a_p, a_q` collinear. Its conclusion produces the unique second
+and $`a_v, a_p, a_q` collinear. Its conclusion gives the unique second
 neighbour $`z`, the values in (3.10), collinearity of $`a_v, a_p, a_z`, and
 the vanishing of
 {name RB31E2E.DirectionStress.deletedConnectingClass}`deletedConnectingClass`,
@@ -601,10 +604,11 @@ augmentation lemma below shows one of them can actually be added.
 
 # Two augmentation lemmas for the completion
 
-Both exceptional branches end by inserting an edge whose row is already in
-the retained row space, and the insertion must preserve completion sparsity.
-The two lemmas of this section produce that edge, one for the outside case
-and one for the private case. Their proofs are tight-set arguments in the
+Both exceptional cases end with the insertion of an edge whose row is
+already in the retained row space, and the insertion must preserve
+completion sparsity. The two lemmas of this section give that edge, one for
+the outside case and one for the private case. Their proofs are tight-set
+arguments in the
 completion — {bpref "addable_edge_triple"}[the addable-edge lemma] and
 {bpref "uncrossing"}[uncrossing] applied to $`\widehat{G}` — and, like those
 of the sparsity chapter, they do not use the construction theorem that the
@@ -660,8 +664,8 @@ $`\widehat{G}` directly. Part (ii) is
 {name RB31E2E.ProvenanceFlag.State.outside_complete_triangle_live}`outside_complete_triangle_live`,
 proved by the tight-$`K_4` argument of the paper, and
 {name RB31E2E.ProvenanceFlag.State.outside_complete_or_exists_sparse_insertedChild}`outside_complete_or_exists_sparse_insertedChild`
-returns the addable branch already packaged as a smaller sparse flag state,
-with the deleted apex removed and the edge inserted.
+states the addable alternative on the smaller flag state directly: the
+outside vertex deleted, the edge inserted, and the child completion sparse.
 
 :::lemma_ "private_augmentation" (parent := "flags_spine") (lean := "RB31E2E.ProvenanceFlag.State.private_response_edge_addable") (tags := "paper") (uses := "private_local_classification, missing_edge_pivot")
 Suppose $`v \in P` satisfies (3.10), its unique flag is $`\gamma` with
@@ -706,13 +710,13 @@ The formal statement,
 {name RB31E2E.ProvenanceFlag.State.private_response_edge_addable}`private_response_edge_addable`,
 is proved on the literal completion with both the private terminal and its
 consumed ghost deleted, so the graph it augments is exactly the simultaneous
-completion of the child system that the private branch recurses into. The
+completion of the child system on which the induction continues. The
 blocking argument uses
 {name RB31E2E.ProvenanceFlag.State.flagVertices_tight}`flagVertices_tight` —
 the completed $`K_4` of the old flag is tight — together with
 {bpref "uncrossing"}[uncrossing] and the fact that a tight set with at least
-two vertices has at least four, and it never touches the construction
-theorem, which settles for the flags what
+two vertices has at least four. The construction theorem is not used, which
+confirms at the level of proofs what
 {bpref "lean_nixon_owen_reduction"}[the sparsity chapter] claimed from
 reachability alone.
 
@@ -736,11 +740,11 @@ RB31E2E.ProvenanceFlag.FunctionFieldBranch.stressDim
 RB31E2E.ProvenanceFlag.FunctionFieldBranch.SemismallBudget
 ```
 
-The last definition is the inequality the whole induction proves.
-{bpref "deletion_ledger"}[The deletion chapter] records that the paper's
-defect $`\Delta(G, \Gamma, a) = s + \trdeg_k K + 2|\Gamma| - 3|V|` has no
-Lean counterpart as a quantity; the statement $`\Delta \le 0` appears
-instead as this predicate, in the subtraction-free form
+The last definition is the inequality the whole induction proves. As noted
+in {bpref "deletion_ledger"}[the deletion chapter], the paper's defect
+$`\Delta(G, \Gamma, a) = s + \trdeg_k K + 2|\Gamma| - 3|V|` has no Lean
+counterpart as a quantity; the statement $`\Delta \le 0` appears instead as
+this predicate, in the subtraction-free form
 
 $$`
 s + \trdeg_k K + 2|\Gamma| \le 3|V|,
@@ -758,7 +762,7 @@ defect is carried out inside those proofs.
 Let $`(G = (V, E), \Gamma)` be a sparse collinearity-flag system, let $`K/k`
 be a finitely generated field extension, and let $`a : V \to K^3` be an
 injective configuration that realizes all the flags and whose coordinates
-generate $`K`. Then
+generate $`K`; then
 
 $$`
 \dim_K \ker D_G(a)^T + \trdeg_k K + 2|\Gamma| \le 3|V|.
@@ -790,7 +794,7 @@ Write $`n = |V|`, $`j = |\Gamma|`, $`s = \dim_K \ker D_G(a)^T` and
 $`\Delta(G, \Gamma, a) = s + \trdeg_k K + 2j - 3n`; the assertion is
 $`\Delta \le 0`, proved by strong induction on $`n`. If $`n = 0` then
 $`E = \Gamma = \emptyset` and $`K = k`, so $`\Delta = 0`. Otherwise the
-selection lemma produces a vertex $`v` of one of its two types.
+selection lemma gives a vertex $`v` of one of its two types.
 
 _An outside vertex of degree at most three._ Delete $`v` and keep every
 flag; the child completion embeds in $`\widehat{G} - v`, so the child system
@@ -800,19 +804,19 @@ $`u + \delta_v \le 3` the induction hypothesis applies to $`H = G - v`.
 Otherwise the low-degree classification gives $`\delta_v = 3`, $`u = 1` and
 three distinct collinear neighbours $`N` whose pairwise rigidity rows lie in
 $`\operatorname{row}_L D_H(a_H)`. If $`\widehat{G} - v` is not complete on
-$`N`, the outside augmentation lemma yields an addable nonedge $`f`; it is a
+$`N`, the outside augmentation lemma gives an addable nonedge $`f`; it is a
 certified response edge, so adding it raises the self-stress dimension of
 $`H` from $`t` to $`t + 1 = s`, since the ledger gives $`s = t + u` with
-$`u = 1`. Every retained flag survives, and
+$`u = 1`. Every retained flag remains valid, and
 $`\Delta(H + f, \Gamma, a_H) = \Delta(G, \Gamma, a)` with one live vertex
 fewer. If instead the neighbour triangle is complete, its three edges are
 live and no two of its vertices share a flag; delete one triangle edge
 $`d_N` and register $`(T_\star, d_\star) = (N, d_N)` with a new ghost as a
 new flag. Mapping the new ghost to $`v` embeds the new completion into
-$`\widehat{G}`, so the enlarged system is sparse; removing one collinear
-triangle row drops the stress dimension to $`s - 2`, while $`j` grows by one
-and $`n` drops by one, so $`\Delta` is unchanged and the induction
-hypothesis applies again.
+$`\widehat{G}`, so the enlarged system is sparse. Removing one collinear
+triangle row preserves the rank, so the stress dimension becomes $`s - 2`,
+while $`j` increases by one and $`n` decreases by one; hence $`\Delta` is
+unchanged and the induction hypothesis applies again.
 
 _A private support vertex of degree at most two._ Pivot so that
 $`d_\gamma = vq` with $`vp, pq` live; the pivot changes neither the
@@ -823,9 +827,9 @@ $`\Delta(G, \Gamma, a) = \Delta(H, \Gamma \setminus \{\gamma\}, a_H) +
 (u + \delta_v - 1)`. If $`u + \delta_v \le 1` the induction hypothesis
 applies. Otherwise the private classification forces $`\delta_v = u = 1`,
 degree exactly two, and the two candidate rows $`r_{pz}, r_{qz}` in the
-retained row space; the private augmentation lemma adds one of the two
-candidates to the child completion, the insertion is a certified response
-edge restoring the stress dimension to $`s`, and
+retained row space; by the private augmentation lemma one of the two
+candidates is an addable edge $`f` of the child completion, its insertion is
+a certified response edge, the stress dimension is restored to $`s`, and
 $`\Delta(H + f, \Gamma \setminus \{\gamma\}, a_H) = \Delta(G, \Gamma, a)`
 with one live vertex fewer.
 :::
@@ -839,13 +843,13 @@ decreases at every recursive call because each move constructs its child on
 the subtype of remaining vertices. The base case is
 the empty live type, where the state's own fields force $`\Gamma` to be
 empty and coordinate generation forces $`\trdeg_k K = 0`. Each of the four
-recursive branches is closed in its own module: the two nonexceptional
-deletions consume the local payments proved in the deletion ledger, the
-outside exceptional branch runs the insert-or-register alternative with
-stress and flag codimension changing by exactly two in the registered case,
-and the private exceptional branch transports the branch across the pivot
-before deleting; the closing section of this chapter describes those
-transitions one by one.
+cases of the induction is proved in its own module: the two nonexceptional
+deletions rest on the local payments proved in the deletion ledger; in the
+outside exceptional case an edge is inserted or the neighbour triple is
+registered, with the stress and flag terms changing by exactly two each in
+the registered alternative; and in the private exceptional case the branch
+is transported across the pivot before the deletion. We describe those
+transitions one by one in the closing section.
 
 One hypothesis differs in form. The paper redefines the retained data after
 each move and reuses the ambient field $`K`; the formalization measures each
@@ -860,7 +864,7 @@ every step.
 :::theorem "stress_codim" (parent := "flags_spine") (lean := "RB31E2E.ProvenanceFlagGroundedPF.groundedPF_of_provenanceFlag_semismallness, RB31E2E.endToEndBodyPinStatement_of_groundedPF") (tags := "paper, deviation") (uses := "stress_codim_flags")
 Let $`F` be a finite simple $`(2,2)`-sparse graph on the vertex set $`V`,
 let $`K/k` be a finitely generated field extension, and let
-$`a : V \to K^3` be injective with coordinates generating $`K`. Then
+$`a : V \to K^3` be injective with coordinates generating $`K`; then
 
 $$`
 \dim_K \ker D_F(a)^T + \trdeg_k K \le 3|V|.
@@ -891,8 +895,8 @@ $`\Gamma = \emptyset`, so that $`\widehat{G} = F` and (3.14) is (1.5). The
 formalization makes the same specialization:
 {name RB31E2E.ProvenanceFlagGroundedPF.emptyFlagState}`emptyFlagState` puts
 the empty flag type on $`F`, and its completion is $`F` itself. It never
-states (1.5) as a standalone theorem, however. What the assembly of
-{bpref "formal_statement"}[the main theorem] consumes is a _grounded_ form:
+states (1.5) as a standalone theorem, however. The assembly of
+{bpref "formal_statement"}[the main theorem] uses a _grounded_ form instead:
 the placement sends a root vertex to zero, the base field is $`\mathbb{Q}`,
 and the right-hand side is $`3(|V| - 1)`, the number of spatial variables
 left after grounding.
@@ -919,14 +923,14 @@ vertex with its flag, inserting a virtual response edge, registering a new
 flag, pivoting a missing edge — is a constructor producing a literal child
 state on the exact remaining types, with completion sparsity proved by
 transporting the child completion into the parent's, and with a budget-lift
-theorem carrying the child's semismallness back to the parent. The paper
+theorem deriving the parent's budget from the child's. The paper
 performs the corresponding changes of flag system inside the proof of
 Theorem 3.9 and needs no such statements.
 :::
 
 The paper's induction modifies one graph in place; the formalization, whose
-state is defined on exact types, rebuilds the state at every move. Four
-constructors produce children:
+state is defined on exact types, rebuilds the state at every move. The
+child states are built by four constructors:
 {name RB31E2E.ProvenanceFlag.State.deleteOutside}`deleteOutside` restricts
 every field to the subtype of remaining vertices,
 {name RB31E2E.ProvenanceFlag.State.deletePrivate}`deletePrivate` restricts
@@ -943,20 +947,19 @@ terminates.
 
 On the numerical side, the deletion-ledger module identifies each child's
 stress dimension with that of the parent's deleted graph and proves the two
-local
-budget lifts the nonexceptional branches consume: an outside deletion
-removes three ambient dimensions, so a payment of
-$`u + \delta_v \le 3` suffices
+local budget lifts used in the nonexceptional cases: an outside deletion
+removes three ambient dimensions, so a payment of $`u + \delta_v \le 3`
+suffices
 ({name RB31E2E.ProvenanceFlag.FunctionFieldBranch.semismallBudget_of_deleteOutsideIntrinsic}`semismallBudget_of_deleteOutsideIntrinsic`),
-while a private deletion removes three but returns two with the deleted
-flag, so the allowance is exactly one
+while a private deletion removes three ambient dimensions but also one flag
+term of two, so the allowance is exactly one
 ({name RB31E2E.ProvenanceFlag.FunctionFieldBranch.semismallBudget_of_deletePrivateIntrinsic}`semismallBudget_of_deletePrivateIntrinsic`).
-The two exceptional branches are closed by
+The two exceptional cases are proved by
 {name RB31E2E.ProvenanceFlag.FunctionFieldBranch.semismallBudget_of_outsideExceptional}`semismallBudget_of_outsideExceptional` —
-whose registered case erases one collinear triangle row and gains one flag,
-changing stress and flag term by exactly two each — and
+in its registered alternative one collinear triangle row is erased and one
+flag is added, so the stress and flag terms change by exactly two each — and
 {name RB31E2E.ProvenanceFlag.FunctionFieldBranch.semismallBudget_of_privateExceptional}`semismallBudget_of_privateExceptional`,
-which transports the branch across the pivot first. The transcendence
+whose proof first transports the branch across the pivot. The transcendence
 accounting in all four rests on the tower equality of
 {bpref "lean_base_change"}[the base-change infrastructure], and the closing
 natural-number arithmetic is collected in one module so that no truncated

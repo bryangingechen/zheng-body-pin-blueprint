@@ -58,12 +58,20 @@ TELLS: list[tuple[str, str, str]] = [
     ("warn", "dodged role-naming: 'the mechanism is'", r"\bthe mechanism is\b"),
     ("warn", "dodged role-naming: 'the value Y needs'", r"\bthe value [a-z $]{0,40}\bneeds\b"),
     ("warn", "scorekeeping flourish: 'does the same work'", r"\bdo(es)? the same work\b"),
-    # An abstraction with a vivid verb -- travelling, supplying, dwelling.
+    # An abstraction with a vivid verb -- pricing, remembering, producing.
     # The subject is fine; the verb asserts agency it does not have.  Restate
-    # with is/has/satisfies/implies and a because/so chain (STYLE.md, "The
-    # text is not the subject").
-    ("warn", "animated abstraction: vivid verb on an abstract subject",
-     r"\b(supplies|reaches the|lives? (?:on|in)|sits (?:in|on|at))\b"),
+    # with is/has/satisfies/implies/gives and a because/so chain (STYLE.md,
+    # "The text is not the subject").  Promoted to an error 2026-08-29, after
+    # the family recurred with fresh verbs in the flags chapter and every verb
+    # below was measured at zero occurrences in the human references; the
+    # references' own stock where these get written is gives (61), shows (20),
+    # implies (83), we obtain (11), there exists (38).  Witnesses are already
+    # excluded from the scan, so a quoted paper sentence cannot trip this.
+    ("error", "animated abstraction: vivid verb on an abstract subject "
+              "(use gives / shows / implies / we obtain)",
+     r"\b(supplies|produces?|prices?|remembers?|knows|consumes?|tracks|"
+     r"handles?|packages?|packaged|recurses?|adds back|yields?|"
+     r"reaches the|lives? (?:on|in)|sits (?:in|on|at))\b"),
 
     # -- Register.
     ("warn", "mission statement", r"\b(this blueprint (exists|is for)|job of this blueprint|the (first|whole) job|the deliverable)\b"),

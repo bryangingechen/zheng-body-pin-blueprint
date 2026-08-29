@@ -74,7 +74,7 @@ at most three, and deleting a vertex leaves a sparse graph; the deletion
 argument therefore never leaves the class and always has a vertex of degree at
 most three to remove. We first state sparsity and tightness, then the two
 consequences of supermodularity that the deletion argument uses, and then
-Lemma 2.1, which produces an addable edge among the three neighbours of a
+Lemma 2.1, which gives an addable edge among the three neighbours of a
 deleted degree-three vertex. In the exceptional case of
 {bpref "low_degree_classification"}[the local classification] those three
 neighbours are collinear, and the induction continues on the smaller graph
@@ -258,7 +258,7 @@ The formal proof uses only the tight-set combinatorics above; in particular it
 does not depend on the construction theorem of the next section. Like the
 paper's proof, it splits on how many of the three neighbour edges are missing:
 {name RB31E2E.degree_three_neighbour_triangle_complete_or_addable}`degree_three_neighbour_triangle_complete_or_addable`
-assembles one lemma for a single missing edge and one for two.
+combines one lemma for a single missing edge and one for two.
 
 # A construction theorem with no paper counterpart
 
@@ -320,7 +320,7 @@ child edge is an edge of a sparse parent set, the child set is sparse.
 RB31E2E.Sparse22Transport.mapEdgeSet
 ```
 
-In the formalization, deleting a vertex produces an edge set on a smaller
+In the formalization, deleting a vertex leaves an edge set on a smaller
 vertex type — the subtype of the remaining vertices — rather than on a subset
 of one fixed vertex set, and creating a flag changes the type again, by
 adjoining an auxiliary vertex. A sparse edge set therefore has to be moved

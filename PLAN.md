@@ -284,6 +284,16 @@ Findings worth keeping from the writing:
   tokens (`degG`, `dimK`, `trdegk`) survive as words in the text layer, and
   §1 hyphenates one word across a line break. The chapter's leading comment
   carries the list.
+- A reading of the drafted chapter found the animated-abstraction instinct
+  recurring with verbs the checker did not match — "the deletion ledger
+  *prices* each step", "the induction *remembers* the triple", "a selection
+  lemma *produces* a low-degree vertex". Measured against the references,
+  *produces*, *yields*, *consumes*, *tracks*, *handles*, *packages*,
+  *remembers* and *prices* are all 0-for-50,748; the corpus writes *gives*,
+  *shows*, *implies*, *we obtain*. Every instance across the document was
+  rewritten, the family is now an **error** in `style-check.py` with the
+  extended verb list, and STYLE.md records the measurement and the two
+  deliberate exemptions (*descends*, *forces*).
 
 *Exit met:* the induction in `provenanceFlag_semismallness` is readable from
 the blueprint alone — the Theorem 3.9 proof block walks both cases with the
@@ -584,7 +594,12 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
 
   *Still open from this pass:* promoting warning families that show zero
   legitimate uses after the next chapters are drafted (candidates: *exists
-  to*, *the mechanism is*, the animated-abstraction verbs).
+  to*, *the mechanism is*). The animated-abstraction family was promoted
+  ahead of schedule — see the Phase 3 findings: it recurred in the flags
+  chapter with verbs the grep did not know (*prices*, *remembers*,
+  *produces*), the whole extended list measured zero in the references, and
+  it now gates. Witness blocks were confirmed excluded from the scan, so the
+  promotion cannot fail a build on the paper's own words.
 
 - **`ci-pages.sh` does not clean its output directory.** Found 2026-08-29 while
   verifying the prose pass: renaming a section heading leaves the old page and

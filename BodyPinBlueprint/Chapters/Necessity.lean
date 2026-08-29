@@ -270,7 +270,7 @@ injective, so the rank of that operator is the full $`6(t-1)`; the same rank
 is at most the sum of the bundle capacities; and the partition inequality
 follows by comparing the two.
 
-The two arguments correspond clause by clause. Where the paper produces a
+The two arguments correspond clause by clause. Where the paper constructs a
 nontrivial tuple, the formalization proves injectivity; where the paper counts
 ranks, the formalization computes the {name Module.finrank}`finrank` of a
 range; and the paper's grounding step, "modulo the six-dimensional diagonal

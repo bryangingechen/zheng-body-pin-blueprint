@@ -503,7 +503,7 @@ statements differ only in the reading of "generically rigid".
 
 Since necessity is a theorem, the equivalence is equivalent to its sufficiency
 direction alone: that the partition condition implies maximum-rank generic
-rigidity. The formalization records that trivial consequence as
+rigidity. The formalization states that trivial consequence as
 {name RB31E2E.endToEndBodyPinStatement_iff_sufficiency}`endToEndBodyPinStatement_iff_sufficiency`
 and uses it once, in the final assembly, to avoid restating both directions
 there. Necessity is proved separately, in {bpref "necessity"}[the necessity
