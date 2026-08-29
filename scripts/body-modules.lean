@@ -25,8 +25,13 @@ def moduleOf? (env : Environment) (decl : Name) : Option Name :=
   | some idx => env.header.moduleNames[idx.toNat]?
   | none => none
 
-/-- `def`, `abbrev`, `theorem`, … as the blueprint would label it. -/
+/-- `def`, `abbrev`, `theorem`, … as the blueprint would label it.  A structure
+projection is a reducible definition to the kernel, but it is declared by its
+parent structure rather than by a command of its own, so it is reported
+separately: the panel renders the structure's fields, and the quoted-body rule
+does not apply to it. -/
 def kindOf (decl : Name) : CoreM String := do
+  if (← getEnv).isProjectionFn decl then return "projection"
   match (← getEnv).find? decl with
   | some (.thmInfo _) => return "theorem"
   | some (.axiomInfo _) => return "axiom"

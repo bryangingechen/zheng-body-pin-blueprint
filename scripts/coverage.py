@@ -109,6 +109,11 @@ KERNEL_CLASS = {
     "inductive": "structure", "constructor": "structure",
     "opaque": "other", "axiom": "other",
 }
+# Kernel kinds with no source-level command of their own: a projection or a
+# constructor is declared by its parent structure or inductive, so the source
+# scan rightly returns nothing for one, and `quoted_bodies` already reports a
+# warning for it. `kinds_agree` must not read that as a scan defect.
+KERNEL_SUBDECLARATION = {"constructor", "projection"}
 
 # `status` in the table -> the tag a node must carry. The two vocabularies are
 # otherwise identical; see AGENTS.md, "Tags carry blueprint state".
@@ -274,6 +279,8 @@ def kinds_agree(kinds: dict[str, str]) -> list[str]:
         return []
     errors = []
     for item in json.loads(path.read_text())["declarations"]:
+        if item["kind"] in KERNEL_SUBDECLARATION:
+            continue
         want = KERNEL_CLASS.get(item["kind"])
         got = kinds.get(item["name"])
         if want is None or got == want:
