@@ -63,10 +63,11 @@ against the transcendence degree released by the deleted point, and a local
 classification says what can happen when the deleted vertex has degree at most
 three.
 
-One case survives the classification unpaid: a degree-three vertex whose three
+One case is left over: a degree-three vertex whose three
 neighbours are collinear. Everything in {bpref "collinearity_flag"}[the flags chapter] exists to carry
-that case through the induction, and the last two lemmas of this chapter are
-what makes it usable when it occurs.
+that case through the induction, and the last two lemmas of this chapter show
+that when it occurs the three rows on pairs of neighbours already lie in the
+row space of the deleted graph.
 
 :::group "deletion_spine"
 The direction matrix over a coefficient field, the exact sequence, the ledger,
@@ -74,7 +75,7 @@ and the local classification at a low-degree vertex.
 :::
 
 :::group "deletion_infrastructure"
-Base-change and field-tower plumbing with no paper counterpart.
+Base change and field towers, with no paper counterpart.
 :::
 
 # Direction rows over a coefficient field
@@ -103,10 +104,9 @@ $`V \to (\mathrm{Fin}\ 3 \to k)`, an edge weighting is a function on the edge
 set, and the load a weighting produces at one vertex coordinate is the sum of
 the direction rows against it.
 {name RB31E2E.DirectionStress.directionEquilibrium}`directionEquilibrium` is
-that function bundled as a linear map: with its additivity and homogeneity
-obligations elided, what is left is one field naming the coordinate function,
-which is where the mathematics is. Its kernel is the
-self-stress space, and
+that function bundled as a linear map. Its additivity and homogeneity
+obligations are elided, leaving a single field that names the coordinate
+function. Its kernel is the self-stress space, and
 {name RB31E2E.DirectionStress.directionStressDim}`directionStressDim` is the
 dimension the whole induction bounds.
 
@@ -171,9 +171,8 @@ The formalization carries $`L` as an
 {name RB31E2E.DirectionStress.retainedCoordinates}`retainedCoordinates` of the
 three coordinates of every vertex other than $`v`, and $`\delta_v` as a
 {name Cardinal}`Cardinal`. Neither definition mentions the coordinates of
-$`v`: $`L` is what
-survives the deletion, and $`\delta_v` is the transcendence degree of the whole
-of $`K` over it. The bound
+$`v`: $`L` uses only the coordinates that survive, and $`\delta_v` is the
+transcendence degree of the whole of $`K` over it. The bound
 $`\delta_v \le 3` is
 {name RB31E2E.DirectionStress.outsideExtensionTrdeg_le_three}`outsideExtensionTrdeg_le_three`,
 and it is proved from the hypothesis that the coordinates of $`a` generate
@@ -234,7 +233,7 @@ weighting of $F$ to $E_v$, give the exact sequence
 \end{lemma}
 ```
 
-The formalization proves this twice over, at two levels. The linear algebra is
+The formalization proves this in two layers. The linear algebra is
 separated out with no graph in sight: for maps $`A : X \to Y`, $`B : Z \to Y`
 and $`C : Z \to W`, the block map $`(x, z) \mapsto (Ax + Bz, Cz)` has a kernel
 that surjects onto the kernel of $`z \mapsto [Bz]`, with fibre $`\ker A`. That
@@ -246,7 +245,7 @@ The graph-level half is then two linear equivalences and a rewriting: edge
 weights split along
 {name RB31E2E.DirectionStress.edgeDeletionEquiv}`edgeDeletionEquiv`, loads split
 along {name RB31E2E.DirectionStress.splitVertexLoads}`splitVertexLoads`, and the
-direction equilibrium map becomes the block map on the nose. The paper's
+direction equilibrium map becomes the block map exactly. The paper's
 $`\partial_v` is
 {name RB31E2E.DirectionStress.deletedConnectingClass}`deletedConnectingClass`,
 whose vanishing on a local weight is exactly the statement that the load that
@@ -259,14 +258,14 @@ RB31E2E.DirectionStress.deletedConnectingClass
 
 The first of the two is the paper's $`\mu \mapsto [B_v\mu]` with no graph in
 it: apply $`B`, take the class modulo the image of $`A`. The second supplies the
-three maps, and its type is where the deletion appears: the kernel of the local
+three maps, and the deletion appears in its type: the kernel of the local
 equilibrium at $`v` for the source, and the loads on the vertices away from
 $`v`, modulo the image of the retained equilibrium map, for the target.
 
 The exactness of (2.3) is not stated as such anywhere in the formalization.
 What is stated is its numerical consequence, $`s = t + u`, and the module
 comment says why: no rank identity or exactness assertion is supplied as a
-hypothesis, so the dimension formula is what the induction is given.
+hypothesis, so the induction is given the dimension formula and nothing else.
 
 :::definition "deletion_ledger" (parent := "deletion_spine") (lean := "RB31E2E.CoordinateFieldTower.trdeg_deletion_ledger, RB31E2E.DirectionStress.outsideResponseKernelDim") (tags := "paper, deviation") (uses := "stress_exact_sequence")
 Write $`s = \dim_K \ker D_F(a)^T`, $`t = \dim_L \ker D_H(a_H)^T`,
@@ -321,8 +320,8 @@ and the transcendence-degree half is packaged with the bound
 $`\delta_v \le 3` as
 {name RB31E2E.CoordinateFieldTower.trdeg_deletion_ledger}`trdeg_deletion_ledger`.
 
-The defect $`\Delta` itself is not. Nothing in the development is named after
-it, and no declaration has its shape. The inequality $`\Delta \le 0` appears
+The defect $`\Delta` itself has no counterpart. Nothing in the development is
+named after it, and no declaration has its shape. The inequality $`\Delta \le 0` appears
 instead as a predicate on a branch of the induction,
 {name RB31E2E.ProvenanceFlag.FunctionFieldBranch.SemismallBudget}`SemismallBudget`,
 in the form $`s + \operatorname{trdeg}_k K + 2|\Gamma| \le 3|V|`; the flag-free
@@ -332,11 +331,11 @@ of use with the local increment. See {bpref "stress_codim_flags"}[the stress-cod
 form the budget actually takes, and `lt-source-deviations.toml` for the
 register entry.
 
-The local increment is where the two branches of the induction part company. If
+The local increment decides which branch of the induction applies. If
 $`u + \delta_v \le 3` the defect does not grow and the induction hypothesis
-finishes the step. The formalization makes that inequality a definition and the
-exceptional branch its literal negation, so the case split is an excluded middle
-rather than a classification with a stored tag.
+completes the step. The formalization makes that inequality a definition and the
+exceptional case its literal negation, so the two cases are a proposition and
+its negation rather than two labelled outcomes of a classification.
 
 ```BodyPinBlueprint.bodies
 RB31E2E.DirectionStress.OutsideNonexceptional
@@ -379,21 +378,21 @@ The row space itself is
 RB31E2E.DirectionStress.directionRowSpace
 ```
 
-The span runs over the edges of $`F` rather than over all pairs, which is what
-makes "the row is already in the row space" a condition on the graph as well as
-on the placement. The formalization proves the second
+The span runs over the edges of $`F` rather than over all pairs, so membership
+of a row in the row space is a condition on the graph as well as on the
+placement. The formalization proves the second
 sentence of the definition rather than asserting it. Row-space invariance is
 {name RB31E2E.DirectionStress.directionRowSpace_insert_eq_of_mem}`directionRowSpace_insert_eq_of_mem`,
 and the increment follows from it and the rank–nullity identity that already
 relates stress dimension, rank and edge count. The result is stated twice under
-two names, once as the general augmentation lemma and once as
+two names: once as a general augmentation lemma, and once as
 {name RB31E2E.DirectionStress.stress_augmentation_of_virtual_response}`stress_augmentation_of_virtual_response`,
-the form the deletion branches call.
+which is the same statement under the paper's vocabulary.
 
 The sparsity half of the paper's definition is not part of the Lean statement.
-Sparsity of $`H + xy` is what the caller has to supply, and it is supplied by
-{bpref "addable_edge_triple"}[the addable-edge lemma]; the augmentation lemma
-itself needs only that the edge is absent.
+Sparsity of $`H + xy` has to come from elsewhere, and
+{bpref "addable_edge_triple"}[the addable-edge lemma] supplies it; the
+augmentation lemma itself needs only that the edge is absent.
 
 # The local classification
 
@@ -447,7 +446,8 @@ The formalization splits this proof along the same lines, but keeps the two
 halves in different modules. `OutsideLocalClassification.lean` carries the
 numerical part:
 rank–nullity for $`C_v` is the degree ledger, the response kernel is a subspace
-of $`\ker C_v`, and a failed payment has only two possible numerical shapes.
+of $`\ker C_v`, and a failure of $`u + \delta_v \le 3` has only two possible
+numerical shapes.
 `OutsideLocalGeometry.lean` carries the geometric part, as two field-generation
 statements. Rank one puts the apex on a line through two
 retained neighbours, so the extension has transcendence degree at most one;
@@ -491,10 +491,10 @@ then $c, b_1, b_2, b_3 \in R$.
 The Lean statement takes the coefficient family to be indexed by an arbitrary
 finite type rather than by $`\{1,2,3\}`, and takes as hypothesis that the family
 is algebraically independent over $`L` rather than that $`1` together with it is
-linearly independent. Algebraic independence is the stronger assumption and is
-what the call site has, since
-{bpref "low_degree_classification"}[the exceptional branch] gives
-$`\delta_v = 3` for three coordinates.
+linearly independent. Algebraic independence is the stronger assumption,
+and it is the one available:
+{bpref "low_degree_classification"}[the exceptional case] gives
+$`\delta_v = 3` for the three coordinates of $`a_v`.
 
 The proof is the paper's. A coefficient outside $`R` is separated by an
 $`L`-linear functional; extending that functional coordinatewise to $`K` kills
@@ -536,8 +536,8 @@ $`\tau(C - \Lambda(a_q)) = (1-\tau) r_{pr}`, and every scalar is nonzero.
 The Lean statement bundles the classification with the conclusion: it returns
 the three neighbours, the degree, the transcendence degree, the response
 dimension, the collinearity, and membership of all three neighbour rows in the
-row space of the deleted graph. Bundling matters at the call site, because the
-flag move needs the same three neighbours in all of those roles at once.
+row space of the deleted graph. The bundling matters because the flag move needs
+the same three neighbours in all of those roles at once.
 
 One step of the argument is carried out where the paper leaves it implicit. The
 paper works with $`a_H` as an $`L`-valued configuration throughout; the
@@ -546,7 +546,8 @@ $`L`-valued one by sending $`v` to zero and restricting elsewhere, and then has
 to move collinearity of the three neighbours down from $`K` to $`L` before the
 descent lemma can be applied. That is
 {name RB31E2E.DirectionStress.collinear_restrictScalars_for_response}`collinear_restrictScalars_for_response`,
-and it is why the module is 872 lines for a lemma the paper proves in a page.
+and it is one reason the module runs to 872 lines for a lemma the paper proves
+in a page.
 
 # Base change and field towers
 

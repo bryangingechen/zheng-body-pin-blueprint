@@ -150,8 +150,8 @@ at this point, and the definition given there agrees with this one, including
 the $`d_H(w) + 4` bound.
 
 The appendix parametrizes the construction by a function $`r : W \to \N`
-counting private vertices _beyond_ the mandatory four, which is what makes
-$`G(H, r)` a function of $`H` and $`r` rather than of a sequence of choices.
+counting private vertices _beyond_ the mandatory four, so that $`G(H, r)` is a
+function of $`H` and $`r` rather than of a sequence of choices.
 The formalization follows the appendix: the vertex type is
 $`E \sqcup \bigsqcup_{w \in W} \{w\} \times [4 + r(w)]`, adjacency is "belongs
 to a common body", and the graph is _definitionally_ the supremum of its body
@@ -163,11 +163,10 @@ RB31E2E.BodyPinIncidence.bodyPinGraph
 RB31E2E.BodyPinIncidence.canonicalBodyPinGraph
 ```
 
-What {name RB31E2E.BodyPinIncidence.bodyClique}`bodyClique` shows is its
-adjacency relation. What it does not show is its
-two proof obligations — a {name SimpleGraph}`SimpleGraph` carries proofs that adjacency is
-symmetric and irreflexive — which render as `⋯` here and in every quoted body.
-Nothing else is left out.
+The body of {name RB31E2E.BodyPinIncidence.bodyClique}`bodyClique` gives the
+adjacency relation. Its two proof obligations, that adjacency is symmetric and
+irreflexive, render as `⋯`, here and in every quoted body. Nothing else is left
+out.
 
 The bound $`|V(B_w)| \ge d_H(w) + 4` is exactly the requirement that four
 private vertices survive after the pins have taken theirs, so every body carries
@@ -228,7 +227,7 @@ onwards needs to vary the coefficient field; Appendix A.1 uses the real form
 $`R_G(p)`, indexed by _all_ ordered vertex pairs with nonedges sent to zero.
 
 {name RB31E2E.BarJoint.rigidityOperator}`rigidityOperator` is that real form,
-and the `if` in its body is where the nonedges go to zero. Its value at an
+and the `if` in its body sends a nonadjacent pair to zero. Its value at an
 adjacent pair is
 {name RB31E2E.BarJoint.edgeConstraint}`edgeConstraint`, the single number one
 edge contributes; the two are joined by
@@ -290,8 +289,8 @@ RB31E2E.BodyPinIncidence.GenericallyRigidInR3
 Each is one line. The comparison with the complete graph is written once, for
 any dimension, as
 {name RB31E2E.BarJoint.IsGenericallyRigidInDimension}`IsGenericallyRigidInDimension`,
-and fixing $`d = 3` is the whole of the first; three is the only value this
-paper needs.
+and {name RB31E2E.BarJoint.IsGenericallyRigidInR3}`IsGenericallyRigidInR3` fixes
+$`d = 3` in it. Three is the only value this paper needs.
 
 A maximum-rank placement is precisely what
 {Informal.citet "asimowRoth1978"}[] call a _regular point_, and their theorem is
@@ -317,16 +316,16 @@ at one regular placement it is rigid at every other.
 That right-hand side is the rank the complete graph attains at the same
 placement, which is why the criterion can be stated as
 $`\rho_3(G) = \rho_3(K_{V(G)})`. The second half, rigidity at one regular
-placement implying rigidity at all of them, is what makes rigidity a property of
-the graph rather than of a placement.
+placement implying rigidity at all of them, makes rigidity a property of the
+graph rather than of a placement.
 
 This is the one step of the paper's Theorem 1.1 that the formalization does not
 contain, and the only statement in this chapter given without a witness, since
 it is not the paper's sentence to quote. It is standard, the paper treats it as
-such, and {Informal.citet "asimowRoth1979"}[] carries the theory further; but a
-reader auditing the Lean development should know that this is where the formal
-statement stops and the literature takes over. The register entry for this gap
-is in `lt-source-deviations.toml`.
+such, and {Informal.citet "asimowRoth1979"}[] carries the theory further. The
+formal statement nevertheless stops here, and a reader auditing the Lean
+development should know it. The register entry for this gap is in
+`lt-source-deviations.toml`.
 
 # Pin capacity and the partition condition
 
@@ -406,12 +405,12 @@ RB31E2E.BodyPinIncidence.PartitionCondition
 
 The formalization indexes partitions by surjections $`\pi : W \to [t]` rather than by set
 partitions, and writes the right-hand side as `6 * (t - 1)` over $`\N`, where
-truncated subtraction supplies the paper's $`\max\{t - 1, 0\}` for free. Both
-moves are bookkeeping with a purpose: the empty body set and the one-block case
-then fall out of the definition instead of needing separate treatment.
+truncated subtraction gives the paper's $`\max\{t - 1, 0\}`. Both conventions
+have the same effect: the empty body set and the one-block case fall out of the
+definition instead of needing separate treatment.
 
 The paper's unordered pairs $`i < j` are the edges of the complete graph on
-$`[t]`, and that is literally how
+$`[t]`, and that is how
 {name RB31E2E.BodyPinIncidence.partitionCapacity}`partitionCapacity` sums over
 them: the index set is `(⊤ : SimpleGraph (Fin t)).edgeFinset`. The
 formalization also carries a second, ordered convention —
@@ -450,7 +449,7 @@ and construct $G_H$ as above.  Then the following conditions are equivalent:
 \end{theorem}
 ```
 
-This is the paper's headline result: Conjecture 5 of
+This is Conjecture 5 of
 {Informal.citet "kiralyTanigawa2019"}[], still listed as Conjecture 7.6 by
 {Informal.citet "jacksonJordanVillanyi2026"}[] as of July 2026.
 

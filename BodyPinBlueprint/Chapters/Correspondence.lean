@@ -35,7 +35,7 @@ Five things go here, and none of them are written yet.
 # The correspondence table
 
 Every numbered result of {Informal.citet "zheng2026"}[] against the Lean
-declaration that discharges it, with a status: mapped, deviation, informal,
+declaration that corresponds to it, with a status: mapped, deviation, informal,
 gap, or Lean-only. The machine-readable source is `correspondence.toml`.
 
 # Glossary

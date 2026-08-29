@@ -234,13 +234,12 @@ the point of doing it first: Chapter 05 will be written under a settled rule
 and an enforced one, so every `def` and `abbrev` it names carries its body and
 `scripts/coverage.py` says so without a reviewer.
 
-**NEXT: the prose pass under "Open, not blocking", then Chapter 05.** The same
-argument that put the declaration-body pass ahead of this chapter puts the
-prose pass ahead of it too: Chapter 05 is the longest one, and writing it
-against a register that is about to be rewritten is the expensive order. The
-pass is four written chapters and a decision about the style guide.
+The prose pass is done as well; it is written up under "Open, not blocking".
+`BodyPinBlueprint/STYLE.md` now carries a standard measured against the sources
+rather than asserted, and `scripts/style-check.py` fails `checks.sh` on the two
+constructions it bans.
 
-Then Chapter 05. Vocabulary table first, then flag definitions, forest,
+**NEXT: Chapter 05.** Vocabulary table first, then flag definitions, forest,
 selection, pivot, classification, augmentations, Thm 3.9. Longest chapter,
 heaviest translation load.
 
@@ -444,40 +443,77 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   the edges of $F$ rather than all pairs, and that the active-vertex count in
   front of the Nixon-Owen disjunction is the measure the induction descends on.
 
-- **NEXT: a general prose review, and a stronger style guide.** Raised
-  2026-08-29 by Bryan, reading the rendered site: the register is off, and it is
-  off across the document rather than in a few places. Read the whole thing
-  before deciding anything, and do not work from the examples below — they are
-  evidence that the problem is general and live, not a list of fixes.
+- **General prose review, and a stronger style guide. Done.** Raised
+  2026-08-29 by Bryan, reading the rendered site: the register was off across
+  the document rather than in a few places. Three things were reported — a
+  section title phrased as a sentence ("The construction theorem the
+  formalization carries"), proof-engineering idiom standing in for mathematics
+  ("closes the low-degree branches"), and a page that is simply hard to follow.
 
-  What was reported: a section title phrased as a sentence rather than a title
-  ("The construction theorem the formalization carries"); proof-engineering
-  idiom standing in for mathematics ("closes the low-degree branches"); and a
-  page that is simply hard to follow. Similar problems were visible in other
-  sections on a first look.
+  *What the measurement found.* Two constructions — *X is what makes Y* and *X is where Y happens* — occur 28
+  times in the 10,449 words of blueprint prose and **zero** times in the 66,307
+  words of the paper and its four reference papers. So do the idioms: *earn
+  their place*, *part company*, *put to work*, *on the nose*, *for free*,
+  *headline* — 0 for 66,307 across all five documents. The sources' whole stock of
+  connectives is *thus* (130), *hence* (125), *therefore* (41), *note that* (33)
+  and six rarer ones; this document had used *thus* not once. That comparison
+  turned a matter of taste into a rule, and it is written into the guide so the
+  next writer does not have to re-derive it.
 
-  A count taken over the prose of all nine chapters, to show the scale: 10
-  occurrences of "is/are where" and 7 of "is what makes / does / lets / turns",
-  plus single instances of "on the nose", "part company", "does one thing",
-  "earn their place" and "costs something". Several were written during the
-  declaration-body pass of 2026-08-28, so this is a habit being added to, not a
-  legacy to clean up once. `scripts/style-check.py` catches none of them.
+  *The standard.* `BodyPinBlueprint/STYLE.md` was rewritten around one diagnosis:
+  the prose kept naming a fact's *role* instead of stating the fact. Both
+  constructions above are always removable, and removing one shortens the
+  sentence and forces the reason into the open, so they are banned rather than
+  budgeted — a budget was considered and rejected once every case turned out to
+  have a plain rewrite. The cleft (*What X shows is Y*) keeps a budget, because
+  a genuine contrast earns it. Three further sections were added: one on
+  proof-engineering idiom, with the test "could a mathematician who has never
+  used a proof assistant read this sentence for the argument?"; one on headings
+  as noun phrases; and two moves to try before reaching for a frame.
 
-  The order to work in. Read the built site end to end first — the register
-  problems are visible there and invisible in the source, which is how they
-  survived two phases of review. Then revise `BodyPinBlueprint/STYLE.md`, which
-  is where the standard lives and is currently too thin to have prevented any
-  of this. Then rewrite against it. Then encode whatever turns out to be
-  mechanical in `style-check.py`, whose `TELLS` list is the right home.
+  *The rewrite.* All 28 occurrences are gone, along with every idiom above,
+  across the four written chapters, the five stubs and the index page. The
+  offending section title is now "A construction theorem with no paper
+  counterpart". The paragraph Bryan found hard to follow was hard to follow for
+  a reason the register hid: "closes the low-degree branches" and "the long
+  triangle-sequence branch is replaced" both refer to a proof structure the
+  reader has never been shown, so the section now says which case is proved
+  outright, which one ends at a named $K_4$, and what `GraphExtension.lean`
+  replaces.
 
-  Encoding checks before deciding the standard would flood four written
-  chapters with warnings against a register nobody has agreed yet, and would
-  bias the standard towards whatever is easy to grep for.
+  *Two errors of fact the pass turned up*, neither of them a register problem.
+  Chapter 05 opened "This is the chapter the paper is named for" — the paper is
+  *Stress Degeneracy of Direction Complexes of (2,2)-Sparse Graphs and
+  Three-Dimensional Body–Pin Rigidity*, and it is the research **note** that
+  names collinearity flags. And Chapter 07 had twists living in $k \oplus k^3$,
+  which is a `pdftotext` line-break artifact of `k 3 ⊕ k3` in the text layer;
+  §5 says six-dimensional $k^3 \oplus k^3$. Reading for register is a cheap way
+  to find these, because it means reading every sentence for what it asserts.
 
-  This comes before Chapter 05, by the argument the plan already used for the
-  declaration-body pass: Chapter 05 is the longest chapter and the heaviest
-  translation load, and writing it against a register about to be rewritten is
-  the expensive order.
+  *The check.* `scripts/style-check.py` now reports two severities. The two
+  banned constructions are **errors**, and `checks.sh` passes `--strict`, so one
+  fails the fifteen-second list and CI with it. Everything else is a warning:
+  idiom, proof-engineering vocabulary, a heading containing a finite verb, three
+  em dashes in a paragraph. `--pedantic` fails on warnings too, which is the
+  mode for revising one chapter. Both new checks were verified to fire on the
+  exact text that was reported and the document is clean at 0 and 0.
+
+  Encoding the checks before deciding the standard was deliberately avoided: it
+  would have flooded four chapters with warnings against a register nobody had
+  agreed, and biased the standard towards whatever is easy to grep for.
+
+- **`ci-pages.sh` does not clean its output directory.** Found 2026-08-29 while
+  verifying the prose pass: renaming a section heading leaves the old page and
+  its search-index shard behind in `_out/site/html-multi`. The rename in the
+  sparsity chapter left exactly two orphans — the old
+  `The-construction-theorem-the-formalization-carries/index.html` and
+  `-verso-search/searchIndex_79.js` — and nothing in the current site links to
+  either, so `check-rendered.py` did not see them. They were deleted by hand.
+  Harmless locally, but a first Pages deploy would ship a dead duplicate page
+  and a stale search entry, so decide before deployment: either `rm -rf` the
+  output directory at the top of `ci-pages.sh`, or clean in the workflow.
+  Not fixed here because it is a build-script change outside the prose pass and
+  cannot be verified without another ten-minute build.
 
 - **Two decisions left open**, neither blocking:
   - *Whether the prose should name each quoted body's source file.* Settled for

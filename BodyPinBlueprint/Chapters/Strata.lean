@@ -32,11 +32,10 @@ conclusion that the cone is a local complete intersection and therefore
 Cohen–Macaulay and pure-dimensional.
 
 *None of this is formalized*, and none of it needs to be. The Lean development
-uses the field-theoretic inequality throughout, and Theorem A.1 never depends
-on the scheme statements. This chapter exists to say so in place: a reader
-meeting a scheme-theoretic section with no formalization beside it will ask
-whether it was skipped, and the answer belongs here rather than in a footnote. The one
-mapped part is the equivalence the paper itself proves between (1.5) and (4.7).
+uses the field-theoretic inequality throughout, and Theorem A.1 never depends on
+the scheme statements. This chapter records what §4 claims and which part of it
+the formal argument uses. That part is a single equivalence, between (1.5) and
+(4.7), which the paper itself proves.
 
 :::group "strata_comparison"
 What §4 claims, and which part of it the formalization uses.
@@ -54,7 +53,7 @@ Cohen–Macaulay and pure-dimensional. {Informal.citep "zheng2026" (kind := "the
 :::
 
 :::lemma_ "grounded_model" (parent := "strata_comparison") (tags := "paper, unwritten") (uses := "stress_codim")
-The grounded model and the grounded inequality (4.7), which is the part of §4
-the formalization does use: it is equivalent to (1.5), and that equivalence is
-the only bridge Theorem A.1 crosses into this section. {Informal.citep "zheng2026" (kind := "section") (index := "4")}[]
+The grounded model and the grounded inequality (4.7). This is the part of §4
+the formalization uses: (4.7) is equivalent to (1.5), and Theorem A.1 depends
+on nothing else in the section. {Informal.citep "zheng2026" (kind := "section") (index := "4")}[]
 :::

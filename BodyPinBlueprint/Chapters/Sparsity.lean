@@ -109,9 +109,9 @@ if $|E_F(U)| = 2|U| - 2$.
 The bound is stated for nonempty $`U` because $`2|U| - 2` is negative at
 $`U = \emptyset`. A one-vertex set is tight, since both sides are zero, and
 $`K_4` is tight on its whole vertex set. Sparsity passes to any subset of the
-edge set, which is
-{name RB31E2E.Sparse22.mono}`Sparse22.mono` and is what lets the induction
-delete a vertex and still have a sparse graph.
+edge set, which is {name RB31E2E.Sparse22.mono}`Sparse22.mono`; deleting a
+vertex from a sparse graph therefore leaves a sparse graph, as the induction
+needs.
 
 The formalization carries the condition on a finite set of unordered pairs
 rather than on a {name SimpleGraph}`SimpleGraph`. A
@@ -226,8 +226,8 @@ The formalization states the lemma as a dichotomy rather than under a
 hypothesis: for a sparse edge set $`F` and a vertex $`v` of degree exactly
 three with named neighbours $`a, b, c`, either all three neighbour edges are
 present in $`F`, or one of the absent ones can be inserted after deleting $`v`.
-Taking $`Q = F - v` recovers the paper's formulation, and the disjunction is
-what the caller in the flag induction actually branches on.
+Taking $`Q = F - v` recovers the paper's formulation, and the flag induction
+uses the disjunction itself rather than the hypothesis form.
 
 The formal proof is a tight-set obstruction argument that does not go through
 the construction theorem below, and does not need the graph to be tight or a
@@ -240,7 +240,7 @@ so does the formalization, in the two lemmas that
 {name RB31E2E.degree_three_neighbour_triangle_complete_or_addable}`degree_three_neighbour_triangle_complete_or_addable`
 assembles, one for a single missing pair and one for two.
 
-# The construction theorem the formalization carries
+# A construction theorem with no paper counterpart
 
 :::lemma_ "lean_nixon_owen_reduction" (parent := "sparsity_infrastructure") (lean := "RB31E2E.HasNixonOwenReduction, RB31E2E.isK4Base_or_hasNixonOwenOrGraphExtensionReduction, RB31E2E.exists_tight22_completion") (tags := "lean-only")
 On at least two active vertices, a simple $`(2,2)`-tight graph is either the
@@ -256,17 +256,22 @@ RB31E2E.HasNixonOwenReduction
 ```
 
 The four `LegalInverse` predicates in that disjunction are inverse Henneberg one
-and two, $`K_4`-to-vertex, and $`K_3`-to-edge; `Construction.lean` calls them
-the Nixon–Owen reductions. The strict decrease of the active-vertex count in
-front of them is what makes the disjunction a reduction rather than a
-rewriting, and it is the measure the induction descends on.
+and two, $`K_4`-to-vertex, and $`K_3`-to-edge. `Construction.lean` calls them
+the Nixon–Owen reductions; the name is the module's own, and this blueprint has
+not checked it against a primary source. The definition puts a strict decrease
+of the active-vertex count in front of the disjunction, so it is a reduction
+rather than a rewriting, and that count is the measure the induction descends
+on.
 
-The formalization gives each of the four literal edge-set semantics, on an
-ambient edge set together with an explicit active vertex set, and closes the
-low-degree branches. The long triangle-sequence branch is replaced by a shorter
-argument on a maximum-cardinality proper tight module: tightness alone forces
-every outside vertex to send at most one edge into the module, unless that
-vertex already has degree two and supplies an inverse Henneberg-one move.
+The formalization gives each of the four a literal edge-set semantics, on an
+ambient edge set together with an explicit active vertex set. The degree-two
+case is then proved outright: deleting a degree-two vertex of a tight graph
+leaves a smaller tight one. The degree-three case ends at a vertex contained in
+a named $`K_4`, and the usual argument continues from there through a sequence
+of triangles. `GraphExtension.lean` replaces that branch with a shorter one over
+a maximum-cardinality proper tight module: tightness alone forces every outside
+vertex to send at most one edge into the module, unless the vertex already has
+degree two and supplies an inverse Henneberg-one move.
 
 None of that appears in {Informal.citet "zheng2026"}[], which proves Lemma 2.1
 from uncrossing in a seven-line paragraph and Lemmas 3.7 and 3.8 in the same
@@ -290,8 +295,8 @@ So these 2,811 lines are not what Lemmas 2.1, 3.7 and 3.8 rest on. They are a
 parallel development of a construction theorem, and what the main line takes
 from them is vocabulary and four or five counting facts.
 `lt-source-deviations.toml` records the divergence, `notes/reachability.md`
-records the measurement, and `scripts/coverage.py --reachable` is what rechecks
-it against a moved submodule pin.
+records the measurement, and `scripts/coverage.py --reachable` rechecks it when
+the submodule pin moves.
 
 :::lemma_ "lean_sparsity_transport" (parent := "sparsity_infrastructure") (lean := "RB31E2E.Sparse22Transport.mapEdgeSet, RB31E2E.Sparse22Transport.sparse22_of_mapEdgeSet_subset") (tags := "lean-only") (uses := "sparse22")
 Sparsity transports along an injective map of vertices: if every image of a

@@ -24,21 +24,22 @@ one-line placeholder naming the result it will state. See `PLAN.md` for the
 phase that covers it.
 
 Section 5 of {Informal.citet "zheng2026"}[] moves the problem into commutative
-algebra. Twists are points of $`k \oplus k^3` carrying the Split–Klein
-quadratic form $`q(\omega, b) = \omega \cdot b`; the ideal $`I_F` is generated
+algebra. Twists are points of the six-dimensional space
+$`k^3 \oplus k^3` carrying the Split–Klein quadratic form
+$`q(\omega, b) = \omega \cdot b`; the ideal $`I_F` is generated
 by the isotropy of the differences along the edges. Theorem 1.3 computes the
 height of every minimal prime whose component meets the distinct locus, and
-that height is exactly $`|E_F|`, which is what the codimension estimate needs.
-The mechanism is a Witt shear chosen separately on each component, which turns
-the isotropic-difference equations into the linear equations of the rigidity
-matrix over the generic fibre.
+that height is exactly $`|E_F|`, the value the codimension estimate needs. The
+mechanism is a Witt shear chosen separately on each component, which turns the
+isotropic-difference equations into the linear equations of the rigidity matrix
+over the generic fibre.
 
 :::group "splitklein_spine"
 The paper's algebraic argument.
 :::
 
 :::group "splitklein_infrastructure"
-Lean-only weight and initial-ideal machinery.
+Weights and initial ideals, with no paper counterpart.
 :::
 
 :::definition "split_klein_form" (parent := "splitklein_spine") (tags := "paper, unwritten")
@@ -72,5 +73,6 @@ orbit. {Informal.citep "zheng2026" (kind := "corollary") (index := "5.4")}[]
 
 :::lemma_ "lean_weight_apparatus" (parent := "splitklein_infrastructure") (tags := "lean-only, unwritten")
 Provenance weights, initial ideals, weight components and replacement
-identities: the formal machinery behind the paper's componentwise choice.
+identities: the formal apparatus standing behind the paper's componentwise
+choice.
 :::

@@ -64,11 +64,11 @@ for the $`C^1_2` cofactor matroid, whose combinatorial characterization is due
 to {Informal.citet "clinchJacksonTanigawa2022b"}[] — but equality of the
 cofactor matroid with the three-dimensional rigidity matroid is
 {Informal.citet "whiteley1996"}[]'s Conjecture 10.3.2, still open, so that
-result does not settle the Euclidean question. What
-{Informal.citet "zheng2026"}[] does is go at the rigidity matrix of $`\R^3`
-directly, through a stress–codimension theorem for $`(2,2)`-sparse graphs
-whose degree-three deletion step forces a collinear neighbour triple — and so
-requires carrying *collinearity flags* through the induction. Prescribed
+result does not settle the Euclidean question.
+{Informal.citet "zheng2026"}[] works with the rigidity matrix of $`\R^3`
+directly, through a stress–codimension theorem for $`(2,2)`-sparse graphs whose
+degree-three deletion step forces a collinear neighbour triple, and so requires
+carrying *collinearity flags* through the induction. Prescribed
 collinearity has been studied before, for planar bar–joint rigidity and for
 pin-collinear body–pin frameworks
 {Informal.citep "jacksonJordan2005" "jacksonJordan2008"}[]; what is new here is

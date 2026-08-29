@@ -8,8 +8,11 @@ what the blueprint is for, why there is no TeX source, the harness, build costs
 
 `STYLE.md` next to this file is the register: what blueprint prose should sound
 like, calibrated against the papers themselves, with the failure modes that have
-actually occurred here. Read it before writing prose, and run
-`python3 scripts/style-check.py` before committing.
+actually occurred here. Read it before writing prose. `scripts/style-check.py`
+enforces the mechanical part of it, and `checks.sh` runs it with `--strict`: the
+two constructions the guide bans — *X is what makes Y*, *X is where Y happens* —
+are build errors, and everything else it finds is a warning to look at. Run it
+with `--pedantic` on the chapter you are writing.
 
 Two fast loops, for two different questions.
 

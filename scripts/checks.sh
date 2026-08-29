@@ -36,5 +36,5 @@ python3 scripts/coverage.py --summary
 step "witness prose against the paper (advisory, needs source/paper.txt)"
 python3 scripts/check-witness-prose.py
 
-step "prose register (advisory)"
-python3 scripts/style-check.py
+step "prose register"
+python3 scripts/style-check.py --strict

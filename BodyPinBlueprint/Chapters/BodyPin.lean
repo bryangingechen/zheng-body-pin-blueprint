@@ -27,17 +27,17 @@ phase that covers it.
 
 Section 6 of {Informal.citet "zheng2026"}[] assembles the pieces. Its first two
 lemmas, on twists and on the fibre of a pin, are stated in {bpref "twist_description"}[the necessity chapter],
-which is where the paper's necessity argument needs them. The twist-equality
+where the paper's necessity argument needs them. The twist-equality
 relation partitions the bodies, the partition condition supplies a
 $`(2,2)`-sparse subgraph, and {bpref "isotropic_ideal_height"}[the height theorem] then bounds the dimension
 of the bad locus.
 Exceptional pin parameters form a proper closed subset for each nontrivial
 partition; avoiding finitely many of them gives generic infinitesimal rigidity,
-and {bpref "asimow_roth"}[the Asimow–Roth step] finishes.
+and {bpref "asimow_roth"}[the Asimow–Roth step] completes the argument.
 
-The one deviation worth watching is Lemma 6.3. The paper extracts the sparse
-subgraph with Nash-Williams and Edmonds' matroid-union rank formula; the Lean
-development uses no matroid API at all.
+Lemma 6.3 is proved by a different route in the formalization. The paper
+extracts the sparse subgraph with Nash-Williams and Edmonds' matroid-union rank
+formula; the formalization uses no matroid API at all.
 
 :::group "bodypin_spine"
 The paper's assembly argument.
