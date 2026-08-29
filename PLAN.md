@@ -502,6 +502,57 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   would have flooded four chapters with warnings against a register nobody had
   agreed, and biased the standard towards whatever is easy to grep for.
 
+- **Register recalibration and the duties pass. Done 2026-08-29, after the
+  item above.** Reading the rewritten chapters showed the ban list exhausted:
+  both banned constructions were gone and the prose still read as machine
+  register. Three findings drove a second pass.
+
+  *The baseline was contaminated.* The statistics above pooled `source/paper.txt`
+  with the four reference papers, and the paper itself is machine-written: it
+  signposts never (*in this section*, *we shall*, *recall that*, *note that* —
+  all zero in 15,559 words) where the human references signpost constantly, and
+  its sentence lengths lack the references' short-sentence mode. STYLE.md now
+  names two authorities — the paper for content, the references for register —
+  and its numbers are recomputed over the 50,748 human-written words alone.
+  The error-level bans survive the correction (0 occurrences in the human
+  subcorpus by itself).
+
+  *Bans do not produce good prose.* The instinct behind the banned
+  constructions had migrated into synonyms (*exists to*, *the mechanism is*,
+  *is how*), into sentences whose subject is the document rather than the
+  mathematics, into identifier-caption paragraphs, clipped rhetorical closers,
+  and — found by the repository owner's reading of the pilot — the animated abstraction, an
+  abstract noun with a vivid verb (*sparsity supplies the vertex*, *the class
+  reaches the main theorem*). STYLE.md was restructured around six positive
+  duties (signpost, connect, recall, rhythm, motivate, no definite description
+  before its definition), with model paragraphs quoted from the references,
+  and the new tells are warnings in `style-check.py`, which also gained
+  `--report`: per-chapter sentence statistics and connective/signposting
+  densities against references-only baselines. Report never gates; a warning
+  family reaching zero legitimate uses is the promotion criterion for making
+  it an error.
+
+  *Decisions taken with the repository owner:* guidance-only authorial "we" ("We now return
+  to…"), with the paper/the formalization keeping agency for who proved what;
+  repository bookkeeping (line counts, dependency walks) relocated to the
+  correspondence chapter, identifier captions fused or dropped; chapter prose
+  names no repository file a web reader cannot open — the deviation tag
+  already says a register entry exists.
+
+  *The rewrite.* Every written chapter and the index page were rewritten to
+  the duties: the index now opens with the physical body–pin picture and a
+  roadmap paragraph; the sparsity chapter states what the class is for and
+  what the induction does before using either; the deletion chapter opens by
+  pricing a deletion step and glosses $\Gamma$ at first use; the necessity
+  chapter completes the arguments it names; the stub summaries walk their
+  sections with connectives. The five unwritten chapters are drafted against
+  STYLE.md's duties when their phases arrive: orientation paragraph first,
+  then nodes.
+
+  *Still open from this pass:* promoting warning families that show zero
+  legitimate uses after the next chapters are drafted (candidates: *exists
+  to*, *the mechanism is*, the animated-abstraction verbs).
+
 - **`ci-pages.sh` does not clean its output directory.** Found 2026-08-29 while
   verifying the prose pass: renaming a section heading leaves the old page and
   its search-index shard behind in `_out/site/html-multi`. The rename in the

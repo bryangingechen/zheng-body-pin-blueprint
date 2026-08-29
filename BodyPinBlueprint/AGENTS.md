@@ -196,8 +196,12 @@ only by adding the matching status, and vice versa.
   either: `(Laman (1970))`. Parenthetical aside: bare `citep`. Citation as part
   of the sentence: `citet`.
 - **In running prose, spell the reference out:** "Section 2.1 of
-  {Informal.citet "zheng2026"}[] is two paragraphs". Every chapter opening does
-  this. Do not open a sentence with a locator tag.
+  {Informal.citet "zheng2026"}[] defines the class of graphs on which ...".
+  Every chapter opens with a paragraph that names its part of the paper this
+  way AND says what the chapter proves and where it sits in the argument —
+  STYLE.md, Duty 1. A chapter opening that only inventories the section
+  ("... is two paragraphs and one lemma") is not an orientation. Do not open a
+  sentence with a locator tag.
 - Cite the upstream references at the points the paper invokes them. Mathematical
   credit runs through the bibliography, and getting that right matters more than
   anything this repository claims for itself.
