@@ -163,8 +163,9 @@ RB31E2E.BodyPinIncidence.bodyPinGraph
 RB31E2E.BodyPinIncidence.canonicalBodyPinGraph
 ```
 
-What `bodyClique` shows is its adjacency relation. What it does not show is its
-two proof obligations — a `SimpleGraph` carries proofs that adjacency is
+What {name RB31E2E.BodyPinIncidence.bodyClique}`bodyClique` shows is its
+adjacency relation. What it does not show is its
+two proof obligations — a {name SimpleGraph}`SimpleGraph` carries proofs that adjacency is
 symmetric and irreflexive — which render as `⋯` here and in every quoted body.
 Nothing else is left out.
 

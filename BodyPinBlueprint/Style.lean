@@ -422,7 +422,18 @@ def quotedBodyJs : String := r##"
   }
 
   /* Append the value to one rendering of the signature.  The panel carries two,
-     for wide and narrow viewports, and both need it. */
+     for wide and narrow viewports, and both need it.
+
+     The trailing newline the extract ends with is dropped by removing the
+     whitespace-only children that carry it.  Trimming the last child's
+     `textContent` instead is what this used to do, and it was destructive:
+     assigning `textContent` to an *element* replaces its whole subtree with one
+     flat text node.  Every quoted body ends in an element, so every spliced
+     value lost the markup of its final token, and where that token was a `by`
+     block the flattening fused the tactic label with the hidden goal state --
+     `rigidityOperator` rendered `... else 0All goals completed! 🐙` in its
+     panel.  So the trim now runs only on a text node, where it means what it
+     says. */
   function splice(pre, value) {
     var span = document.createElement("span");
     span.className = "bpx_body_value";
@@ -431,8 +442,8 @@ def quotedBodyJs : String := r##"
     while (span.lastChild && !span.lastChild.textContent.trim()) {
       span.removeChild(span.lastChild);
     }
-    if (span.lastChild) {
-      span.lastChild.textContent = span.lastChild.textContent.replace(/\s+$/, "");
+    if (span.lastChild && span.lastChild.nodeType === 3) {
+      span.lastChild.nodeValue = span.lastChild.nodeValue.replace(/\s+$/, "");
     }
     pre.appendChild(isolate(span));
     return span;

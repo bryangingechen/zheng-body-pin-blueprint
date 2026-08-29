@@ -114,9 +114,10 @@ edge set, which is
 delete a vertex and still have a sparse graph.
 
 The formalization carries the condition on a finite set of unordered pairs
-rather than on a `SimpleGraph`. A
-{name RB31E2E.SimpleEdge}`SimpleEdge` is a `Sym2` of two distinct vertices and a
-{name RB31E2E.SimpleEdgeSet}`SimpleEdgeSet` is a `Finset` of those, so parallel
+rather than on a {name SimpleGraph}`SimpleGraph`. A
+{name RB31E2E.SimpleEdge}`SimpleEdge` is a {name Sym2}`Sym2` of two distinct
+vertices and a
+{name RB31E2E.SimpleEdgeSet}`SimpleEdgeSet` is a {name Finset}`Finset` of those, so parallel
 pins and loops are absent by construction and multiplicity stays in the
 body–pin layer where the paper also keeps it. The accessor
 {name RB31E2E.SimpleEdge.vertices}`vertices` is quoted with them because

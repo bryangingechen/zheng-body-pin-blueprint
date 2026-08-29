@@ -75,6 +75,24 @@ failure modes to watch for, not hypotheticals.
 - **Contractions, exclamations, and second person do not appear.** Neither does
   *simply*, *just*, *obviously*, or *of course*.
 
+## Under revision (2026-08-29)
+
+This guide is being rewritten. It was read against the built site and found too
+thin: the register is off across the document, and none of the rules below
+caught it. `PLAN.md` carries the task, which is a general review of the whole
+document before the next chapter is written — not a list of fixes.
+
+What was reported, as an indication of the kind of thing at issue rather than
+as a checklist: section titles phrased as sentences; proof-engineering idiom
+standing in for mathematics, where the test is whether a mathematician reading
+for the argument can follow the sentence; and two constructions used as tics,
+"X is where Y" and "X is what makes Y", which foreground the framing instead of
+stating the fact. Ten and seven occurrences respectively, so a budget rather
+than a ban is probably what the rewritten guide needs to express.
+
+Until that pass lands, the rules below still apply and are still worth running
+`style-check.py` for. They are just not sufficient.
+
 ## Check before committing
 
 `scripts/style-check.py` greps for the tells above and prints what it finds. It

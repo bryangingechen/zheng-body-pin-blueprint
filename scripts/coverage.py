@@ -32,6 +32,15 @@ without a build:
     named definitions with no principle separating the halves, which is why it
     is a check.
 
+6.  *No declaration of the formalization is named as dead text.* Inline, a Lean
+    constant goes in a `name` role, which renders the short name, hovers with
+    the signature and docstring, and links to the pinned source; a plain code
+    span renders as unhighlighted text that goes nowhere. The two look identical
+    in the source and completely different on the page, which is why this is
+    checked rather than reviewed. It can only see the formalization's own names:
+    a Mathlib constant is not resolvable without a build, so `SimpleGraph` in a
+    code span stays a review item.
+
 With `--reachable` it also reads `_out/reachable.json`, written by
 `scripts/reachable.lean`, and reports two things a module inventory cannot say
 on its own: modules of the formalization that no entry names at all, and
@@ -62,6 +71,11 @@ NODE = re.compile(r'^:::(theorem|definition|lemma_|corollary)\s+"([^"]+)"(.*)$',
 TAGS = re.compile(r'\(tags\s*:=\s*"([^"]*)"\)')
 WITNESS = re.compile(r'^```tex "([^"]+)"[^\n]*\n(.*?)^```$', re.M | re.S)
 CITED = re.compile(r'\(lean\s*:=\s*"([^"]+)"\)')
+# A `name` role and its label, so the label is not then read as a bare span.
+ROLE = re.compile(r"\{name\s+[\w.'!?]+\}`[^`\n]*`")
+# An inline code span. Verso's inline math is `$` followed by a backticked
+# span, so the lookbehind is what keeps the mathematics out of this.
+CODE_SPAN = re.compile(r"(?<!\$)`([^`\n]+)`")
 FENCE = re.compile(r'^```BodyPinBlueprint\.bodies[^\n]*\n(.*?)^```$', re.M | re.S)
 
 # One declaration command in the formalization's own source. The pinned
@@ -329,6 +343,53 @@ def quoted_bodies(optouts: list[dict]) -> tuple[list[str], list[str]]:
     return errors, warnings
 
 
+def dead_names() -> list[str]:
+    """A formalization declaration written as a code span instead of a role.
+
+    `{name RB31E2E.BodyPinIncidence.bodyClique}`bodyClique`` renders the short
+    name, hovers with the signature and docstring, and links to the pinned
+    source. Plain `` `bodyClique` `` renders as text and does nothing, and the
+    difference is invisible in the source -- which is how the statement chapter
+    carried one for two phases.
+
+    Only the chapter's own prose is read, not its leading comment: a comment is
+    for whoever edits the file and cannot carry a role. Docstrings quoted from
+    the formalization are out of reach too, and their backticked names really do
+    render as dead text; that is upstream's to fix and is noted in
+    `notes/questions.md`.
+    """
+    if not (ROOT / "formalization" / "RB31EndToEnd.lean").exists():
+        return []
+
+    # Index by every dotted suffix, so a span may name a declaration the way the
+    # prose would: `bodyClique` as readily as `BodyPinIncidence.bodyClique`.
+    by_suffix: dict[str, set[str]] = defaultdict(set)
+    for full in declaration_kinds():
+        parts = full.split(".")
+        for i in range(len(parts)):
+            by_suffix[".".join(parts[i:])].add(full)
+
+    errors = []
+    for path in sorted(CHAPTERS.glob("*.lean")):
+        text = path.read_text(encoding="utf-8")
+        start = text.find("#doc (Manual)")
+        if start < 0:
+            continue
+        prose = ROLE.sub("", text[start:])
+        for match in CODE_SPAN.finditer(prose):
+            span = match.group(1)
+            full = sorted(by_suffix.get(span, ()))
+            if not full:
+                continue
+            line = prose[: match.start()].count("\n") + text[:start].count("\n") + 1
+            named = full[0] if len(full) == 1 else " or ".join(full)
+            errors.append(
+                f"{path.stem}:{line}: `{span}` is a declaration of the formalization written "
+                f"as a code span, so it renders as dead text. Write "
+                f"{{name {named}}}`{span}`, or reword so the name is not code")
+    return errors
+
+
 def module_name(path: str) -> str:
     """`RB31EndToEnd/Linear/PinRank.lean` -> `RB31EndToEnd.Linear.PinRank`."""
     return path.removesuffix(".lean").replace("/", ".")
@@ -389,7 +450,7 @@ def main() -> int:
     nodes = chapter_nodes()
 
     body_errors, warnings = quoted_bodies(table.get("body_optout", []))
-    errors = check(entries, nodes) + fingerprints() + body_errors
+    errors = check(entries, nodes) + fingerprints() + body_errors + dead_names()
     if args.reachable:
         more, reachable_warnings = reachability(entries)
         errors += more

@@ -36,6 +36,14 @@ layout, node kinds, math delimiters, heading structure, quoted snippets against
 the pinned submodule, coverage and correspondence, and the prose register. CI
 runs it as its own workflow, ahead of the Pages build.
 
+`scripts/check-rendered.py` is the other half, and `ci-pages.sh` runs it after
+the build: the claims that are true of a *page* rather than of a chapter, such
+as a named declaration having produced a block a reader can see and an elided
+proof obligation being gone rather than folded behind its `⋯`. Both of the
+things it looks for have been wrong on a built page while every source check
+passed. It refuses to read a site the freshness stamp calls stale, and its
+docstring says what it still cannot see.
+
 ---
 
 # What this blueprint is for

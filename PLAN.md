@@ -230,12 +230,19 @@ chapter. `scripts/coverage.py` checks that on every run, so it can no longer
 drift silently.
 
 **Phase 3 — collinearity flags.** The declaration-body pass is done, which was
-the point of doing it first: Chapter 05 is written under a settled rule and an
-enforced one, so every `def` and `abbrev` it names carries its body and
-`scripts/coverage.py` says so without a reviewer. **NEXT: Chapter 05.**
-Vocabulary table first, then flag definitions, forest, selection, pivot,
-classification, augmentations, Thm 3.9. Longest chapter, heaviest translation
-load.
+the point of doing it first: Chapter 05 will be written under a settled rule
+and an enforced one, so every `def` and `abbrev` it names carries its body and
+`scripts/coverage.py` says so without a reviewer.
+
+**NEXT: the prose pass under "Open, not blocking", then Chapter 05.** The same
+argument that put the declaration-body pass ahead of this chapter puts the
+prose pass ahead of it too: Chapter 05 is the longest one, and writing it
+against a register that is about to be rewritten is the expensive order. The
+pass is four written chapters and a decision about the style guide.
+
+Then Chapter 05. Vocabulary table first, then flag definitions, forest,
+selection, pivot, classification, augmentations, Thm 3.9. Longest chapter,
+heaviest translation load.
 
 What the quoting check will ask of Chapter 05 is already visible, because the
 table's `lean` names classify without a build. Of the eight the flags entries
@@ -436,6 +443,41 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   not: where the grounding sits inside the operator, that the row space spans
   the edges of $F$ rather than all pairs, and that the active-vertex count in
   front of the Nixon-Owen disjunction is the measure the induction descends on.
+
+- **NEXT: a general prose review, and a stronger style guide.** Raised
+  2026-08-29 by Bryan, reading the rendered site: the register is off, and it is
+  off across the document rather than in a few places. Read the whole thing
+  before deciding anything, and do not work from the examples below — they are
+  evidence that the problem is general and live, not a list of fixes.
+
+  What was reported: a section title phrased as a sentence rather than a title
+  ("The construction theorem the formalization carries"); proof-engineering
+  idiom standing in for mathematics ("closes the low-degree branches"); and a
+  page that is simply hard to follow. Similar problems were visible in other
+  sections on a first look.
+
+  A count taken over the prose of all nine chapters, to show the scale: 10
+  occurrences of "is/are where" and 7 of "is what makes / does / lets / turns",
+  plus single instances of "on the nose", "part company", "does one thing",
+  "earn their place" and "costs something". Several were written during the
+  declaration-body pass of 2026-08-28, so this is a habit being added to, not a
+  legacy to clean up once. `scripts/style-check.py` catches none of them.
+
+  The order to work in. Read the built site end to end first — the register
+  problems are visible there and invisible in the source, which is how they
+  survived two phases of review. Then revise `BodyPinBlueprint/STYLE.md`, which
+  is where the standard lives and is currently too thin to have prevented any
+  of this. Then rewrite against it. Then encode whatever turns out to be
+  mechanical in `style-check.py`, whose `TELLS` list is the right home.
+
+  Encoding checks before deciding the standard would flood four written
+  chapters with warnings against a register nobody has agreed yet, and would
+  bias the standard towards whatever is easy to grep for.
+
+  This comes before Chapter 05, by the argument the plan already used for the
+  declaration-body pass: Chapter 05 is the longest chapter and the heaviest
+  translation load, and writing it against a register about to be rewritten is
+  the expensive order.
 
 - **Two decisions left open**, neither blocking:
   - *Whether the prose should name each quoted body's source file.* Settled for

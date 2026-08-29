@@ -212,6 +212,15 @@ only by adding the matching status, and vice versa.
   build on an unknown constant — which is the point, it keeps prose references
   as honest as `(lean := ...)` ones. Only for real constants: `sorry` and
   `admit` are not, and file paths and option names stay plain code spans.
+
+  The two forms are indistinguishable in the source and completely different on
+  the page, so `scripts/coverage.py` checks it: a code span naming a
+  declaration of the formalization is an error, and the message gives the role
+  to write. It resolves a span by any dotted suffix, so `bodyClique` is caught
+  as readily as `BodyPinIncidence.bodyClique`. What it cannot see is a **Mathlib**
+  constant — resolving one needs a build — so `` `SimpleGraph` ``, `` `Sym2` ``,
+  `` `Finset` `` and `` `Cardinal` `` sat in the prose as dead text until they
+  were found by eye. Those stay a review item.
 - Prefer a `(lean := ...)` link to reproducing Lean code, and never reproduce a
   proof. `formalization/` carries no licence, so what is quoted here is limited
   to short definition bodies, quoted because they are what the blueprint is

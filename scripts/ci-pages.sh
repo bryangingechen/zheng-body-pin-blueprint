@@ -25,3 +25,10 @@ python3 tools/verso-harness/scripts/check_generated_site.py --project-root . --s
 
 step "stamping the output with the source state it was built from"
 python3 scripts/check-fresh.py --write _out/site/html-multi
+
+# After the stamp, so the check can refuse to read a site that is not current.
+# This is the only place the claims that are true of a *page* rather than of a
+# chapter get checked; both of the bugs it looks for shipped green through
+# checks.sh and were found by eye.
+step "checking the rendered page"
+python3 scripts/check-rendered.py
