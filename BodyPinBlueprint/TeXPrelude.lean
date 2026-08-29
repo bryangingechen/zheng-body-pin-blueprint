@@ -15,7 +15,9 @@ open Informal
 -- macro nobody notices breaking.
 tex_prelude
   r#"\providecommand{\N}{\mathbb{N}}
+\providecommand{\Q}{\mathbb{Q}}
 \providecommand{\R}{\mathbb{R}}
+\providecommand{\C}{\mathbb{C}}
 \providecommand{\trdeg}{\operatorname{trdeg}}
 \providecommand{\codim}{\operatorname{codim}}
 \providecommand{\ht}{\operatorname{ht}}"#

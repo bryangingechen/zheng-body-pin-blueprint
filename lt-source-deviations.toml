@@ -114,17 +114,52 @@ chapter = "BodyPinBlueprint/Chapters/Flags.lean"
 fingerprint = "b2bc4650309d949d2c284df284ce34dc90405d92cf5f0deb1faec04162382371"
 reason = "Never stated as a standalone theorem. The paper's specialization Gamma = empty is emptyFlagState, but what the assembly consumes is a grounded form over Q with a root vertex at zero and right-hand side 3(|V|-1); groundedPF_of_provenanceFlag_semismallness derives it by adjoining three translation variables, which fix every direction row and raise the transcendence degree by exactly three, then cancelling. The equivalent subvariety form of (1.5) is likewise not formalized."
 
-# ---------------------------------------------------------------- later chapters
-
-[[witness]]
-paper = "Lem 6.3"
-chapter = "BodyPinBlueprint/Chapters/BodyPin.lean"
-reason = "The paper argues through Nash-Williams forest decomposition and Edmonds' matroid-union rank formula. Lean uses no matroid API at all: exists_sparse22_of_all_partition_terms extracts the subgraph directly from a maximum sparse subset and an explicit tight partition, and says so in a source comment at OptimalPartition.lean:370. No fingerprint yet: the chapter is a stub."
+# ---------------------------------------------------------------- strata
 
 [[witness]]
 paper = "§4, Thm 4.2"
 chapter = "BodyPinBlueprint/Chapters/Strata.lean"
-reason = "Expository only. The determinantal, local-complete-intersection and Cohen-Macaulay statements have no Lean counterpart; the formalization uses the field-theoretic inequality throughout, so Theorem 1.1 does not depend on section 4. No fingerprint yet: the chapter is a stub."
+reason = "Expository only. The determinantal, local-complete-intersection and Cohen-Macaulay statements have no Lean counterpart; the formalization uses the field-theoretic inequality throughout, so Theorem 1.1 does not depend on section 4. No fingerprint: the entry is about the whole section, carried by two informal-only witnesses, not one."
+
+# ---------------------------------------------------------------- split-klein
+
+[[witness]]
+paper = "(1.6)/(5.2)"
+chapter = "BodyPinBlueprint/Chapters/SplitKlein.lean"
+fingerprint = "03aa129ac12f85e08fd0ab81c74c767b4e0980d4a422c83dc435c47624beb10d"
+reason = "Two builds of I_F. NullCellulePolynomial.edgeIdeal is the literal one -- six variables at every vertex, one orientation-independent quadric per edge, zero locus proved equal to the null-difference condition -- and is unreachable from the root theorem. The load-bearing SelectedNullHeight.coefficientSelectedNullIdeal is grounded (the root's six variables are absent from the ring), over Q rather than a general field, and indexed by selected pin occurrences rather than abstract edges. The distinct locus is not an open set but a denominator: a distinctness chart picks one coordinate of each pairwise twist difference, and 'the component meets U_dist' is non-membership of the product in the prime."
+
+[[witness]]
+paper = "Thm 1.3"
+chapter = "BodyPinBlueprint/Chapters/SplitKlein.lean"
+fingerprint = "e1799f6498790983eba193465ba9217bf08a751af1731b5bf8415e5d8a2b3979"
+reason = "Lower bound only: every reachable statement has the shape |E_F| <= ht P, and the Krull upper bound half of the equality is not formalized, because Prop 6.5's dimension count uses only the lower bound. The three proof steps match the paper's -- shear to an equal-height prime with injective placement, height decomposition ht P = ht p + ht L_F through the coefficient contraction, identification of the generic fibre with the linear-form ideal of the grounded direction rows -- in the grounded occurrence-indexed ring of the (1.6)/(5.2) entry."
+
+[[witness]]
+paper = "Cor 5.4"
+chapter = "BodyPinBlueprint/Chapters/SplitKlein.lean"
+fingerprint = "f510c9541a185e57ecd0e86af46b36fb8959f8eb32e8797d28ff1e0e7d4842b5"
+reason = "Neither the ungrounded variety nor the product decomposition with the common-translation space has a counterpart: the formalization is grounded from the ring onward, so the corollary's grounded clause is the height theorem itself and its ungrounded clause is never needed. GroundScale.lean's orbit statements are unrelated to this proof (they are Lemma 6.4's content) and are themselves unreachable."
+
+# ---------------------------------------------------------------- body-pin
+
+[[witness]]
+paper = "Lem 6.3"
+chapter = "BodyPinBlueprint/Chapters/BodyPin.lean"
+fingerprint = "fd824058bd1ffc22427485ea324a67278ac6a16c845e2e937ce0f49036871c07"
+reason = "The paper argues through Nash-Williams forest decomposition and Edmonds' matroid-union rank formula. Lean uses no matroid API at all: exists_sparse22_of_all_partition_terms extracts the subgraph directly from a maximum sparse subset and an explicit tight partition, and says so in a source comment at OptimalPartition.lean:370. Only the constructive half of the min-max is load bearing; the converse bound Sparse22.card_le_sparsePartitionTerm is proved and unreachable. The contraction to the support graph J is replaced by an aggregation inequality on capped capacities under label coarsening."
+
+[[witness]]
+paper = "Lem 6.4"
+chapter = "BodyPinBlueprint/Chapters/BodyPin.lean"
+fingerprint = "5c5d352054b9339fe9d7d44b4c2d1a8b329ab734d56af4cb56a86de2b56e7026"
+reason = "No statement of the lemma's shape exists. GroundScale.lean proves the point-set freeness of the scaling action and its own comment defers the conversion into a dimension inequality, which is never made; nothing reachable uses the module. The load-bearing substitute is homogeneity: the compatibility equations are homogeneous in the twist variables, and homogeneousPrime_height_lt_of_irrelevant_mem_not_mem gives the strict height drop for a homogeneous prime avoiding a positive-degree denominator, which is the paper's minus one."
+
+[[witness]]
+paper = "§6.4 (sufficiency)"
+chapter = "BodyPinBlueprint/Chapters/BodyPin.lean"
+fingerprint = "ea74c91473607ef8b497b91dad5eeaf4f23d36bdb1f8a16531a7ea5a42bde5e0"
+reason = "No complex-to-real specialization occurs, although the paper takes k = C from section 6.3 onward: the certificates are nonzero integer polynomials from the start, the real point comes from exists_real_eval_ne_zero applied to their product -- the only reachable declaration of ComplexRealSpecialization.lean -- and the compatibility-matrix minor f has no counterpart, because twist rigidity at the chosen placement is concluded directly from the certificates. The rational-to-integer descent runs inside the chart contraction modules, not at the top level."
 
 [[witness]]
 paper = "Prop 3.3, Prop 6.5"

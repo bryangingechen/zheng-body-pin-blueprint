@@ -394,8 +394,11 @@ paper = "§4, (4.7)"
 title = "Grounded model and the grounded inequality"
 chapter = "Strata"
 label = "grounded_model"
+lean = ["RB31E2E.GroundedDirectionConstraint.GroundedSpatialCoordinate", "RB31E2E.GroundedDirectionConstraint.ker_synthesis_eq_directionStressSpace"]
 modules = ["RB31EndToEnd/Linear/GroundedDirectionConstraint.lean", "RB31EndToEnd/NullCellule/GroundedTwistSplit.lean", "RB31EndToEnd/Algebra/GroundedTwist.lean"]
 status = "mapped"
+verified = true
+note = "No standalone declaration states (4.7): the grounded inequality is the conclusion of groundedPF_of_provenanceFlag_semismallness and the hypothesis of endToEndBodyPinStatement_of_groundedPF, both anchored on the stress_codim entry. This entry carries the grounded model itself: the OffRoot coordinate types and the theorem that restricting equilibrium output to non-root blocks preserves the stress space."
 
 [[entry]]
 paper = "(4.2)-(4.3)"
@@ -403,12 +406,14 @@ title = "Direction complex; Sigma_s(F) as determinantal loci"
 chapter = "Strata"
 label = "direction_complex"
 status = "informal"
+verified = true
 
 [[entry]]
 paper = "Ex 4.1"
 title = "The collinear triangle"
 chapter = "Strata"
 status = "informal"
+verified = true
 
 [[entry]]
 paper = "Thm 4.2"
@@ -416,6 +421,7 @@ title = "codim Sigma_s >= s; N_F is LCI, Cohen-Macaulay, pure"
 chapter = "Strata"
 label = "stress_strata_codimension"
 status = "informal"
+verified = true
 note = "Not load-bearing: Theorem 1.1 never depends on the scheme statements."
 
 [[entry]]
@@ -423,6 +429,7 @@ paper = "Rem 4.3"
 title = "Flag conditions vs exact stress strata"
 chapter = "Strata"
 status = "informal"
+verified = true
 
 # ---------------------------------------------------------------- section 5
 
@@ -434,53 +441,68 @@ label = "split_klein_form"
 lean = ["RB31E2E.Twist.splitKlein"]
 modules = ["RB31EndToEnd/Linear/Vec3Twist.lean"]
 status = "mapped"
+verified = true
 
 [[entry]]
 paper = "(5.2)"
 title = "The ideal I_F and the distinct locus"
 chapter = "SplitKlein"
 label = "isotropic_difference_ideal"
-modules = ["RB31EndToEnd/NullCellule/Definitions.lean", "RB31EndToEnd/NullCellule/PolynomialModel.lean"]
-status = "mapped"
+lean = ["RB31E2E.NullCellulePolynomial.edgeIdeal", "RB31E2E.SelectedNullHeight.coefficientSelectedNullIdeal"]
+modules = ["RB31EndToEnd/NullCellule/Definitions.lean", "RB31EndToEnd/NullCellule/PolynomialModel.lean", "RB31EndToEnd/NullCellule/SelectedNullHeight.lean", "RB31EndToEnd/Algebra/GroundedTwistPolynomial.lean"]
+status = "deviation"
+verified = true
+note = "Two builds. The literal one (edgeIdeal, six variables at every vertex, zero locus proved equal to the null-difference condition) is unreachable from the root theorem; the load-bearing one (coefficientSelectedNullIdeal) is grounded, over Q, and indexed by selected pin occurrences, in the twist-coordinate vocabulary of GroundedTwistPolynomial.lean (moved here from lean_weight_apparatus: its reachable part is that vocabulary, not weights). The distinct locus is handled as non-membership of a distinctness-denominator polynomial. The register has the entry."
 
 [[entry]]
 paper = "Lem 5.1"
 title = "Componentwise Witt shear"
 chapter = "SplitKlein"
 label = "witt_shear_componentwise"
-lean = ["RB31E2E.WittShear.exists_scalar_shear_snd_ne_zero"]
+lean = ["RB31E2E.WittShear.shear", "RB31E2E.WittShear.splitKlein_shear", "RB31E2E.WittShear.exists_common_base_shear_snd_ne_zero"]
 modules = ["RB31EndToEnd/NullCellule/WittShear.lean", "RB31EndToEnd/NullCellule/WittShearDistinctPrime.lean"]
 status = "mapped"
+verified = true
+note = "The name previously here, exists_scalar_shear_snd_ne_zero, exists but has no callers anywhere in the tree; the load-bearing existence lemma is the common shear for a finite family of nonzero twists, with the parameter chosen on the rational moment curve. The skew matrix S_Z is written as the cross product with a parameter vector."
 
 [[entry]]
 paper = "Ex 5.2"
 title = "A shear separating coincident coordinates"
 chapter = "SplitKlein"
 status = "informal"
+verified = true
 
 [[entry]]
 paper = "Lem 5.3"
 title = "ht P + trdeg = N for a polynomial ring"
 chapter = "SplitKlein"
 label = "polynomial_dimension_formula"
+lean = ["RB31E2E.PolynomialPrimeTrdegHeight.polynomialPrime_height_add_fractionTrdeg_eq_natCard"]
 modules = ["RB31EndToEnd/Algebra/PolynomialPrimeTrdegHeight.lean", "RB31EndToEnd/Algebra/FiniteCoordinateTrdeg.lean"]
 status = "mapped"
+verified = true
+note = "The paper cites Eisenbud via Noether normalization; the formalization proves the formula from scratch (Jacobson property plus coordinate transcendence bases, no catenarity), since Mathlib does not carry it. Same statement, so not registered as a deviation."
 
 [[entry]]
 paper = "Thm 1.3"
 title = "Height of the distinct isotropic-difference ideal"
 chapter = "SplitKlein"
 label = "isotropic_ideal_height"
-modules = ["RB31EndToEnd/NullCellule/SelectedNullHeight.lean", "RB31EndToEnd/NullCellule/SelectedNullHeightPrimewise.lean", "RB31EndToEnd/Algebra/LinearFormIdealHeight.lean", "RB31EndToEnd/Algebra/MinimalPrimeLinearFibreHeight.lean"]
-status = "mapped"
+lean = ["RB31E2E.SelectedDirectionHeight.splitMinimalPrime_height_ge_edgeCard_of_groundedPF", "RB31E2E.SelectedNullHeightPrimewise.incidenceLocalizedSelectedNullIdealHeight_ge_selectedCard_of_groundedPF"]
+modules = ["RB31EndToEnd/NullCellule/SelectedNullHeight.lean", "RB31EndToEnd/NullCellule/SelectedNullHeightPrimewise.lean", "RB31EndToEnd/NullCellule/SelectedDirectionFibre.lean", "RB31EndToEnd/NullCellule/SelectedDirectionHeight.lean", "RB31EndToEnd/Algebra/LinearFormIdealHeight.lean", "RB31EndToEnd/Algebra/MinimalPrimeLinearFibreHeight.lean"]
+status = "deviation"
+verified = true
+note = "Lower bound only: every reachable statement is |E_F| <= ht P, and the Krull upper bound is not formalized, because Prop 6.5's dimension count needs only the lower bound. SelectedDirectionFibre.lean and SelectedDirectionHeight.lean moved here from lean_base_change: they hold the generic-fibre identification with the linear-form ideal and the height decomposition ht P = ht p + ht L_F. The register has the entry."
 
 [[entry]]
 paper = "Cor 5.4"
 title = "The ungrounded isotropic-difference variety"
 chapter = "SplitKlein"
 label = "ungrounded_variety"
-modules = ["RB31EndToEnd/NullCellule/GroundScale.lean"]
-status = "mapped"
+modules = []
+status = "deviation"
+verified = true
+note = "Neither the ungrounded variety nor the paper's product decomposition has a counterpart: the formalization is grounded from the ring onward, so the corollary's grounded clause is the height theorem itself and the ungrounded clause is never needed. GroundScale.lean was listed here until Phase 4; its content is the scaling orbit of Lemma 6.4, not the translation product of this proof, and it moved to orbit_dimension_drop. Carries no lean anchor on purpose. The register has the entry."
 
 # ---------------------------------------------------------------- section 6
 
@@ -489,8 +511,11 @@ paper = "§6.1"
 title = "The twist-equality partition"
 chapter = "BodyPin"
 label = "twist_equality_partition"
+lean = ["RB31E2E.equalitySetoid", "RB31E2E.equalityPartition", "RB31E2E.equalityBlockValue_injective"]
 modules = ["RB31EndToEnd/Incidence/EqualityPartition.lean", "RB31EndToEnd/Combinatorics/BodyPinFinpartition.lean"]
 status = "mapped"
+verified = true
+note = "The kernel setoid of the assignment; no quotient representatives appear downstream. The grounded tail of EqualityPartition.lean (groundedEqualityBlockValue and its freeness) is unreachable, as is most of BodyPinFinpartition.lean -- the load-bearing part of the latter is capacityOn/finpartitionBlock, used to coarsen labels in the skeleton argument."
 
 [[entry]]
 paper = "Lem 6.3"
@@ -500,6 +525,7 @@ label = "sparse_subgraph_selection"
 lean = ["RB31E2E.exists_sparse22_of_all_partition_terms", "RB31E2E.BodyPinIncidence.exists_sparse_nullSkeleton"]
 modules = ["RB31EndToEnd/Combinatorics/Sparse22/OptimalPartition.lean", "RB31EndToEnd/Combinatorics/BodyPinSparseSkeleton.lean"]
 status = "deviation"
+verified = true
 note = "Lean uses no matroid API at all. No Nash-Williams, no Edmonds."
 
 [[entry]]
@@ -507,17 +533,22 @@ paper = "Lem 6.4"
 title = "Dimension drop along free G_m orbits"
 chapter = "BodyPin"
 label = "orbit_dimension_drop"
-modules = ["RB31EndToEnd/NullCellule/GroundScale.lean", "RB31EndToEnd/Algebra/HomogeneousPrimeChartHeight.lean", "RB31EndToEnd/Algebra/HomogeneousChartContradiction.lean"]
-status = "mapped"
+lean = ["RB31E2E.NullCellulePolynomial.homogeneousPrime_height_lt_of_irrelevant_mem_not_mem", "RB31E2E.NullCellulePolynomial.finiteIrrelevantIdeal_height"]
+modules = ["RB31EndToEnd/NullCellule/GroundScale.lean", "RB31EndToEnd/Algebra/HomogeneousPrimeChartHeight.lean", "RB31EndToEnd/Algebra/HomogeneousChartContradiction.lean", "RB31EndToEnd/Algebra/HomogeneousDenominatorContradiction.lean"]
+status = "deviation"
+verified = true
+note = "No statement of the lemma's shape exists. GroundScale.lean proves the point-set freeness and its own comment defers the dimension conversion, which is never made; nothing reachable uses it. The load-bearing substitute is homogeneity: a homogeneous prime avoiding an irrelevant-ideal element has height strictly below the variable count, in HomogeneousDenominatorContradiction.lean (moved here from lean_base_change). HomogeneousChartContradiction.lean is its superseded single-coordinate variant, 0 declarations reachable. The register has the entry."
 
 [[entry]]
 paper = "Prop 6.5"
 title = "Exceptional parameter image is a proper closed subset"
 chapter = "BodyPin"
 label = "exceptional_pin_parameters"
+lean = ["RB31E2E.SparseNullIncidence.PropernessPrinciple", "RB31E2E.BodyPinIncidence.hasOnlySmallBundlesAt_or_tripleBundlePartitionCertificate", "RB31E2E.BodyPinIncidence.exists_smallBundlePartitionPolynomial"]
 modules = ["RB31EndToEnd/Incidence/SmallBundleCertificate.lean", "RB31EndToEnd/Incidence/TripleBundleCertificate.lean", "RB31EndToEnd/Incidence/FiniteBadCover.lean", "RB31EndToEnd/Incidence/FiniteFullProvenancePropernessAssembly.lean", "RB31EndToEnd/Incidence/CollinearityPolynomial.lean"]
 status = "mapped"
-note = "Cluster node in the first pass; the Incidence chart layer sits under it. See PLAN.md on going deeper later."
+verified = true
+note = "Cluster node in the first pass; the Incidence chart layer sits under it. See PLAN.md on going deeper later. Properness is stated as a certificate: a nonzero integer polynomial vanishing at every real realization, with no topology and no C."
 
 [[entry]]
 paper = "§6.1"
@@ -564,11 +595,14 @@ note = "The paper argues by contraposition, constructing a flex from a violated 
 
 [[entry]]
 paper = "§6.4"
-title = "Sufficiency: C to R specialization and final assembly"
+title = "Sufficiency and final assembly"
 chapter = "BodyPin"
 label = "sufficiency_assembly"
-modules = ["RB31EndToEnd/Algebra/ComplexRealSpecialization.lean", "RB31EndToEnd/Algebra/RationalCertificateDescent.lean", "RB31EndToEnd/Rigidity/BodyTwistGenericBridge.lean", "RB31EndToEnd/NullCellule/GroundedPFEndToEnd.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagGroundedPF.lean"]
-status = "mapped"
+lean = ["RB31E2E.endToEndBodyPinStatement_of_sparseNullIncidenceProperness", "RB31E2E.BodyPinIncidence.exists_real_twistRigidAt_of_partitionCertificates", "RB31E2E.BodyPinIncidence.genericallyRigidInR3_of_hasRigidTwistRealization"]
+modules = ["RB31EndToEnd/Algebra/ComplexRealSpecialization.lean", "RB31EndToEnd/Rigidity/BodyTwistGenericBridge.lean", "RB31EndToEnd/NullCellule/GroundedPFEndToEnd.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagGroundedPF.lean"]
+status = "deviation"
+verified = true
+note = "Title said 'C to R specialization' until Phase 4 read the route: no complex-to-real step occurs. ComplexRealSpecialization.lean is reachable in exactly one declaration, exists_real_eval_ne_zero (a nonzero real polynomial has a real non-root); the genuinely complex half of the module, and the paper's compatibility-matrix minor f, have no counterpart. RationalCertificateDescent.lean moved to lean_chart_layer, where its three call sites are. The register has the entry."
 
 # ---------------------------------------------------------------- appendix
 
@@ -632,16 +666,21 @@ note = "Split out of lean_nixon_owen_reduction: deletion and flag registration c
 title = "Provenance weight and initial-ideal apparatus"
 chapter = "SplitKlein"
 label = "lean_weight_apparatus"
-modules = ["RB31EndToEnd/NullCellule/WeightInitialIdeal.lean", "RB31EndToEnd/NullCellule/WeightComponents.lean", "RB31EndToEnd/NullCellule/VertexK4Weight.lean", "RB31EndToEnd/NullCellule/ReplacementIdentities.lean", "RB31EndToEnd/Algebra/FilteredInitialHeight.lean", "RB31EndToEnd/Algebra/GroundedTwistPolynomial.lean"]
+lean = ["RB31E2E.NullCellulePolynomial.weightInitialIdeal", "RB31E2E.NullCellulePolynomial.WeightInitialHeightMonotone"]
+modules = ["RB31EndToEnd/NullCellule/WeightInitialIdeal.lean", "RB31EndToEnd/NullCellule/WeightComponents.lean", "RB31EndToEnd/NullCellule/VertexK4Weight.lean", "RB31EndToEnd/NullCellule/ReplacementIdentities.lean", "RB31EndToEnd/Algebra/FilteredInitialHeight.lean"]
 status = "lean-only"
+verified = true
+note = "A parallel development, like the sparsity construction theorem: the four pure weight modules (157 declarations) reach the root theorem not at all, and the height-comparison keystone WeightInitialHeightMonotone is defined as a proposition and neither assumed nor proved -- FilteredInitialHeight.lean's own comment says Mathlib lacks the flat weighted-Rees family. That file's coordinate-ideal block (11 declarations) is load bearing, under LinearFormIdealHeight. GroundedTwistPolynomial.lean moved to isotropic_difference_ideal. See notes/reachability.md."
 
 [[entry]]
 title = "Universal and provenance chart layer"
 chapter = "BodyPin"
 label = "lean_chart_layer"
-modules = ["RB31EndToEnd/Incidence/UniversalHomogeneousChart.lean", "RB31EndToEnd/Incidence/UniversalChartIdeal.lean", "RB31EndToEnd/Incidence/UniversalChartContraction.lean", "RB31EndToEnd/Incidence/UniversalChartHeightElimination.lean", "RB31EndToEnd/Incidence/UniversalDistinctChartContraction.lean", "RB31EndToEnd/Incidence/UniversalFullProvenanceChartContraction.lean", "RB31EndToEnd/Incidence/UniversalActivePinHeightTransfer.lean", "RB31EndToEnd/Incidence/DistinctProvenanceChart.lean", "RB31EndToEnd/Incidence/FullProvenanceChart.lean", "RB31EndToEnd/Incidence/TotalRingProvenanceSwap.lean", "RB31EndToEnd/Incidence/PinOuterActiveHeight.lean", "RB31EndToEnd/Incidence/PinOuterFullProvenanceHeightTransfer.lean", "RB31EndToEnd/Incidence/ActivePinPrimeHeight.lean", "RB31EndToEnd/Incidence/PinTriangularElimination.lean", "RB31EndToEnd/Incidence/SkeletonOccurrenceSelection.lean", "RB31EndToEnd/Incidence/Arithmetic.lean"]
+lean = ["RB31E2E.UniversalHomogeneousChart.FiniteGenericIncidenceProvenancePrimeHeightCondition", "RB31E2E.SparseNullIncidence.propernessPrinciple_of_finiteGenericFullProvenancePrimeHeights"]
+modules = ["RB31EndToEnd/Incidence/UniversalHomogeneousChart.lean", "RB31EndToEnd/Incidence/UniversalChartIdeal.lean", "RB31EndToEnd/Incidence/UniversalChartContraction.lean", "RB31EndToEnd/Incidence/UniversalChartHeightElimination.lean", "RB31EndToEnd/Incidence/UniversalDistinctChartContraction.lean", "RB31EndToEnd/Incidence/UniversalFullProvenanceChartContraction.lean", "RB31EndToEnd/Incidence/UniversalActivePinHeightTransfer.lean", "RB31EndToEnd/Incidence/DistinctProvenanceChart.lean", "RB31EndToEnd/Incidence/FullProvenanceChart.lean", "RB31EndToEnd/Incidence/TotalRingProvenanceSwap.lean", "RB31EndToEnd/Incidence/PinOuterActiveHeight.lean", "RB31EndToEnd/Incidence/PinOuterFullProvenanceHeightTransfer.lean", "RB31EndToEnd/Incidence/ActivePinPrimeHeight.lean", "RB31EndToEnd/Incidence/PinTriangularElimination.lean", "RB31EndToEnd/Incidence/SkeletonOccurrenceSelection.lean", "RB31EndToEnd/Incidence/Arithmetic.lean", "RB31EndToEnd/Algebra/RationalCertificateDescent.lean"]
 status = "lean-only"
-note = "Largest cluster. First pass documents it as one step under Prop 6.5 and Thm 1.3."
+verified = true
+note = "Largest cluster. First pass documents it as one step under Prop 6.5 and Thm 1.3. RationalCertificateDescent.lean moved here from sufficiency_assembly: its three call sites are the chart contraction modules. Incidence/Arithmetic.lean contributes exactly one reachable declaration, sparseNull_relativeHeight_budget."
 
 [[entry]]
 title = "Flag state transitions and budget ledger"
@@ -658,8 +697,9 @@ chapter = "Deletion"
 label = "lean_base_change"
 lean = ["RB31E2E.FiniteFamilyBaseChange.finrank_span_range_mapVector", "RB31E2E.DirectionStress.directionStressDim_mapPlacement", "RB31E2E.DirectionStress.directionStressDim_restrictedLiveEdges"]
 verified = true
-modules = ["RB31EndToEnd/Linear/DirectionStressBaseChange.lean", "RB31EndToEnd/Linear/DirectionStressVertexDeletion.lean", "RB31EndToEnd/Linear/FiniteFamilyBaseChange.lean", "RB31EndToEnd/Linear/FiniteRowSystem.lean", "RB31EndToEnd/Linear/FiniteRowSpanStress.lean", "RB31EndToEnd/Linear/DirectionStress.lean", "RB31EndToEnd/Algebra/CoordinateFieldTower.lean", "RB31EndToEnd/Algebra/FractionQuotientCoordinates.lean", "RB31EndToEnd/Algebra/FiniteOpenIntersection.lean", "RB31EndToEnd/Algebra/FiniteChartCertificates.lean", "RB31EndToEnd/Algebra/CoefficientLinearFibre.lean", "RB31EndToEnd/Algebra/LinearFormIdeal.lean", "RB31EndToEnd/Algebra/MinimalPrimeLinearFibre.lean", "RB31EndToEnd/Algebra/HomogeneousDenominatorContradiction.lean", "RB31EndToEnd/NullCellule/SelectedDirectionFibre.lean", "RB31EndToEnd/NullCellule/SelectedDirectionHeight.lean", "RB31EndToEnd/Linear/OutsideRegistrationStress.lean"]
+modules = ["RB31EndToEnd/Linear/DirectionStressBaseChange.lean", "RB31EndToEnd/Linear/DirectionStressVertexDeletion.lean", "RB31EndToEnd/Linear/FiniteFamilyBaseChange.lean", "RB31EndToEnd/Linear/FiniteRowSystem.lean", "RB31EndToEnd/Linear/FiniteRowSpanStress.lean", "RB31EndToEnd/Linear/DirectionStress.lean", "RB31EndToEnd/Algebra/CoordinateFieldTower.lean", "RB31EndToEnd/Algebra/FractionQuotientCoordinates.lean", "RB31EndToEnd/Algebra/FiniteOpenIntersection.lean", "RB31EndToEnd/Algebra/FiniteChartCertificates.lean", "RB31EndToEnd/Algebra/CoefficientLinearFibre.lean", "RB31EndToEnd/Algebra/LinearFormIdeal.lean", "RB31EndToEnd/Algebra/MinimalPrimeLinearFibre.lean", "RB31EndToEnd/Linear/OutsideRegistrationStress.lean"]
 status = "lean-only"
+note = "SelectedDirectionFibre.lean and SelectedDirectionHeight.lean moved to isotropic_ideal_height in Phase 4, and Algebra/HomogeneousDenominatorContradiction.lean to orbit_dimension_drop: all three are the Split-Klein height route, not base-change plumbing."
 
 [[entry]]
 title = "Grouped cross-block bundle operator"
