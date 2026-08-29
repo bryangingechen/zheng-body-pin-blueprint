@@ -31,16 +31,32 @@ deleted.
   Power; *neither has been checked against a primary source*, and the
   blueprint therefore reports the module's own name rather than asserting an
   attribution.
-- *Six modules of weight apparatus with nothing reachable.*
-  `NullCellule/WeightInitialIdeal.lean`, `WeightComponents.lean`,
-  `VertexK4Weight.lean`, `ReplacementIdentities.lean`, and with them
-  `NullCellule/Definitions.lean`, `PolynomialModel.lean` and `GroundScale.lean`,
-  contribute nothing to the root theorem. Together that is 209 declarations
-  named by `lean_weight_apparatus`, `isotropic_difference_ideal`,
-  `ungrounded_variety` and `orbit_dimension_drop`. Either those module
-  inventories are wrong, as two in the statement chapter turned out to be, or
-  there is a second body of work the assembly does not depend on. To settle
-  when Phase 4 writes those chapters.
+- *"Grounded" is the paper's coinage, kept deliberately.* Raised by the
+  repository owner 2026-08-29 while Phase 4 was being written: the term is not
+  standard, and the question was whether the blueprint should say "pinned"
+  instead. Checked against the references: *grounded* occurs zero times in the
+  four reference papers, so it is the paper's own word (the formalization's
+  module names use it too — `GroundedTwist`, `GroundedDirectionConstraint`,
+  `groundedPF`). *Pinned* is worse, twice over: Király–Tanigawa §20.3.4 use
+  "pinned framework" as a term of art for structures whose pinned points are
+  fully fixed in the ambient space, which is a different operation (grounding
+  fixes one root vertex at the origin, removing translations only), and in
+  this paper "pin" already names the joints between bodies. Decision: keep the
+  paper's word under the standing policy for source coinages (as with
+  "provenance flag", "null cellule", "Nixon–Owen") — gloss at first use in
+  every chapter that uses it, note in the strata chapter that the term is the
+  paper's and distinct from Király–Tanigawa's "pinned", and list it in the
+  Chapter 09 glossary.
+- *Why the weight apparatus stops where it does.* Settled in Phase 4 that it
+  is a parallel development and *where* it stops — the height-comparison
+  interface `WeightInitialHeightMonotone` is defined as a proposition and
+  neither assumed nor proved, and `FilteredInitialHeight.lean`'s own comment
+  says Mathlib's Rees algebra does not provide the flat one-parameter family
+  of an arbitrary weight filtration. Still open is the historical guess: the
+  0/1/2 weight layers of the edge-to-$K_3$ and vertex-to-$K_4$ replacements
+  look like a degeneration route to Theorem 1.3 that was abandoned when the
+  Witt-shear route landed, but that is not checkable from here, and the
+  chapters report only the reachability facts.
 
 ## For the author, if ever useful
 
@@ -68,6 +84,23 @@ deleted.
 
 ## Resolved
 
+- *Six modules of weight apparatus with nothing reachable — settled in
+  Phase 4.* The question asked whether the inventories naming
+  `NullCellule/Definitions.lean`, `PolynomialModel.lean`, `GroundScale.lean`
+  and the four pure weight modules were wrong or whether a second body of
+  work exists. Both, in parts. Real stories: the literal ideal build
+  (`Definitions`/`PolynomialModel`) and the weight apparatus are parallel
+  developments, documented as such by the Split–Klein chapter, and
+  `GroundScale`'s free-orbit statements are superseded by the homogeneity
+  route, documented by the assembly chapter with a register entry for
+  Lemma 6.4. Inventory corrections: `GroundScale.lean` moved from
+  `ungrounded_variety` (whose proof is a translation product, not the scaling
+  orbit) to `orbit_dimension_drop`; `GroundedTwistPolynomial.lean` moved from
+  `lean_weight_apparatus` to `isotropic_difference_ideal` (its reachable part
+  is the twist-coordinate vocabulary, not weights);
+  `SelectedDirectionFibre/Height` and `HomogeneousDenominatorContradiction`
+  moved out of `lean_base_change` to the entries whose mathematics they
+  carry.
 - *Two module inventories in the statement chapter named modules the root
   theorem never reaches.* `bodypin_incidence` listed
   `Graph/LooplessMultiGraph.lean` and `pin_capacity` listed

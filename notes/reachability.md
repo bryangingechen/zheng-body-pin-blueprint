@@ -76,18 +76,34 @@ facts from `GraphExtension.lean` and `TriangleSequence.lean`. Lemma 2.1's own
 Lean proof is a tight-set obstruction argument that does not use them. The
 sparsity chapter says so, and `lt-source-deviations.toml` has the entry.
 
-## Open, for the phases that reach them
+## Resolved by Phase 4 (was: open, for the phases that reach them)
 
-Seven of the ten unreached modules are in `NullCellule`, and six of those are
-the weight and initial-ideal apparatus that `lean_weight_apparatus` covers —
-157 declarations reaching the root theorem not at all. `NullCellule.Definitions`
-and `NullCellule.PolynomialModel` are named by `isotropic_difference_ideal`,
-and `NullCellule.GroundScale` by `ungrounded_variety` and
-`orbit_dimension_drop`. Those are Phase 4 chapters. `coverage.py --reachable`
-prints all of them as warnings, and they should be resolved as those chapters
-are written rather than now: either the module inventory is wrong, as it was
-twice in the statement chapter, or there is a real story about a body of work
-that the final assembly does not depend on, as there is for Nixon–Owen.
+Seven of the ten unreached modules are in `NullCellule`, and Phase 4 settled
+each one while writing chapters 06 to 08; `notes/questions.md` has the moved
+inventories, `lt-source-deviations.toml` the registered routes. In summary:
+
+- The four pure weight modules (`WeightInitialIdeal`, `WeightComponents`,
+  `VertexK4Weight`, `ReplacementIdentities`) are a parallel development, told
+  by the Split–Klein chapter's `lean_weight_apparatus` node: the keystone
+  height comparison `WeightInitialHeightMonotone` is defined and never
+  assumed or proved, because Mathlib lacks the flat weighted-Rees family.
+- `Definitions` and `PolynomialModel` hold the *literal* build of the ideal
+  $I_F$; the load-bearing build is `SelectedNullHeight`'s grounded,
+  occurrence-indexed one. Both are named by `isotropic_difference_ideal`,
+  which is now a registered deviation.
+- `GroundScale` proves the point-set orbit freeness of Lemma 6.4 and defers
+  the dimension conversion, which is never made; the load-bearing substitute
+  is the homogeneous height drop in `HomogeneousDenominatorContradiction`.
+  It moved from `ungrounded_variety` to `orbit_dimension_drop`, also now a
+  registered deviation.
+- Of the four marginal modules: `Sparse22.TightCompletion` and
+  `Sparse22.GraphExtension` were already told by the sparsity chapter;
+  `Incidence.Arithmetic` contributes exactly one declaration
+  (`sparseNull_relativeHeight_budget`), said on `lean_chart_layer`; and
+  `Algebra.ComplexRealSpecialization`'s one reachable declaration is
+  `exists_real_eval_ne_zero` — no complex-to-real specialization occurs on
+  the load-bearing route, which is a registered deviation on
+  `sufficiency_assembly`.
 
 Nothing is reachable and unclaimed: every module the root theorem reaches is
 named by some entry.

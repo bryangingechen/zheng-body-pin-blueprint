@@ -56,9 +56,9 @@ audit. Node counts are targets. See `correspondence.toml` for what goes where.
 | 03 | `Sparsity` | §2.1 + Lean-only | 10 | **Written (Phase 2):** 6 nodes. 2,811 lines with no paper counterpart, and the root theorem uses almost none of them. |
 | 04 | `Deletion` | §2.2 | 12 | **Written (Phase 2):** 9 nodes. Exact sequence, ledger, the missing defect Δ. |
 | 05 | `Flags` | §3 | 16 | **Written (Phase 3):** 12 nodes. The heart. Vocabulary table at the top; five proof blocks; four new register entries. |
-| 06 | `Strata` | §4 | 3 | **Stubbed:** 3 nodes. **Deliberately short.** See below. |
-| 07 | `SplitKlein` | §5 | 14 | **Stubbed:** 7 nodes. Plus the Lean-only weight apparatus. |
-| 08 | `BodyPin` | §6.2 onwards | 14 | **Stubbed:** 6 nodes. Matroid-union deviation shown beside Lean's substitute. |
+| 06 | `Strata` | §4 | 3 | **Written (Phase 4):** 3 nodes. **Deliberately short.** See below. |
+| 07 | `SplitKlein` | §5 | 14 | **Written (Phase 4):** 7 nodes. Two builds of the ideal; the weight apparatus and its unproved keystone. |
+| 08 | `BodyPin` | §6.2 onwards | 14 | **Written (Phase 4):** 6 nodes. No matroids, no C, and the orbit drop as homogeneity. |
 | 09 | `Correspondence` | — | 6 | **Stubbed:** 1 node + section skeleton. Table, glossary, deviations, trust boundary, reverse index. |
 
 Node counts in the fourth column are the original targets. Chapters 02 to 04
@@ -300,17 +300,68 @@ the blueprint alone — the Theorem 3.9 proof block walks both cases with the
 paper's ledger, and the closing section maps each move to its constructor
 and budget lift.
 
-**NEXT — Phase 4: route comparison, Split–Klein, assembly.** Chapters 06–08.
-Chapter 06 is the deliberately short route comparison (see its section above);
-Chapter 07 carries the Lean-only weight apparatus, and `Twist.splitKlein` is
-its one `def` that will need a fence; Chapter 08 has the matroid-union
-deviation (Lemma 6.3), whose register entry exists and needs its fingerprint
-when the witness lands. `notes/reachability.md` lists the seven `NullCellule`
-modules Phase 4 has to account for.
-*Exit:* every paper-numbered result has a node; no `unwritten` outside Ch 09.
+**Phase 4 — route comparison, Split–Klein, assembly. DONE.** Chapters 06–08
+written in full: 16 nodes, every `paper`-tagged one with a hand-transcribed
+witness, five proof blocks (the grounded equivalence, Lemmas 5.1 and 6.3,
+Proposition 6.5, and the §6.4 sufficiency assembly), and the register grew
+from sixteen entries to twenty-one, eighteen fingerprinted. The three
+chapters were surveyed by three parallel read-only agents over the module
+families before a line was written, which is what made the findings below
+cheap to confirm.
 
-**Phase 5 — audit, figures, polish.** Chapter 09 in full. Redraw the three
-figures. Clear coverage warnings. Then decide on porting to the current release
+Findings worth keeping:
+
+- *The seven unreached `NullCellule` modules all resolved into real stories*
+  (`notes/reachability.md`, now updated; `notes/questions.md` moved the item
+  to Resolved). The formalization holds **two builds of the ideal $I_F$**:
+  the literal one (`edgeIdeal`, unreachable) and the load-bearing one
+  (`coefficientSelectedNullIdeal` — grounded, over $\Q$, indexed by selected
+  pin occurrences, distinct locus as a denominator). The weight apparatus is
+  a parallel development whose keystone, `WeightInitialHeightMonotone`, is
+  defined as a proposition and neither assumed nor proved — its own comment
+  says Mathlib lacks the flat weighted-Rees family — and the chapter quotes
+  that definition. `GroundScale`'s free-orbit statements are superseded by
+  the homogeneity route (a homogeneous prime avoiding a positive-degree
+  denominator drops height), which is how Lemma 6.4 is actually carried.
+- *Three headline deviations registered with fingerprints.* Theorem 1.3 is a
+  lower bound only (no Krull half; Prop 6.5 needs only the lower bound);
+  Lemma 6.3 is proved without matroids, from a maximum sparse subset and the
+  tight-hull partition, with only the constructive half of Edmonds' min-max
+  load-bearing; and §6.4 performs **no complex-to-real specialization** — the
+  certificates are integer polynomials from the start, and
+  `ComplexRealSpecialization.lean` is reachable in exactly one declaration
+  (a nonzero real polynomial has a real non-root). The `sufficiency_assembly`
+  entry title said "C to R specialization" until this phase read the route.
+- *Table corrections, five module moves and one wrong representative.* The
+  `witt_shear_componentwise` entry named `exists_scalar_shear_snd_ne_zero`,
+  which exists and has zero callers; the load-bearing lemma is the common
+  moment-curve shear for a finite family. `GroundScale.lean` moved from
+  `ungrounded_variety` (whose proof is a translation product, not the
+  scaling orbit) to `orbit_dimension_drop`; `GroundedTwistPolynomial.lean`
+  from the weight apparatus to the ideal entry;
+  `SelectedDirectionFibre/Height` and `HomogeneousDenominatorContradiction`
+  out of `lean_base_change` to the entries whose mathematics they carry.
+- *Terminology policy extended, on the repository owner's question.*
+  "Grounded" is the paper's coinage (zero occurrences in the references) and
+  is **not** Király–Tanigawa's "pinned", which fixes points completely in
+  the ambient space — and in a body–pin graph the word pin is taken. Kept,
+  glossed at first use per chapter, remarked in the strata chapter, recorded
+  in `notes/questions.md`; same policy as "provenance flag" and
+  "Nixon–Owen".
+- `coverage.py --reachable` now warns on eight deliberately-named unreachable
+  modules (the two ideal modules, the four weight modules, `GroundScale`,
+  `HomogeneousChartContradiction`). Whether the checker should grow an
+  acknowledgment field for entries that name unreachable modules on purpose
+  is a Phase 5 decision, with "clear coverage warnings" in its exit.
+
+*Exit met:* every paper-numbered result has a node or, for the three
+examples and the remark (Ex 4.1, Rem 4.3, Ex 5.2), an unlabelled entry and a
+place in its chapter's prose; no `unwritten` remains outside Chapter 09.
+
+**NEXT — Phase 5: audit, figures, polish.** Chapter 09 in full. Redraw the
+three figures. Clear coverage warnings, deciding whether `--reachable` gains
+an acknowledgment field for entries that name unreachable modules on purpose
+(see the Phase 4 findings). Then decide on porting to the current release
 line for PDF output and possible upstream reference-blueprint status.
 *Exit:* coverage checker clean; every module reachable from the root theorem
 named by some node.
