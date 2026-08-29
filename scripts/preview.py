@@ -50,6 +50,13 @@ STRIP = [
     (re.compile(r"^```Verso\.Genre\.Manual\.InlineLean\.lean[^\n]*-show[^\n]*\n.*?^```\n\n?",
                 re.M | re.S), ""),
     (re.compile(r"^```Verso\.Genre\.Manual\.InlineLean\.lean.*$", re.M), "```"),
+    # A ```BodyPinBlueprint.bodies block names declarations whose bodies are read
+    # out of `.lake/build/highlighted/`. Both halves of that are missing here:
+    # the preview strips the `import RB31EndToEnd` lines, so the names do not
+    # resolve, and it renders no declaration panels, which is where a body ends
+    # up on the real site. Drop the block whole rather than show a list of names
+    # that would misrepresent how much space the bodies take.
+    (re.compile(r"^```BodyPinBlueprint\.bodies[^\n]*\n.*?^```\n\n?", re.M | re.S), ""),
 ]
 
 

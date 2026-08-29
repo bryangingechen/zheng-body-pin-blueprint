@@ -19,6 +19,13 @@ whole. Every line still has to be genuine upstream text; only the gaps are ours.
 
 The submodule is pinned to a SHA, so a mismatch means either the copy was
 mistyped or the pin moved. Either way the copy needs re-reading, not patching.
+
+This checks a shrinking set. A chapter can now name a declaration instead of
+copying it, with a ```BodyPinBlueprint.bodies fence, and the body is read out of
+the pinned submodule at build time by `BodyPinBlueprint/Bodies.lean`; such a
+body cannot go stale and there is nothing here to check. Sparsity has been
+converted, so the count is eight rather than the nine it was, and it will fall
+to zero as the rest follow. Do not read a falling count as coverage being lost.
 """
 from __future__ import annotations
 

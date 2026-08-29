@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.Bodies
 import RB31EndToEnd.Combinatorics.Sparse22.DegreeThreeAugmentation
 import RB31EndToEnd.Combinatorics.Sparse22.GraphExtension
 import RB31EndToEnd.Combinatorics.Sparse22.Transport
@@ -121,32 +122,13 @@ body–pin layer where the paper also keeps it. The accessor
 {name RB31E2E.SimpleEdge.vertices}`vertices` is quoted with them because
 {name RB31E2E.edgesInside}`edgesInside` uses it.
 
-```Verso.Genre.Manual.InlineLean.lean -show
-variable {V : Type*} [DecidableEq V]
-open RB31E2E hiding SimpleEdge SimpleEdgeSet edgesInside Sparse22 Tight22
-```
-
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Combinatorics/Sparse22/Basic.lean
-abbrev SimpleEdge (V : Type*) := {e : Sym2 V // ¬e.IsDiag}
-
-abbrev SimpleEdgeSet (V : Type*) := Finset (SimpleEdge V)
-
-namespace SimpleEdge
-
-def vertices (e : SimpleEdge V) : Finset V :=
-  e.1.toFinset
-
-end SimpleEdge
-
-def edgesInside (F : SimpleEdgeSet V) (X : Finset V) : SimpleEdgeSet V :=
-  F.filter fun e => e.vertices ⊆ X
-
-def Sparse22 (F : SimpleEdgeSet V) : Prop :=
-  ∀ X : Finset V, X.Nonempty → (edgesInside F X).card ≤ 2 * (X.card - 1)
-
-def Tight22 (F : SimpleEdgeSet V) (X : Finset V) : Prop :=
-  X.Nonempty ∧ (edgesInside F X).card = 2 * (X.card - 1)
+```BodyPinBlueprint.bodies
+RB31E2E.SimpleEdge
+RB31E2E.SimpleEdgeSet
+RB31E2E.SimpleEdge.vertices
+RB31E2E.edgesInside
+RB31E2E.Sparse22
+RB31E2E.Tight22
 ```
 
 The right-hand side is written `2 * (X.card - 1)` over $`\N`, where truncated
