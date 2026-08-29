@@ -212,7 +212,6 @@ sparsity of $`F` gives $`|E_F(X)| \le 2|X| - 2`, and $`X` is tight.
 Supermodularity is never invoked, so
 {name RB31E2E.exists_tight22_of_not_sparse22_insert}`exists_tight22_of_not_sparse22_insert`
 is proved in the same module as the definitions, independently of uncrossing.
-The divergence is recorded in `lt-source-deviations.toml`.
 
 # An addable edge among three vertices
 
@@ -309,11 +308,8 @@ disjunction {name RB31E2E.HasNixonOwenReduction}`HasNixonOwenReduction`, the
 graph-extension quotient, and the tight completion
 {name RB31E2E.exists_tight22_completion}`exists_tight22_completion` are not
 reachable at all. Lemmas 2.1, 3.7 and 3.8 therefore rest on the tight-set
-arguments above, and this section is a parallel development.
-`lt-source-deviations.toml` records the divergence; the module-by-module walk
-is in `notes/reachability.md`, is rechecked by `scripts/coverage.py
---reachable` when the submodule pin moves, and is rendered in the
-correspondence chapter.
+arguments above, and this section is a parallel development; the
+module-by-module accounting appears in the correspondence chapter.
 
 :::lemma_ "lean_sparsity_transport" (parent := "sparsity_infrastructure") (lean := "RB31E2E.Sparse22Transport.mapEdgeSet, RB31E2E.Sparse22Transport.sparse22_of_mapEdgeSet_subset") (tags := "lean-only") (uses := "sparse22")
 Sparsity transports along an injective map of vertices: if every image of a
