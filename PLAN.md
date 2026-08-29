@@ -229,7 +229,10 @@ As of the end of Phase 2 the blueprint's 59 nodes and the 59 labelled entries of
 chapter. `scripts/coverage.py` checks that on every run, so it can no longer
 drift silently.
 
-**Phase 3 — collinearity flags. NEXT.** Chapter 05. Vocabulary table first, then flag
+**Phase 3 — collinearity flags.** Do the declaration-body pass under "Open, not
+blocking" first: it settles the rule Chapter 05 will be written under, and
+writing the longest chapter against a criterion that is about to change is the
+expensive order. It is one session and one full build. Then Chapter 05. Vocabulary table first, then flag
 definitions, forest, selection, pivot, classification, augmentations, Thm 3.9.
 Longest chapter, heaviest translation load.
 
@@ -274,45 +277,70 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
 - Whether to port to `4.33` once the content exists. Note that it would not buy
   declaration bodies in the panels: neither release line renders them, and
   `notes/upstream.md` §8 has the evidence and the routes if it is ever wanted.
-- **Declaration bodies: what is built, and what is left.** The quoted-body pass
-  below has been largely overtaken. A body no longer has to be copied into a
-  chapter: `scripts/extract-bodies.sh` runs SubVerso's `subverso-extract-mod`
-  over the 15 modules holding a `def` or `abbrev` a node names, and a
-  ```BodyPinBlueprint.bodies fence names declarations instead of quoting them.
-  `BodyPinBlueprint.quotedBodyJs` then splices each body's *value* onto the end
-  of the panel's generated signature, so the panel keeps the full name, universe
-  levels and `variable`-supplied binders and gains the value, which is the only
-  part the signature lacks. `notes/upstream.md` §8 has the mechanism and why it
-  is not post-processing.
+- **Declaration bodies: done.** A body is no longer copied into a chapter. `scripts/extract-bodies.sh` runs SubVerso's
+  `subverso-extract-mod` over the 15 modules holding a `def` or an `abbrev` a
+  chapter names, and a ```BodyPinBlueprint.bodies fence names declarations
+  instead of quoting them. `BodyPinBlueprint.quotedBodyJs` then splices each
+  body's *value* onto the end of the panel's generated signature, so the panel
+  keeps the full name, universe levels and `variable`-supplied binders and gains
+  the value, which is the only part the signature lacks. `notes/upstream.md` §8
+  has the mechanism and why it is not post-processing.
 
-  Done: the machinery, and one chapter (Sparsity) converted. Left, in order —
+  All nine blocks are converted, across the four chapters that quote anything,
+  and Chapter 01 gained a tenth: twenty-five declarations, fifteen of them
+  spliced into the panel that declares them and ten standing in the prose
+  because no node names them. Counted from the built HTML, not inferred. Every `-show`
+  scaffolding block is gone, `scripts/check-snippets.py` reports zero, and it
+  stays only so that a copy cannot drift if a fragment ever has to be quoted
+  that cannot be extracted. Two habits changed with it: a chapter
+  imports `BodyPinBlueprint.Bodies` and the module its names come from, and
+  `extract-bodies.sh` collects names from the fences as well as from
+  `(lean := ...)`, so naming a declaration is what puts its module on the
+  extraction list. That last one was luck until it was fixed — every body quoted
+  so far happened to sit in a module some node also cited.
 
-  1. **Convert the remaining eight blocks.** Delete each `-show` scaffolding
-     block and its verbatim copy; list the names. Sparsity is the worked
-     example. `scripts/check-snippets.py` then falls from 8 towards 0.
-  2. **Take the value boundary from the syntax tree.** `valueFrom` in
-     `quotedBodyJs` finds it by scanning for `:=` at bracket depth zero, which
-     is wrong for a `where` declaration — its first depth-zero `:=` belongs to a
-     field, so the rendering silently drops `where` and the field name. Latent
-     today (no quoted declaration uses `where`) but twelve declarations in the
-     extracted modules do. Fix it in Lean, not JS:
-     `Lean.Parser.Command.declValSimple`, `declValEqns` and `whereStructInst`
-     name the three forms, and all 119 definitions in the extracted modules
-     reparse from `code.toString`, so the tree is available. Slicing the
-     `Highlighted` by character offset is sound because `toString` reproduces
-     the source exactly. This also deletes `slices`, `resolve` and the bracket
-     counting from the JS.
-  3. **Elide proof obligations, the way `pp.proofs` does.** A `where` field is
-     an obligation exactly when its projection's result type is a `Prop`
-     (checked: `SimpleGraph.Adj` data, `symm`/`loopless` Prop). Rendering those
-     as `⋯` turns `directionEquilibrium` from eighteen lines into three that
-     show the mathematics. This *cannot* live in the JS — `isProp` needs the
-     environment — so it depends on step 2. Do **not** elide by syntax:
-     `rigidityOperator` and `genericRigidityRank` are data defined by `by`
-     blocks, and eliding tactics would delete their content. Field names resolve
-     through the parent chain (`toFun`/`map_add'` are on `AddHom`, not
-     `LinearMap`). With this, the "except proof terms" criterion stops excluding
-     declarations and starts showing them honestly.
+  The value boundary comes from the parse rather than from the text, which was
+  the second item on this list and did **not** land where it was planned. The
+  plan was to reparse `code.toString` in Lean, where `declValSimple`,
+  `declValEqns` and `whereStructInst` name the three forms; that works, but the
+  boundary would then have to reach the DOM, and Verso offers no way to mark a
+  run inside a rendered block. It is not needed: SubVerso already records on
+  every keyword token the production it belongs to, so a rendered `where` says
+  `kw-occ-Lean.Parser.Command.whereStructInst-3348` and the real parse is in the
+  page. `:=` and `|` carry nothing — SubVerso emits a keyword token only for an
+  atom starting with a letter — so no route would have given them a production,
+  and they stay token searches. Checked over the extracts rather than on a page:
+  of the 118 `def`, `abbrev` and `instance` commands in the fifteen extracted
+  modules, the rule moves the boundary on exactly the twelve written with
+  `where` and leaves the other 106 alone, including all twenty-two the chapters
+  quote. A `structure` is now refused outright, since its `where` and its field
+  defaults read exactly like a value.
+
+  Proof obligations are elided as `⋯`, the way `pp.proofs` does it, in
+  `Bodies.lean` and not in the script — `Meta.isProp` needs the environment. A
+  `where` field is an obligation exactly when its projection lands in `Prop`,
+  which is a question about the projection and not about the text:
+  `SimpleGraph.Adj` and `SimpleGraph.symm` are written identically, and what
+  separates them is that `Symmetric self.Adj` is a proposition while `Prop` is
+  not one. Eliding by syntax would have been wrong in both directions, since
+  `rigidityOperator` and `genericRigidityRank` are data given by `by` blocks.
+  Field names arrive already resolved by SubVerso, so the parent chain
+  (`toFun` and `map_add'` are on `AddHom`, not `LinearMap`) costs nothing.
+
+  This is the one place a parse is needed, and it is the route the second item
+  above did not take: a field's `:=` carries no binding, so nothing short of
+  reparsing `code.toString` says where one field stops. It runs only for a
+  `where` declaration — the only one of the twenty-five the chapters quote — and
+  reports a failure rather than swallowing it, since a body that quietly kept
+  its proofs would look like one that had none.
+
+  Chapter 01 shows the result: `bodyClique` goes from eight lines to seven with
+  `symm` and `loopless` replaced by `⋯`, so what is left is the adjacency
+  relation the surrounding paragraph describes, and `bodyPinGraph` beside it is
+  the one line that makes "definitionally the supremum of its body cliques"
+  checkable. `AGENTS.md`'s rule loosens accordingly: bundling is no longer a
+  reason on its own not to quote, though what survives elision still has to earn
+  the block.
 
   Facts worth not re-deriving, several of which corrected a first guess:
   extraction is ~47 min cold, mean 189 s per module, dominated by imports rather
@@ -321,21 +349,59 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   binders a `variable` block supplied, the universe levels and the namespace
   qualification, but *not* the explicit arguments — which is why the value is
   spliced onto the generated signature rather than replacing it; and extracted
-  blocks carry their docstrings, where hand-quoted ones did not.
+  blocks carry their docstrings, where hand-quoted ones did not, which is why
+  the ten blocks still standing in the prose now open with the author's own
+  one-line description of each definition.
 
-- **Three decisions left open after the quoted-body pass**, largely overtaken by
-  the above; the first is now a question of which names to list rather than how
-  much to type:
-  - *Which further definitions to quote.* `BodyPinBlueprint/AGENTS.md` now
-    states the criterion. Applying it strictly would add blocks for
-    `edgeConstraint`, `rigidityOperator`, `bodyPinGraph`, `partitionCapacity`,
-    `retainedCoordinateField` with `outsideExtensionTrdeg`, and
-    `directionRowSpace`. All are one line of real content each and are currently
-    paraphrased in prose. Six more blocks is a lot of set-apart code, so this is
-    a taste call rather than a defect.
-  - *Whether the prose should name each quoted body's source file.* Verso's
-    highlighter drops comments, so the `-- <path>` first line is invisible on
-    the site and a block is anonymous unless the surrounding sentence names the
-    file. Some already do; it is not consistent across the nine.
+- **NEXT: quote the remaining sixteen bodies, and make the rule a check.**
+  Decided 2026-08-28, replacing the taste criterion that produced fifteen quoted
+  definitions out of thirty-one named ones with no principle separating them.
+  The rule is in `BodyPinBlueprint/AGENTS.md`; this is what it takes to hold.
+
+  *The rule.* Every `def` and `abbrev` a node names gets its body quoted.
+  Closed exceptions: a structure or inductive (the panel renders its fields, and
+  its `where` reads exactly like a value), a theorem (the value is a proof), and
+  an explicit opt-out carrying a one-line reason. Size is measured on the
+  **value**, never the declaration, and is never a reason to omit; a long value
+  is folded by default instead.
+
+  *Two things the measurement corrected, both of which had made the old
+  criterion look reasonable.* Raw declaration length is the wrong number: the
+  body is spliced onto the panel's generated signature, so the reader gains the
+  value alone, and `deletedConnectingClass` is nine lines of which five are a
+  type the panel renders better. And elision moves the rest —
+  `directionEquilibrium` is eighteen lines raw and four as it would appear. On
+  the sixteen, the longest value is `HasNixonOwenReduction` at six lines and
+  everything else is one to four, so no case is anywhere near the ten lines
+  where folding would start to matter.
+
+  *One reason retired, deliberately.* "Its value names something no node
+  explains" no longer excuses an omission. Every token in an extracted body
+  hovers with its signature and docstring and links to the pinned source, so a
+  name the reader can hover is not dead text; `HasNixonOwenReduction` ships with
+  its four `LegalInverse` predicates on that basis.
+
+  The sixteen, by chapter — all in modules already extracted, so this costs no
+  build time:
+
+  | Chapter | Declarations |
+  |---|---|
+  | 01 `Statement` | `edgeConstraint`, `rigidityOperator`, `IsGenericallyRigidInR3`, `GenericallyRigidInR3`, `partitionCapacity` |
+  | 02 `Necessity` | `coreLineDetPolynomial`, `groupedGroundedBlockOperator` |
+  | 03 `Sparsity` | `HasNixonOwenReduction`, `Sparse22Transport.mapEdgeSet` |
+  | 04 `Deletion` | `directionEquilibrium`, `deletedConnectingClass`, `connectingMap`, `outsideResponseKernelDim`, `outsideExtensionTrdeg`, `retainedCoordinateField`, `directionRowSpace` |
+
+  Each fence goes after its node's witness and commentary, and prose that
+  currently paraphrases a body should be reread against it rather than left to
+  say the same thing twice. Then add the opt-out list to `correspondence.toml`
+  and the check to `scripts/coverage.py`: a node naming a `def` or `abbrev` with
+  neither a fence nor an opt-out fails. Expect one full `ci-pages.sh`.
+
+- **Two decisions left open**, neither blocking:
+  - *Whether the prose should name each quoted body's source file.* The
+    `-- <path>` first line is gone with the copies, and the highlighter dropped
+    it on the site anyway. A declaration with a panel has the panel's source
+    link; one without — ten of the twenty-five — has nothing but the surrounding
+    sentence. Some sentences name the file; it is not consistent.
   - *The block styling itself*, in `BodyPinBlueprint/Style.lean`. The left rule
     is the opinionated part.

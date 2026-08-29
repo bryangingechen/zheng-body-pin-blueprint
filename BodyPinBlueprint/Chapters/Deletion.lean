@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.Bodies
 import RB31EndToEnd.Linear.OutsideExceptionalFullResponse
 import RB31EndToEnd.Linear.DirectionResponseVertexDeletion
 import RB31EndToEnd.Linear.FiniteRowSystem
@@ -107,36 +108,12 @@ $`a_{\text{source}} - a_{\text{target}}` and the target carries its negative, so
 exchanging the two gives back the same function of the vertices. The paper
 writes $`r_{xy}` and lets the symmetry pass without comment.
 
-```Verso.Genre.Manual.InlineLean.lean -show
-noncomputable section
-variable {k V : Type*} [Field k] [Fintype V] [DecidableEq V]
-open RB31E2E
-open RB31E2E.DirectionStress hiding edgeDirection directionRow directionEquilibriumCoordinate DirectionStressSpace directionStressDim
-```
-
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Linear/DirectionStress.lean
-def edgeDirection (a : V → Fin 3 → k) (e : SimpleEdge V) : Fin 3 → k :=
-  fun j ↦ a e.source j - a e.target j
-
-def directionRow (a : V → Fin 3 → k) (e : SimpleEdge V) :
-    V → Fin 3 → k :=
-  fun v j ↦
-    (if e.source = v then edgeDirection a e j else 0) +
-      (if e.target = v then -(edgeDirection a e j) else 0)
-
-def directionEquilibriumCoordinate
-    (F : SimpleEdgeSet V) (a : V → Fin 3 → k)
-    (weight : F → k) (v : V) (j : Fin 3) : k :=
-  ∑ e : F, weight e * directionRow a e.1 v j
-
-abbrev DirectionStressSpace
-    (F : SimpleEdgeSet V) (a : V → Fin 3 → k) :=
-  LinearMap.ker (directionEquilibrium F a)
-
-def directionStressDim
-    (F : SimpleEdgeSet V) (a : V → Fin 3 → k) : ℕ :=
-  Module.finrank k (DirectionStressSpace F a)
+```BodyPinBlueprint.bodies
+RB31E2E.DirectionStress.edgeDirection
+RB31E2E.DirectionStress.directionRow
+RB31E2E.DirectionStress.directionEquilibriumCoordinate
+RB31E2E.DirectionStress.DirectionStressSpace
+RB31E2E.DirectionStress.directionStressDim
 ```
 
 # Deleting one vertex
@@ -326,32 +303,9 @@ finishes the step. The formalization makes that inequality a definition and the
 exceptional branch its literal negation, so the case split is an excluded middle
 rather than a classification with a stored tag.
 
-```Verso.Genre.Manual.InlineLean.lean -show
-end
-
-noncomputable section
-universe u v w
-variable {k : Type u} {K : Type v} {V : Type w}
-  [Field k] [Field K] [Algebra k K]
-  [Fintype V] [DecidableEq V]
-open RB31E2E
-open RB31E2E.DirectionStress hiding OutsideNonexceptional OutsideExceptional
-```
-
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Linear/OutsideLocalPayment.lean
-def OutsideNonexceptional
-    (F : SimpleEdgeSet V) (a : V → Fin 3 → K) (v : V) : Prop :=
-  outsideResponseKernelDim F a v +
-      (outsideExtensionTrdeg (k := k) a v).toNat ≤ 3
-
-def OutsideExceptional
-    (F : SimpleEdgeSet V) (a : V → Fin 3 → K) (v : V) : Prop :=
-  ¬ OutsideNonexceptional (k := k) F a v
-```
-
-```Verso.Genre.Manual.InlineLean.lean -show
-end
+```BodyPinBlueprint.bodies
+RB31E2E.DirectionStress.OutsideNonexceptional
+RB31E2E.DirectionStress.OutsideExceptional
 ```
 
 # Certified response edges

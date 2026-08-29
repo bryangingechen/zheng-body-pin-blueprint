@@ -69,6 +69,19 @@ triage, not mathematical credit.
   its verification, typesetting, and proofreading. Worth stating plainly
   somewhere in the front matter, since it is relevant to how a reader should
   weigh the artifact.
+- **What of it appears on the site, and how it gets there.** Twenty-two short
+  definitions, each because the blueprint is describing that definition; no
+  proof is reproduced. Nothing is committed to this repository: a chapter names
+  a declaration and `BodyPinBlueprint/Bodies.lean` reads it out of the pinned
+  submodule at build time, so the working tree holds names and the built page
+  holds the author's text. Two consequences worth having written down. The
+  extracted command carries its **docstring**, which the hand-quoted copies it
+  replaced did not, so ten one-line descriptions in the author's words are now
+  on the page that were not there before — an increase in what is displayed,
+  from the same source and under the same reasoning. And the licence question
+  above is unchanged by any of this: displaying is not vendoring, but the site
+  is not deployed yet, and if the answer ever came back "no", the fix is to
+  delete the fences rather than to hunt for copies.
 
 ## Checked against primary sources
 

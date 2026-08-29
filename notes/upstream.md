@@ -309,7 +309,19 @@ cold CI build, and a no-op once warm.
 
 It joins on the panel's `data-decl`, on the `id` Verso puts on a block's
 defining occurrence of a constant (`Token.Kind.idAttr`, which emits one only for
-a definition site), and on the `kw-occ-Lean.Parser.Command.<kind>` binding that
-marks each command start — so an upstream restyle that renamed any of those
-would stop it. It is written to leave the page alone whenever it cannot resolve,
-so what a restyle costs is the feature, not the page.
+a definition site), and on the `kw-occ-<production>-<position>` binding SubVerso
+records on every keyword token — so an upstream restyle that renamed any of
+those would stop it. It is written to leave the page alone whenever it cannot
+resolve, so what a restyle costs is the feature, not the page.
+
+That last binding is worth stating precisely, because it decided where a fix
+belonged. `SubVerso.Highlighting.Code` sets `occ := s!"{name}-{pos}"` from the
+*enclosing syntax node*, so a rendered token says which parser production it
+belongs to and where that production began: the `where` of a `def ... where` is
+`kw-occ-Lean.Parser.Command.whereStructInst-3348`, and the `where` that opens a
+`structure`'s fields is `kw-occ-null-596`. The real parse is therefore in the
+page, and a boundary that depends on it needs no reparse in Lean. But SubVerso
+emits a `keyword` token only for an atom beginning with a letter (`Code.lean`,
+`if c.isAlpha then .keyword name occ docs`), so `:=` and `|` arrive with no
+binding at all — which is why `quotedBodyJs` reads `where` off the tree and the
+other two forms off their tokens. See `BodyPinBlueprint/Style.lean`.

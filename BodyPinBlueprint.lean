@@ -119,7 +119,10 @@ preprint distributed as a PDF under a ResearchGate DOI, with no arXiv version as
 of 27 August 2026, and result numbering shifts between revisions — so this
 blueprint pins a SHA-256 of the exact file it maps and labels its nodes
 semantically rather than by paper number. The formalization repository carries
-no licence, so it is referenced here as a pinned submodule and never vendored.
+no licence, so it is referenced here as a pinned submodule and never vendored:
+where a definition's body appears on these pages it is read out of that
+submodule as the page is built, and the only thing ever left out of one is a
+proof obligation, which renders as `⋯`.
 The author credits OpenAI Codex (GPT-5.6 Sol), in both the paper and the note,
 with assisting the proof organization, the Lean formalization and its
 verification, the typesetting and the proofreading. The development is

@@ -29,13 +29,31 @@ map="_out/body-modules.json"
 
 step() { printf '\n[extract-bodies] %s\n' "$*" >&2; }
 
-step "collecting the declarations the nodes name"
+step "collecting the declarations the chapters name"
 python3 - "$names" <<'PY'
 import re, sys, pathlib
+
+# Two sources, and both matter. A `(lean := ...)` name is what a node claims to
+# correspond to, and its module is worth extracting on the chance that a body is
+# wanted; body-modules.lean drops the theorems among them. A name inside a
+# ```BodyPinBlueprint.bodies fence is a *demand*: the chapter will not elaborate
+# unless that module has been extracted. Collecting only the first kind worked
+# by coincidence -- every body quoted so far sat in a module some node also
+# cited -- and would fail as soon as one did not.
+CITED = re.compile(r'\(lean\s*:=\s*"([^"]+)"\)')
+FENCE = re.compile(r"^```BodyPinBlueprint\.bodies[^\n]*\n(.*?)^```$", re.M | re.S)
+
 out = set()
 for p in sorted(pathlib.Path("BodyPinBlueprint/Chapters").glob("*.lean")):
-    for m in re.finditer(r'\(lean\s*:=\s*"([^"]+)"\)', p.read_text(encoding="utf-8")):
+    text = p.read_text(encoding="utf-8")
+    for m in CITED.finditer(text):
         out.update(n.strip() for n in m.group(1).split(",") if n.strip())
+    for m in FENCE.finditer(text):
+        out.update(
+            line.strip()
+            for line in m.group(1).splitlines()
+            if line.strip() and not line.lstrip().startswith("--")
+        )
 path = pathlib.Path(sys.argv[1])
 path.parent.mkdir(parents=True, exist_ok=True)
 text = "\n".join(sorted(out)) + "\n"

@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.Bodies
 import RB31EndToEnd
 
 open Verso.Genre
@@ -148,6 +149,17 @@ $`E \sqcup \bigsqcup_{w \in W} \{w\} \times [4 + r(w)]`, adjacency is "belongs
 to a common body", and the graph is _definitionally_ the supremum of its body
 cliques.
 
+```BodyPinBlueprint.bodies
+RB31E2E.BodyPinIncidence.bodyClique
+RB31E2E.BodyPinIncidence.bodyPinGraph
+RB31E2E.BodyPinIncidence.canonicalBodyPinGraph
+```
+
+What `bodyClique` shows is its adjacency relation. What it does not show is its
+two proof obligations — a `SimpleGraph` carries proofs that adjacency is
+symmetric and irreflexive — which render as `⋯` here and in every quoted body.
+Nothing else is left out.
+
 The bound $`|V(B_w)| \ge d_H(w) + 4` is exactly the requirement that four
 private vertices survive after the pins have taken theirs, so every body carries
 a $`K_4` of its own whatever its pin degree. The formalization names that
@@ -237,17 +249,8 @@ Define
 \end{definition}
 ```
 
-```Verso.Genre.Manual.InlineLean.lean -show
-open RB31E2E RB31E2E.BarJoint
-```
-
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Rigidity/BarJoint.lean
-noncomputable def genericRigidityRank {V : Type} [Fintype V] (G : SimpleGraph V)
-    (d : ℕ) : ℕ := by
-  classical
-  exact Nat.findGreatest (RankIsAttained G d)
-    (Module.finrank ℝ (Velocity V d))
+```BodyPinBlueprint.bodies
+RB31E2E.BarJoint.genericRigidityRank
 ```
 
 No generic configuration is chosen in this statement, and no genericity
@@ -329,13 +332,8 @@ Define also $c : \mathbb{N} \to \mathbb{N}$ by
 \end{definition}
 ```
 
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Specification.lean
-def pinCapacity : ℕ → ℕ
-  | 0 => 0
-  | 1 => 3
-  | 2 => 5
-  | _ => 6
+```BodyPinBlueprint.bodies
+RB31E2E.pinCapacity
 ```
 
 One shared pin forces two bodies to agree at a point, which is three
@@ -375,11 +373,8 @@ For every $t \in \mathbb{N}$ and every surjection $\pi : W \twoheadrightarrow [t
 \end{definition}
 ```
 
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Specification.lean
-def BodyPinIncidence.PartitionCondition (H : BodyPinIncidence) : Prop :=
-  ∀ (t : ℕ) (π : H.Body → Fin t), Function.Surjective π →
-    6 * (t - 1) ≤ H.partitionCapacity π
+```BodyPinBlueprint.bodies
+RB31E2E.BodyPinIncidence.PartitionCondition
 ```
 
 The formalization indexes partitions by surjections $`\pi : W \to [t]` rather than by set
@@ -456,11 +451,8 @@ every $r : W \to \mathbb{N}$, the following conditions are equivalent:
 \end{theorem}
 ```
 
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Target.lean
-def EndToEndBodyPinStatement : Prop :=
-  ∀ (H : BodyPinIncidence) (extra : H.Body → ℕ),
-    H.GenericallyRigidInR3 extra ↔ H.PartitionCondition
+```BodyPinBlueprint.bodies
+RB31E2E.EndToEndBodyPinStatement
 ```
 
 This is the root theorem of the formalization: a closed proposition, universally

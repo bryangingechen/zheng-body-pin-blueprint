@@ -37,14 +37,16 @@ looking, never for believing a node is wired up.
 
 Project CSS does reach it. `BodyPinBlueprint/Style.lean` is passed as
 `extraCss` by both entry points, and its block rule names the preview's markup
-as well as the site's, so a quoted body sits and weighs the same in both. The
-one rule the preview cannot honour is the source-path caption, which needs the
-token spans that only elaboration produces.
+as well as the site's, so a plain quoted block sits and weighs the same in both.
 
-A `-show` block is dropped from the preview rather than rewritten like other
-Lean fences. Rewriting it would turn scaffolding the reader is never meant to
-see into visible code — which is what happened until it was caught, so if you
-add a fence flag, check what `preview.py` does with it.
+Quoted declaration bodies are the one thing it cannot show at all. A
+```` ```BodyPinBlueprint.bodies ```` fence resolves its names against the
+formalization, which the preview has stripped, so `preview.py` drops those
+blocks whole — printing the list of names would misrepresent how much of the
+page they take. If you add a fence kind or a fence flag, check what `preview.py`
+does with it: `-show` scaffolding was rewritten like an ordinary Lean fence
+until that was caught, which turned blocks the reader was never meant to see
+into visible code.
 
 **Does it elaborate?** Use the Lean language server rather than `lake build`. The
 `lean-lsp` MCP server (`.mcp.json`) keeps the imports loaded, so after one cold
@@ -225,114 +227,104 @@ only by adding the matching status, and vice versa.
   tells a reader nothing. Every `Prop`-valued definition, every
   `pinCapacity`-style table of values, every graph construction: write the
   content out in the node body. Chapter 01 does this throughout.
-- **Every declaration a node names has to be understandable from the page.**
-  There are three ways to satisfy that, and each declaration needs one of them.
-  The panel does it by itself for a structure or an inductive, which get their
-  fields and constructors rendered. Otherwise either the prose states the
-  content, or the body is quoted.
+- **Quote the body of every `def` and `abbrev` a node names.** Showing it is the
+  default and the exceptions are closed:
 
-  *Quote the body* when the value is the mathematical content and is short: a
-  `Prop`-valued definition, a table of values, a formula. Quote it when a
-  convention is visible nowhere else -- which component of a pair is the angular
-  part, which endpoint of an edge carries the negative. And quote it when
-  something already quoted refers to it, because a quoted block that names an
-  unexplained function is worse than no block.
+  - a structure or an inductive, because the panel already renders its fields
+    and constructors, and because its `where` and its field defaults read
+    exactly like a value;
+  - a theorem, because its value is a proof and this blueprint reproduces none;
+  - anything on the opt-out list in `correspondence.toml`, each entry carrying
+    a one-line reason.
 
-  *Do not quote* a theorem: the blueprint states results and never reproduces a
-  proof, and `formalization/` carries no licence. Do not quote a body that is
-  bundling rather than content -- a `LinearMap` is mostly its `map_add'` and
-  `map_smul'` obligations, a `SimpleGraph` instance mostly its `symm` and
-  `loopless` ones. Quote the function underneath instead: Chapter 04 quotes
-  `directionEquilibriumCoordinate`, a four-line sum, and leaves
-  `directionEquilibrium` to a sentence saying it is that function bundled.
-  And do not quote where the node's statement already says it in full and the
-  body would add only notation.
+  **Not yet enforced**, and it should be: `scripts/coverage.py` is where the
+  check goes, and `PLAN.md` carries the task along with the sixteen definitions
+  still to quote. Until it lands the rule is on you. It is written to become a
+  check rather than to stay a paragraph because the taste version of it produced
+  fifteen quoted bodies out of thirty-one named definitions, with no principle
+  separating the halves.
 
-  The failure to watch for is a node whose `lean :=` names three declarations
-  and whose prose explains one. Read the rendered panel and ask what a reader
-  learns from it; for a `def` the answer is a signature and nothing else.
+  **Size is measured on the value, never on the declaration, and it is not a
+  reason to omit.** The body is spliced onto the panel's generated signature, so
+  what a reader gains is the value alone: `deletedConnectingClass` is nine lines
+  of which five are a type the panel already renders better, with the universe
+  levels and the qualified names. Obligations elide on top of that, taking
+  `directionEquilibrium` from eighteen lines to four. A value that is genuinely
+  long gets folded by default rather than dropped -- `quotedBodyJs` already
+  carries the control, a `body` pill on the panel.
 
-- **When you do quote a body**, use a fenced block after the witness, first line
-  a comment giving the source path:
+  One thing that reads like a reason and is not: that the value names something
+  no node explains. Every token in a quoted body is extracted, so it hovers with
+  its own signature and docstring and links to the pinned source. A name the
+  reader can hover is not dead text. `HasNixonOwenReduction` names four
+  `LegalInverse` predicates on exactly that basis.
 
-  ````
-  ```
-  -- RB31EndToEnd/Target.lean
-  def EndToEndBodyPinStatement : Prop :=
-    ∀ (H : BodyPinIncidence) (extra : H.Body → ℕ),
-      H.GenericallyRigidInR3 extra ↔ H.PartitionCondition
-  ```
-  ````
-
-  Use ```` ```Verso.Genre.Manual.InlineLean.lean ````, which elaborates the
-  block and so highlights it, gives hovers, and fails the build if the copy
-  stops making sense. The declarations are elaborated in the chapter's root
-  namespace, so they do not redeclare the imported ones, but every name they
-  mention has to resolve.
-
-  **Put whatever it takes to make that happen in a hidden block, not in the
-  quoted one.** A fence marked `-show` elaborates and renders nothing, and
-  Verso carries scopes from one block to the next, so a hidden block can set the
-  section `variable`s and the `open` that the next block needs:
+- **When you do quote a body, name it; do not copy it.** A
+  ```` ```BodyPinBlueprint.bodies ```` fence takes one fully qualified
+  declaration name per line and renders each one's command as the pinned
+  submodule has it:
 
   ````
-  ```Verso.Genre.Manual.InlineLean.lean -show
-  variable {k W E : Type*} [CommRing k]
-  open RB31E2E hiding IsTwistMotion IsDiagonalTwist
-  ```
-
-  ```Verso.Genre.Manual.InlineLean.lean
-  -- RB31EndToEnd/Linear/TwistSystem.lean
-  def IsTwistMotion ...
+  ```BodyPinBlueprint.bodies
+  RB31E2E.SimpleEdge
+  RB31E2E.SimpleEdge.vertices
+  RB31E2E.edgesInside
   ```
   ````
 
-  `check-snippets.py` only looks at blocks whose first line is a source path, so
-  the hidden block is free-form while the visible one stays verbatim, with no
-  `open ... in` line of its own. Set up the scope the way the source file does:
-  open the namespace the declarations actually live in, not its parent, and
-  repeat the source's `noncomputable section` where it has one. Getting either
-  wrong fails loudly -- `Unknown constant RB31E2E.directionRow` when the `hiding`
-  list names a declaration that is really in `RB31E2E.DirectionStress`, which
-  then takes the whole `open` down with it, or `failed to compile definition,
-  consider marking it as 'noncomputable'`. Where two quoted files have different
-  section variables, give each its own `section ... end` in the hidden blocks so
-  the variable sets cannot collide; Chapter 04 quotes two files this way. Two
-  further gotchas, both already met:
+  `BodyPinBlueprint/Bodies.lean` reads the body out of `.lake/build/highlighted/`,
+  which `scripts/extract-bodies.sh` fills by running SubVerso's
+  `subverso-extract-mod` over the modules the chapters name. So the text on the
+  page is the submodule's own source, extracted at build time: nothing is copied
+  into this repository, nothing elaborates twice, and no quote can go stale.
+  There is no scaffolding to write -- no `-show` block, no `open ... hiding`, no
+  section `variable`s -- because nothing is being re-elaborated.
 
-  - *Quoted declarations that refer to each other.* The local copies sit at the
-    root while the `open` brings the upstream ones into scope, so a
-    cross-reference is ambiguous: `Ambiguous term IsTwistMotion. Possible
-    interpretations: _root_.IsTwistMotion, RB31E2E.IsTwistMotion`. Name them in
-    the setup block's `open ... hiding`.
-  - *A quoted declaration that uses field notation on a quoted type.*
-    Redeclaring the type without its accessors breaks it -- `Invalid field
-    notation: Function SimpleEdge.vertices does not have a usable parameter of
-    type SimpleEdge` -- because the upstream accessor still expects the upstream
-    type. Quote the accessor too, in the source's own order; Chapter 03 quotes
-    `SimpleEdge.vertices` between the two abbreviations and the definitions that
-    use it. Where that would bloat the block, the alternative is to leave the
-    type out of the block and out of the `hiding` list and name it in prose with
-    a `{name ...}` role, which hovers anyway.
+  Three things a fence needs, each of which fails loudly if missing:
 
-  All six quoted bodies in the chapters use this pattern, and none of them
-  carries scaffolding a reader can see. `check-snippets.py` still strips a
-  leading `open ... in` line, which an earlier convention put inside the quoted
-  block itself; nothing relies on that now and a new block should not need it.
+  - `import BodyPinBlueprint.Bodies` in the chapter.
+  - The declaration's own module among the chapter's imports, since the name is
+    resolved against the chapter's environment.
+  - An extract for that module. `extract-bodies.sh` collects names from these
+    fences as well as from `(lean := ...)`, so naming a declaration is enough to
+    put its module on the list; run the script if the list changed (seconds when
+    the module was already extracted, minutes when it was not).
+
+  What renders is the whole command, including its docstring, in the source's
+  own order -- so give the names in that order too. Verso's highlighter drops
+  comments, so an ordinary `--` comment inside a declaration is invisible on the
+  site, and there is no source-path line to write: a reader who wants the file
+  follows the source link on the declaration panel.
+
+  The fence and the panel are then joined by `quotedBodyJs`
+  (`BodyPinBlueprint/Style.lean`). Where a node names the declaration, its value
+  is spliced onto the end of the panel's generated signature -- which has the
+  full name, the universe levels and every binder a `variable` block supplied,
+  and lacks only the value -- and the block leaves the prose. Where no node names
+  it, the block stays where it is, which is how a supporting definition like
+  `SimpleEdge.vertices` gets quoted at all.
+
+  Only a `def`, an `abbrev` or an `instance` is spliced. A structure's `where`
+  and its field defaults read exactly like a value, so a structure is refused
+  and its block stays in the prose — which is the right outcome twice over,
+  since the panel already renders its fields and there was no reason to quote
+  it. A definition written with `where` splices correctly, from the `where`
+  rather than from its first field's `:=`.
+
+  Its proof obligations are elided as `⋯`, by `Bodies.lean` and not by the
+  script: a field is an obligation exactly when its projection lands in `Prop`,
+  which `Meta.isProp` decides and the syntax cannot — `SimpleGraph.Adj` and
+  `SimpleGraph.symm` are written the same way. Say so in the prose the first
+  time a chapter shows one, as Chapter 01 does; a reader should not have to
+  guess what `⋯` stands for. Nothing else is ever omitted from a quoted body.
+
   A plain ```` ``` ```` fence remains available for a fragment that cannot be
-  made to elaborate at all, at the cost of highlighting and hovers. Never use
-  ```` ```lean ````: an unlabelled Lean block is rejected outright.
-
-  The `-- <path>` first line is a marker for the checker, not something the
-  reader sees: Verso's highlighter drops comments, so it renders on the site as
-  nothing at all. It is visible in the preview, which does not elaborate. A
-  reader who wants the file follows the source link on the declaration panel
-  beside the block.
-
-  `python3 scripts/check-snippets.py` verifies every such block against the file
-  it names, chunk by chunk, so a copy cannot silently drift from the pinned
-  submodule. Run it with the other checks. Keep quotes to definitions that the
-  prose is actually about; each one is a maintenance obligation.
+  extracted, at the cost of highlighting and hovers; `scripts/check-snippets.py`
+  is what keeps such a copy honest, and it currently reports zero because there
+  are none. Never use ```` ```lean ````: an unlabelled Lean block is rejected
+  outright. Keep quotes to definitions the prose is actually about; each one is
+  still a claim about what matters, even though it is no longer a maintenance
+  obligation.
 - The panel does carry a source link, pinned to the submodule SHA and anchored
   to the declaration's line range — e.g. `Target.lean#L12-L20`. That is how a
   reader checks our restatement against the real definition, and it is why the

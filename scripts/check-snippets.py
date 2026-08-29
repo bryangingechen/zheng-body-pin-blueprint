@@ -20,12 +20,16 @@ whole. Every line still has to be genuine upstream text; only the gaps are ours.
 The submodule is pinned to a SHA, so a mismatch means either the copy was
 mistyped or the pin moved. Either way the copy needs re-reading, not patching.
 
-This checks a shrinking set. A chapter can now name a declaration instead of
-copying it, with a ```BodyPinBlueprint.bodies fence, and the body is read out of
-the pinned submodule at build time by `BodyPinBlueprint/Bodies.lean`; such a
-body cannot go stale and there is nothing here to check. Sparsity has been
-converted, so the count is eight rather than the nine it was, and it will fall
-to zero as the rest follow. Do not read a falling count as coverage being lost.
+**The set is now empty, and that is the finished state.** Every declaration body
+in the document is named rather than copied, in a ```BodyPinBlueprint.bodies
+fence, and read out of the pinned submodule at build time by
+`BodyPinBlueprint/Bodies.lean`. Such a body cannot go stale, so there is nothing
+left here to check and the run reports zero.
+
+The script stays because the copying it checks is still possible: a fragment
+that cannot be made to elaborate at all can be quoted in a plain fence, and this
+is what would then keep the copy honest. A reported count of zero means no
+chapter copies anything, not that a check was lost.
 """
 from __future__ import annotations
 

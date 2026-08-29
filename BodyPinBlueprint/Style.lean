@@ -9,21 +9,21 @@ and script its own pages without patching VersoBlueprint or post-processing the
 output.  Both entry points pass both, so the site and `scripts/preview.py`
 agree.
 
-The two builds render a quoted body differently.  The site elaborates the fence
-and emits `<code class="hl lean block">`; the preview strips the fence, because
-it has no formalization to resolve names against, and emits an unclassed
-`<pre>`.  The block rule names both, so the preview is a fair picture of where a
-block sits and how heavy it looks.  A preview render has no declaration panels
-either, so `quotedBodyJs` does nothing there and the fast loop is unaffected.
+The two builds render a quoted body differently.  The site reads the declaration
+out of the pinned submodule's extract and emits `<code class="hl lean block">`;
+the preview has no formalization to resolve the name against, so it drops the
+block entirely.  The block rule still names the unclassed `<pre>` a plain fence
+produces, so the preview remains a fair picture of where such a block sits and
+how heavy it looks.  A preview render has no declaration panels either, so
+`quotedBodyJs` does nothing there and the fast loop is unaffected.
 
-They differ in one visible way, and it is the site that shows less.  Verso's
-highlighter drops comments -- there is not one `.comment` span anywhere on the
-built site -- so the `-- <path>` first line of every quoted body is invisible
-there, while the preview keeps it as ordinary text.  That line is a marker for
-`scripts/check-snippets.py`, not something the reader ever sees on the site; a
-reader who wants the file follows the source link on the declaration panel.  A
-caption rule styling that first line was written here and removed once the built
-page showed it matches nothing.
+One thing the built page silently omits: Verso's highlighter drops comments --
+there is not one `.comment` span anywhere on the site -- so an ordinary `--`
+comment inside an extracted declaration renders as nothing.  A docstring is not
+a comment and does survive.  A caption rule for the `-- <path>` line that quoted
+bodies used to carry was written here and removed once the built page showed it
+matches nothing; the bodies no longer carry that line at all, and a reader who
+wants the file follows the source link on the declaration panel.
 
 Everything here uses VersoBlueprint's own `--bp-color-*` tokens, defined in
 `VersoBlueprint/Commands/Common.lean`.  Matching the declaration panel means
@@ -168,35 +168,36 @@ nothing else the signature does not already say better.  So the panel keeps its
 signature and gains the value spliced onto the end of it, and the run the value
 came from leaves the prose.  Nothing is shown twice and nothing is lost.
 
-Finding where the value starts is the whole trick.  Verso renders a block as one
-flat run of top-level nodes and marks every command start with a
-`kw-occ-Lean.Parser.Command.<kind>` binding on its keyword token, which cuts a
-cluster into one run per declaration: `namespace` and `end` are scaffolding, and
-a modifier like `noncomputable` joins what it modifies.  Within a run the value
-begins at the `:=` that closes the header, found at bracket depth zero so a
-binder's default cannot be mistaken for it -- or, for a declaration given by
-pattern-matching alternatives such as `pinCapacity`, at the first `|`.
+Finding where the value starts is the only hard part left.  Every block holds
+exactly one extracted declaration -- `BodyPinBlueprint.Bodies` emits one block
+per name -- so the block is the run, and what remains is to say where its header
+stops.  Lean writes a value in three forms; `valueFrom` asks about `where`
+before it looks for `:=`, and the comment there says why that order is the whole
+point of the function.
 
 Nothing here is a patch or a post-processing step.  Verso inlines it into every
 page's `<head>` from `RenderConfig.extraJs`, and it reads only what Verso
 already rendered -- `div.declaration[data-decl]` for the panels, and the `id`
 Verso puts on a block's defining occurrence of a constant (`Token.Kind.idAttr`,
-which emits one only for a definition site).
+which emits one only for a definition site).  Extracted names are fully
+qualified, so `RB31E2E___Sparse22` unslugs to the panel's own `data-decl` and
+the join is exact rather than guessed.
 
 What it declines to do matters as much.  A page with no panels is left alone,
-which is every preview render.  A short name is resolved to a panel's full name
-by unique dotted suffix, and an ambiguous or unmatched one is skipped rather
-than guessed.  A run whose value it cannot locate stays in the prose.  A block
-keeps whatever it still holds: on the sparsity page `Sparse22` and `Tight22`
-move into their panels while `SimpleEdge`, `SimpleEdgeSet`, `vertices` and
-`edgesInside` stay, since no node claims them -- and a block with nothing left
-but scaffolding is hidden whole.  When every panel holding a run is inside a
-closed `details`, the run returns to the prose, so folding the Lean code panel
-never hides a body with no way to ask for it.
+which is every preview render.  A block whose declaration no panel claims stays
+in the prose, and so does one whose value cannot be located: on the sparsity
+page `Sparse22` and `Tight22` move into their panels while `SimpleEdge`,
+`SimpleEdgeSet`, `vertices` and `edgesInside` stay, since no node names them.
+When the panel holding a value is inside a closed `details`, the block returns
+to the prose, so folding the Lean code panel never hides a body with no way to
+ask for it.
 
-Cross-references follow that.  A reference from one quoted body to another
-points at the copy in the prose, whose anchors are untouched; the link is
-switched off only while its target is hidden, and comes back when it returns.
+Cross-references follow that.  A reference from one quoted body to another points
+at the block in the prose, whose anchors are untouched; the link is switched off
+only while that block is hidden, and comes back when it returns.  Which block the
+reference *came* from is irrelevant, so the target is looked up across the
+document rather than within one block -- with a declaration per block, a
+reference almost always leaves the block it is written in.
 
 The control is a bordered pill with a chevron rather than a word in the kicker
 line, because an affordance nobody can see is one nobody uses.  It folds the
@@ -204,31 +205,43 @@ value away and back.  It is a real `<button>`, so it takes keyboard focus and
 carries `aria-expanded`, and `quotedBodyCss` grows it under
 `@media (hover: none)`, since 0.66rem of text is not a tap target.
 
-Two kinds of block feed this, and they are not equivalent.  A block written by
-`BodyPinBlueprint.Bodies` holds one extracted declaration and names it in full,
-so the id it carries is `RB31E2E___Sparse22` and the join is exact.  A block
-still quoted by hand in a chapter holds a cluster and declares short names, so
-it needs the segmentation and the dotted-suffix guess above.  One chapter --
-Sparsity -- has been converted; eight blocks have not, which is why both paths
-are here.  When the last one is converted, `slices`, `resolve` and the bracket
-counting in `valueFrom` all become dead code.
+**Where the `where` case is fixed, and why not in Lean.**  `PLAN.md` proposed
+reparsing `code.toString` in `Bodies.lean`, where `declValSimple`, `declValEqns`
+and `whereStructInst` name the three forms exactly.  That would work, but the
+boundary would then have to be carried into the DOM, and Verso gives no way to
+mark a run inside a rendered block -- which is the same wall that made splicing
+necessary in the first place.  It turns out not to be needed: SubVerso already
+records, on every keyword atom, the parser production it belongs to
+(`Code.lean`, `occ := s!"{name}-{pos}"`), so the real parse arrives in the page
+as `data-binding` and no reparse is required.
 
-**A latent defect, recorded so it is not rediscovered.** `valueFrom` looks for
-the `:=` that closes a declaration's header, and a declaration written with
-`where` has none -- its first `:=` at depth zero belongs to a *field*, so the
-value would begin at `toFun weight v j :=` and the rendering would drop the
-`where` and the field name while still looking plausible.  Nothing on the page
-hits this: none of the nine quoted declarations uses `where`.  Twelve of the
-declarations in the extracted modules do, so it will matter as soon as coverage
-widens.  The fix is not to add `where` here but to take the boundary from the
-syntax tree in Lean, where `Lean.Parser.Command.declValSimple`, `declValEqns`
-and `whereStructInst` name the three forms exactly; every one of the 119
-definitions in the extracted modules reparses, so that is available.  See
-`PLAN.md`.
+The catch, and the reason `:=` and `|` are still token searches: SubVerso emits
+a `keyword` token only for an atom that starts with a letter, so `:=` and `|`
+arrive as ordinary tokens carrying no binding at all.  No route -- Lean's or
+this one -- would have given them a production to match on.  `where` is a
+keyword and does carry one, and `where` is the case that was wrong.
 
-As of the pinned formalization this splices twelve values into seven panels,
-hides seven blocks whole and four runs within others, and leaves seven blocks
-standing in the prose.
+Checked over the extracts rather than on a page.  Of the 118 `def`, `abbrev` and
+`instance` commands in the fifteen extracted modules, the rule moves the
+boundary on exactly the twelve written with `where`, in each case to the `where`
+itself and away from a field's `:=`; the other 106 are unchanged, and so are all
+twenty-two declarations the chapters quote.  So this fixes nothing visible and
+prevents the next chapter from rendering a body that silently begins at
+`toFun weight v j :=`.
+
+The same reading gives `hasValue`.  A `structure` writes `where` before its
+fields and may give a field a default with `:=`, both of which read exactly like
+a value, so a block quoting one would have had something plausible spliced into
+a panel that already lists the fields.  Refusing anything that is not a
+definition excludes 152 theorems, 30 `omit ... in` commands and 3 structures
+across the same extracts.
+
+No count of what this does belongs here, because it would have to be corrected
+every time a chapter quotes something. The shape is fixed instead: one block per
+name in a ```BodyPinBlueprint.bodies fence, and a block moves into a panel
+exactly when some node also names its declaration. As the chapters stand that is
+twenty-two blocks, twelve of them claimed by a node and ten left in the prose,
+which the fences and the `(lean := ...)` options say without a build.
 -/
 def quotedBodyJs : String := r##"
 (function () {
@@ -254,83 +267,79 @@ def quotedBodyJs : String := r##"
     return out;
   }
 
-  /* Snippets elaborate in the blueprint's own environment with the upstream
-     namespace opened, so a block defines `genericRigidityRank` where the panel
-     names `RB31E2E.BarJoint.genericRigidityRank`.  Match on a dotted suffix and
-     accept only a unique hit, so an ambiguity is skipped rather than guessed. */
-  function resolve(names, short) {
-    var hit = null;
-    for (var i = 0; i < names.length; i++) {
-      if (names[i] === short || names[i].endsWith("." + short)) {
-        if (hit) return null;
-        hit = names[i];
-      }
+  /* A block holds one extracted declaration, and the token that defines it
+     carries the slug of its full name.  `Token.Kind.idAttr` emits an id only at
+     a definition site, and `Bodies.lean` asks for those with `defSite := true`,
+     so the first such token is the declaration the block is. */
+  function definedBy(block) {
+    return block.querySelector(".const.token[id]");
+  }
+
+  /* SubVerso records, on every alphabetic keyword token, the parser production
+     it belongs to and where that production started:
+     `kw-occ-Lean.Parser.Command.whereStructInst-3348`.  That is the real syntax
+     tree rather than a guess about the text, and it is what the two functions
+     below read. */
+  var KW = "kw-occ-Lean.Parser.Command.";
+
+  function production(node) {
+    var b = node.getAttribute && node.getAttribute("data-binding");
+    if (!b || b.indexOf(KW) !== 0) return null;
+    return b.slice(KW.length).replace(/-\d+$/, "");
+  }
+
+  /* Only a definition has a value worth splicing.  A structure or an inductive
+     already has its fields and constructors rendered in the panel, and would be
+     misread here: `structure ... where` and a field default `x : T := d` both
+     look exactly like a value.  A theorem's value is a proof, which the
+     blueprint does not reproduce. */
+  var HAS_VALUE = { definition: 1, abbrev: 1, instance: 1 };
+
+  function hasValue(nodes) {
+    for (var i = 0; i < nodes.length; i++) {
+      var p = production(nodes[i]);
+      if (p && HAS_VALUE[p]) return true;
     }
-    return hit;
+    return false;
   }
 
-  /* Verso renders a block as one flat run of top-level nodes and marks the
-     start of every command with a `kw-occ-Lean.Parser.Command.<kind>` binding
-     on its keyword token, which is enough to cut a cluster into one run per
-     declaration.  `namespace` and `end` are scaffolding and belong to no
-     declaration; a modifier such as `noncomputable` introduces none of its own,
-     so it joins the command it modifies.  A run carries its own trailing blank
-     line, because that separator sits before the next command's keyword. */
-  var SCAFFOLD = {
-    namespace: 1, end: 1, section: 1, open: 1, variable: 1, universe: 1
-  };
-  var COMMAND = "kw-occ-Lean.Parser.Command.";
-
-  function commandKind(node) {
-    var binding = node.getAttribute && node.getAttribute("data-binding");
-    if (!binding || binding.indexOf(COMMAND) !== 0) return null;
-    return binding.slice(COMMAND.length).replace(/-\d+$/, "");
-  }
-
-  function definitionIn(node) {
-    if (node.classList && node.classList.contains("const") && node.id) return node;
-    if (!node.querySelector) return null;
-    return node.querySelector(".const.token[id]");
-  }
-
-  function slices(block) {
-    var segments = [];
-    var current = null;
-    var children = block.childNodes;
-    for (var i = 0; i < children.length; i++) {
-      var kind = commandKind(children[i]);
-      if (kind) {
-        current = { kind: kind, nodes: [], defines: null };
-        segments.push(current);
-      }
-      if (!current) continue;
-      current.nodes.push(children[i]);
-      current.defines = current.defines || definitionIn(children[i]);
-    }
-
+  function childrenOf(block) {
     var out = [];
-    var pending = [];
-    for (var j = 0; j < segments.length; j++) {
-      var seg = segments[j];
-      if (SCAFFOLD[seg.kind]) { pending = []; continue; }
-      if (!seg.defines) { pending = pending.concat(seg.nodes); continue; }
-      out.push({ nodes: pending.concat(seg.nodes), defines: seg.defines });
-      pending = [];
-    }
+    for (var i = 0; i < block.childNodes.length; i++) out.push(block.childNodes[i]);
     return out;
   }
 
   /* Where the declaration stops restating its signature and starts saying what
-     it is.  Almost always the `:=` that closes the header, which has to be
-     found at bracket depth zero so that a binder's default value cannot be
-     mistaken for it; `pinCapacity` has no `:=` at all and gives its value as
-     pattern-matching alternatives, so the first `|` serves instead, taken with
-     the line break in front of it. */
-  function valueFrom(nodes) {
-    var depth = 0;
-    var i, c, text;
+     it is.  Lean writes a value in three forms, and the parser names all three:
+     `whereStructInst` (`where`, then fields), `declValSimple` (`:=`, then a
+     term) and `declValEqns` (pattern-matching alternatives).
+
+     `where` is asked about first, and that ordering is the whole reason this
+     function is not simply a search for `:=`.  A `where` declaration has no
+     header-closing `:=` at all, so its first `:=` belongs to a *field*: looking
+     for `:=` first would start the value at `toFun weight v j :=` and silently
+     drop the `where` and the field name, which still looks plausible on the
+     page.  `RB31E2E.DirectionStress.directionEquilibrium` is that declaration.
+
+     Only `where` can be read off the syntax tree, because SubVerso records a
+     production for alphabetic keywords and `:=` and `|` are not keywords in
+     that sense -- they arrive as ordinary tokens with no binding at all.  So
+     the other two forms are still found by their token, the `:=` at bracket
+     depth zero so that a binder's default cannot be mistaken for it, and the
+     `|` of a declaration such as `pinCapacity` taken with the line break in
+     front of it. */
+  function valueFrom(block, nodes) {
+    var i, c;
     for (i = 0; i < nodes.length; i++) {
-      text = nodes[i].textContent;
+      if (production(nodes[i]) === "whereStructInst") return nodes.slice(i);
+    }
+    /* A `where` below the top level of the block would leave the search that
+       follows to start the value inside a field.  Nothing renders that way
+       today; refuse rather than find out on the page. */
+    if (block.querySelector("[data-binding^='" + KW + "whereStructInst-']")) return null;
+    var depth = 0;
+    for (i = 0; i < nodes.length; i++) {
+      var text = nodes[i].textContent;
       if (depth === 0 && text === ":=") return nodes.slice(i);
       for (c = 0; c < text.length; c++) {
         var ch = text.charAt(c);
@@ -355,7 +364,7 @@ def quotedBodyJs : String := r##"
      `Sparse22` can still jump to the `edgesInside` the prose kept. */
   var serial = 0;
 
-  function isolate(root, block) {
+  function isolate(root) {
     var mapped = {};
     var suffix = "--body-" + ++serial;
     var i;
@@ -375,7 +384,8 @@ def quotedBodyJs : String := r##"
       var hash = href.indexOf("#");
       if (hash === -1) continue;
       var frag = decodeURIComponent(href.slice(hash + 1));
-      if (targetIn(block, frag)) {
+      var anchor = targetIn(document, frag);
+      if (anchor && anchor.closest("code.hl.lean.block")) {
         links[i].setAttribute("data-bpx-target", frag);
       }
     }
@@ -411,10 +421,10 @@ def quotedBodyJs : String := r##"
 
   /* Append the value to one rendering of the signature.  The panel carries two,
      for wide and narrow viewports, and both need it. */
-  function splice(pre, value, block) {
+  function splice(pre, value) {
     var span = document.createElement("span");
     span.className = "bpx_body_value";
-    if (value[0].textContent === ":=") span.appendChild(document.createTextNode(" "));
+    if (value[0].textContent.trim()) span.appendChild(document.createTextNode(" "));
     for (var i = 0; i < value.length; i++) span.appendChild(value[i].cloneNode(true));
     while (span.lastChild && !span.lastChild.textContent.trim()) {
       span.removeChild(span.lastChild);
@@ -422,7 +432,7 @@ def quotedBodyJs : String := r##"
     if (span.lastChild) {
       span.lastChild.textContent = span.lastChild.textContent.replace(/\s+$/, "");
     }
-    pre.appendChild(isolate(span, block));
+    pre.appendChild(isolate(span));
     return span;
   }
 
@@ -451,9 +461,9 @@ def quotedBodyJs : String := r##"
     return chip;
   }
 
-  /* A panel lives inside a `details` the reader can close.  Anything whose
-     every panel is out of reach comes back to the prose, so closing the Lean
-     code panel never hides a body with no way to ask for it. */
+  /* A panel lives inside a `details` the reader can close.  A block whose panel
+     is out of reach comes back to the prose, so closing the Lean code panel
+     never hides a body with no way to ask for it. */
   function reachable(node) {
     var d = node.closest("details");
     while (d) {
@@ -465,66 +475,37 @@ def quotedBodyJs : String := r##"
 
   function sync(hidden) {
     for (var i = 0; i < hidden.length; i++) {
-      var any = false;
-      for (var j = 0; j < hidden[i].panels.length; j++) {
-        if (reachable(hidden[i].panels[j])) { any = true; break; }
-      }
-      hidden[i].el.classList.toggle("bpx_body_quoted", any);
+      hidden[i].el.classList.toggle("bpx_body_quoted", reachable(hidden[i].panel));
     }
-  }
-
-  /* Take a run out of the prose without disturbing what is left: wrap it, so
-     the separator it carries goes with it and nothing reflows. */
-  function wrapRun(nodes) {
-    var span = document.createElement("span");
-    nodes[0].parentNode.insertBefore(span, nodes[0]);
-    for (var i = 0; i < nodes.length; i++) span.appendChild(nodes[i]);
-    return span;
   }
 
   function run() {
     var panels = document.querySelectorAll("div.declaration[data-decl]");
     if (!panels.length) return;
     var byName = {};
-    var names = [];
     for (var i = 0; i < panels.length; i++) {
       var d = panels[i].getAttribute("data-decl");
-      if (!(d in byName)) { byName[d] = panels[i]; names.push(d); }
+      if (!(d in byName)) byName[d] = panels[i];
     }
 
     var blocks = quotedBlocks();
     var hidden = [];
     for (var b = 0; b < blocks.length; b++) {
       var block = blocks[b];
-      var runs = slices(block);
-      var spliced = [];
-      var left = 0;
-
-      for (var r = 0; r < runs.length; r++) {
-        var short = unslug(runs[r].defines.id);
-        var full = resolve(names, short);
-        var value = full ? valueFrom(runs[r].nodes) : null;
-        if (!full || !value) { left += 1; continue; }
-
-        var panel = byName[full];
-        var sigs = panel.querySelectorAll("pre.bp_external_decl_signature");
-        if (!sigs.length) { left += 1; continue; }
-        for (var s = 0; s < sigs.length; s++) splice(sigs[s], value, block);
-        addChip(panel, short);
-        spliced.push({ nodes: runs[r].nodes, panel: panel });
-      }
-
-      if (!spliced.length) continue;
-
-      if (left === 0) {
-        /* Nothing definitional is left, so the scaffolding would be all that
-           remained.  Hide the block whole. */
-        hidden.push({ el: block, panels: spliced.map(function (x) { return x.panel; }) });
-      } else {
-        for (var k = 0; k < spliced.length; k++) {
-          hidden.push({ el: wrapRun(spliced[k].nodes), panels: [spliced[k].panel] });
-        }
-      }
+      var defines = definedBy(block);
+      if (!defines) continue;
+      var name = unslug(defines.id);
+      var panel = byName[name];
+      if (!panel) continue;
+      var nodes = childrenOf(block);
+      if (!hasValue(nodes)) continue;
+      var value = valueFrom(block, nodes);
+      if (!value) continue;
+      var sigs = panel.querySelectorAll("pre.bp_external_decl_signature");
+      if (!sigs.length) continue;
+      for (var s = 0; s < sigs.length; s++) splice(sigs[s], value);
+      addChip(panel, name.split(".").pop());
+      hidden.push({ el: block, panel: panel });
     }
 
     if (!hidden.length) return;

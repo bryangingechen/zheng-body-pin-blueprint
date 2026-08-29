@@ -19,7 +19,8 @@ WHAT THE PREVIEW CANNOT SHOW, because it has no formalization to link against:
 
   * external declaration panels -- signatures, docstrings, source links
   * hovers on `name` references, which render as plain code
-  * syntax highlighting in quoted Lean bodies, which render as plain text
+  * quoted declaration bodies, which are read out of the formalization's extract
+    and are dropped here entirely, block and all
   * node Lean-status, so the graph and summary colour every node as unformalized
   * anything `strictResolve` would catch: a wrong `(lean := ...)` name is
     stripped here rather than checked

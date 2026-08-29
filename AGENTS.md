@@ -153,11 +153,11 @@ does not apply here (see above); what follows is the half that does.
   names a declaration in a ```BodyPinBlueprint.bodies fence;
   `BodyPinBlueprint/Bodies.lean` reads the body out of
   `.lake/build/highlighted/`, which `scripts/extract-bodies.sh` fills by running
-  SubVerso's `subverso-extract-mod` over the modules the nodes name. Nothing is
-  copied into this repo and no copy can go stale. The older mechanism — a
+  SubVerso's `subverso-extract-mod` over the modules the chapters name. Nothing
+  is copied into this repo and no copy can go stale. The older mechanism — a
   verbatim `lean` fence with `-show` scaffolding, checked by
-  `scripts/check-snippets.py` — still carries eight blocks and is being retired;
-  prefer the fence for anything new.
+  `scripts/check-snippets.py` — is retired: every block has been converted, no
+  chapter copies anything, and the checker reports zero.
 - Project CSS and JavaScript both go in `BodyPinBlueprint/Style.lean` and are
   passed by both entry points as `RenderConfig.extraCss` and
   `RenderConfig.extraJs`, which Verso inlines into every page's `<head>`. Style

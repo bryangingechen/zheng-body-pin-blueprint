@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.Bodies
 import RB31EndToEnd.Rigidity.GraphNecessity
 
 open Verso.Genre
@@ -93,20 +94,9 @@ Both halves of the display are declarations. A twist is the pair itself, with
 the angular part first and the translational part second, and the velocity is
 its evaluation at a point.
 
-```Verso.Genre.Manual.InlineLean.lean -show
-open RB31E2E hiding Twist IsTwistMotion IsDiagonalTwist
-```
-
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Linear/Vec3Twist.lean
-abbrev Twist (k : Type*) := Vec3 k × Vec3 k
-
-namespace Twist
-
-def eval {k : Type*} [CommRing k] (X : Twist k) (p : Vec3 k) : Vec3 k :=
-  X.2 + Vec3.cross X.1 p
-
-end Twist
+```BodyPinBlueprint.bodies
+RB31E2E.Twist
+RB31E2E.Twist.eval
 ```
 
 The formalization states the twist system on a type of pin occurrences with two
@@ -115,21 +105,10 @@ a motion when every pin receives the same velocity from both of its bodies, it
 is diagonal when it is constant, and a pin placement is _twist rigid_ when every
 motion at it is diagonal.
 
-```Verso.Genre.Manual.InlineLean.lean -show
-variable {k W E : Type*} [CommRing k]
-```
-
-```Verso.Genre.Manual.InlineLean.lean
--- RB31EndToEnd/Linear/TwistSystem.lean
-def IsTwistMotion (src dst : E → W) (p : E → Vec3 k)
-    (X : W → Twist k) : Prop :=
-  ∀ e, Twist.eval (X (src e)) (p e) = Twist.eval (X (dst e)) (p e)
-
-def IsDiagonalTwist (X : W → Twist k) : Prop :=
-  ∃ Y : Twist k, X = fun _ ↦ Y
-
-def TwistRigidAt (src dst : E → W) (p : E → Vec3 k) : Prop :=
-  ∀ X : W → Twist k, IsTwistMotion src dst p X → IsDiagonalTwist X
+```BodyPinBlueprint.bodies
+RB31E2E.IsTwistMotion
+RB31E2E.IsDiagonalTwist
+RB31E2E.TwistRigidAt
 ```
 
 Keeping the occurrence type means that two pins joining the same pair of bodies
