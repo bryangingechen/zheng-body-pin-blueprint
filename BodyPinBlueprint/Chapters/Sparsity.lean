@@ -56,31 +56,34 @@ rendered in the correspondence chapter rather than here.
 
 #doc (Manual) "Sparse graphs and addable edges" =>
 
-Section 2.1 of {Informal.citet "zheng2026"}[] fixes the class of graphs on
+Section 2.1 of {Informal.citet "zheng2026"}[] defines the class of graphs on
 which the paper's central estimate is proved: a simple graph is
 $`(2,2)`-sparse when every nonempty vertex set $`U` spans at most $`2|U| - 2`
-edges. {bpref "stress_codim"}[The stress–codimension inequality] is stated for
-exactly this class, and the class reaches the main theorem through
-{bpref "sparse_subgraph_selection"}[the selection lemma of Section 6.2]: a
-body–pin graph satisfying the partition condition contains a $`(2,2)`-sparse
-subgraph of representative pins, and the sufficiency argument bounds
-self-stresses on that subgraph.
+edges. The class enters the proof of the main theorem in its sufficiency
+direction, that the partition condition implies generic rigidity. That
+argument first selects, from the pins of a body–pin graph satisfying the
+partition condition, a $`(2,2)`-sparse subgraph of representative pins —
+{bpref "sparse_subgraph_selection"}[the selection lemma of Section 6.2] — and
+then bounds the self-stresses of sparse graphs:
+{bpref "stress_codim"}[the stress–codimension inequality], the estimate at the
+centre of the paper, is stated for exactly this class.
 
-The estimate is proved one vertex at a time, and sparsity supplies the vertex:
-a $`(2,2)`-sparse graph on $`n` vertices has at most $`2n - 2` edges, hence a
-vertex of degree at most three, and deleting a vertex leaves a sparse graph.
-We first state sparsity and tightness, then the two consequences of
-supermodularity that the deletion argument uses, and then Lemma 2.1, which
-produces an addable edge among the three neighbours of a deleted degree-three
-vertex. That edge is put back after the deletion: in the exceptional case of
-{bpref "low_degree_classification"}[the local classification], where the three
-neighbours are collinear, adding it restores the self-stress dimension the
-deletion lost, and when all three neighbour edges are already present a
-collinearity flag is created instead ({bpref "collinearity_flag"}[the flags
-chapter]). The last two sections describe combinatorics that the formalization
-contains and the paper never mentions: a construction theorem for
-$`(2,2)`-tight graphs, and a transport lemma that moves sparsity along an
-embedding.
+The inequality is proved by deleting one vertex at a time. A $`(2,2)`-sparse
+graph on $`n` vertices has at most $`2n - 2` edges, so some vertex has degree
+at most three, and deleting a vertex leaves a sparse graph; the deletion
+argument therefore never leaves the class and always has a vertex of degree at
+most three to remove. We first state sparsity and tightness, then the two
+consequences of supermodularity that the deletion argument uses, and then
+Lemma 2.1, which produces an addable edge among the three neighbours of a
+deleted degree-three vertex. In the exceptional case of
+{bpref "low_degree_classification"}[the local classification] those three
+neighbours are collinear, and the induction continues on the smaller graph
+with one such edge added back, which restores the self-stress dimension; when
+all three neighbour edges are already present, a collinearity flag is created
+instead ({bpref "collinearity_flag"}[the flags chapter]). The last two
+sections describe combinatorics that the formalization contains and the paper
+never mentions: a construction theorem for $`(2,2)`-tight graphs, and a
+transport lemma that moves sparsity along an embedding.
 
 :::group "sparsity_spine"
 The paper's sparsity vocabulary: the counting condition, tight sets, and the
@@ -131,7 +134,7 @@ rather than for a {name SimpleGraph}`SimpleGraph`: a
 {name RB31E2E.SimpleEdge}`SimpleEdge` is a {name Sym2}`Sym2` of two distinct
 vertices, and a {name RB31E2E.SimpleEdgeSet}`SimpleEdgeSet` is a
 {name Finset}`Finset` of those, so parallel pins and loops are absent by
-construction and multiplicity stays in the body–pin layer, where the paper
+construction and multiplicity belongs to the body–pin layer, where the paper
 also keeps it. The accessor
 {name RB31E2E.SimpleEdge.vertices}`vertices` is quoted with them because
 {name RB31E2E.edgesInside}`edgesInside` is written with it.
@@ -248,9 +251,9 @@ three with named neighbours $`a, b, c`, either all three edges between the
 neighbours are present in $`F`, or one of the absent ones can be inserted
 after deleting $`v`. Taking $`Q = F - v` recovers the paper's formulation. The
 induction of {bpref "stress_codim_flags"}[the flags chapter] applies the
-dichotomy directly: an insertable edge becomes a
-{bpref "certified_response_edge"}[certified response edge], and a complete
-neighbour triangle starts a new flag.
+dichotomy directly: an inserted edge is a
+{bpref "certified_response_edge"}[certified response edge], and on a complete
+neighbour triangle a new flag is created.
 
 The formal proof uses only the tight-set combinatorics above; in particular it
 does not depend on the construction theorem of the next section. Like the
@@ -261,8 +264,9 @@ assembles one lemma for a single missing edge and one for two.
 # A construction theorem with no paper counterpart
 
 The formalization keeps an edge set on an ambient vertex type together with an
-explicit finite set of _active_ vertices, the vertices the graph currently
-lives on. The remaining statements of this chapter are phrased in those terms.
+explicit finite set of _active_ vertices, the vertices on which the graph is
+currently considered. The remaining statements of this chapter are phrased in
+those terms.
 
 :::lemma_ "lean_nixon_owen_reduction" (parent := "sparsity_infrastructure") (lean := "RB31E2E.HasNixonOwenReduction, RB31E2E.isK4Base_or_hasNixonOwenOrGraphExtensionReduction, RB31E2E.exists_tight22_completion") (tags := "lean-only")
 On an active vertex set with at least two elements, a simple $`(2,2)`-tight
@@ -290,7 +294,7 @@ ends at a vertex contained in a $`(2,2)`-tight $`K_4`, and a triangle-sequence
 argument would continue from there; `GraphExtension.lean` replaces that
 continuation with a shorter one, over a proper tight module of maximum
 cardinality, since tightness alone forces every outside vertex to send at most
-one edge into the module unless that vertex has degree two and supplies an
+one edge into the module unless that vertex has degree two and gives an
 inverse Henneberg-one move.
 
 None of this appears in {Informal.citet "zheng2026"}[]: the paper proves
@@ -324,7 +328,8 @@ In the formalization, deleting a vertex produces an edge set on a smaller
 vertex type — the subtype of the remaining vertices — rather than on a subset
 of one fixed vertex set, and creating a flag changes the type again, by
 adjoining an auxiliary vertex. A sparse edge set therefore has to be moved
-along an embedding at every step of the induction, and this lemma moves it.
+along an embedding at every step of the induction, and this lemma justifies
+each such move.
 No corresponding statement appears in the paper, whose graphs share one
 ambient vertex set throughout.
 

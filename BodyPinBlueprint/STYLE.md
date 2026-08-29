@@ -239,6 +239,18 @@ Two shapes of this to watch for specifically:
   words*, *never has to say anything here*. Keep the comparison, state both
   sides, drop the flourish.
 
+A cousin with a legitimate subject and an illegitimate verb: the **animated
+abstraction**. "Sparsity supplies the vertex." "The class reaches the main
+theorem through the selection lemma." "The graph lives on the active
+vertices." The nouns are mathematics; the verbs — supplying, travelling,
+dwelling — assert agency that a property or a class does not have, so the
+metaphor rule applies to verbs as much as to nouns. An abstraction takes the
+plain predicates the sources give it: *is*, *has*, *satisfies*, *equals*,
+*implies*, *gives*, *holds*, *follows*, *passes to*. The test is restatement:
+"A $(2,2)$-sparse graph on $n$ vertices has at most $2n - 2$ edges, so some
+vertex has degree at most three" says everything "sparsity supplies the
+vertex" gestured at, and every clause of it can be checked.
+
 ## Proof-engineering idiom is not mathematics
 
 Compare:
@@ -301,6 +313,8 @@ failure modes to watch for, not hypotheticals.
 | "The one deviation worth watching is Lemma 6.3." | telling the reader what matters | "Lemma 6.3 is proved by a different route." |
 | "…a reader meeting a scheme-theoretic section with no formalization will ask whether it was skipped, and the answer belongs here rather than in a footnote." | narrating the blueprint's design inside a chapter | "This chapter records what §4 claims and which part of it the formal argument uses." |
 | "The rest is short." | clipped closer for cadence, no step stated | fused into the next sentence |
+| "The estimate is proved one vertex at a time, and sparsity supplies the vertex." | animated abstraction | "A $(2,2)$-sparse graph on $n$ vertices has at most $2n - 2$ edges, so some vertex has degree at most three." |
+| "…and the class reaches the main theorem through the selection lemma of §6.2 … the sufficiency argument bounds self-stresses" | animated abstraction, then *the sufficiency argument* with no antecedent | the sufficiency direction stated in full first, then the lemma's place in it |
 | "The chapter opens with a vocabulary table, because…" | narrating a layout — one that did not exist | the table, or nothing |
 | "The paper changes coefficient field constantly and silently." | scorekeeping flourish | the comparison, with both sides stated |
 

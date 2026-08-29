@@ -58,6 +58,12 @@ TELLS: list[tuple[str, str, str]] = [
     ("warn", "dodged role-naming: 'the mechanism is'", r"\bthe mechanism is\b"),
     ("warn", "dodged role-naming: 'the value Y needs'", r"\bthe value [a-z $]{0,40}\bneeds\b"),
     ("warn", "scorekeeping flourish: 'does the same work'", r"\bdo(es)? the same work\b"),
+    # An abstraction with a vivid verb -- travelling, supplying, dwelling.
+    # The subject is fine; the verb asserts agency it does not have.  Restate
+    # with is/has/satisfies/implies and a because/so chain (STYLE.md, "The
+    # text is not the subject").
+    ("warn", "animated abstraction: vivid verb on an abstract subject",
+     r"\b(supplies|reaches the|lives? (?:on|in)|sits (?:in|on|at))\b"),
 
     # -- Register.
     ("warn", "mission statement", r"\b(this blueprint (exists|is for)|job of this blueprint|the (first|whole) job|the deliverable)\b"),
