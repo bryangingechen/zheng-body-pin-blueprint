@@ -63,5 +63,18 @@ remains outside is {bpref "asimow_roth"}[the Asimow–Roth step]. {Informal.cite
 # Reverse index
 
 Lean module to blueprint node, for the 125 modules of the development.
-Promoting a row of this index to a node of its own is how a cluster node is
-later split; see `PLAN.md`.
+A cluster node is later split by promoting a row of this index to a node of
+its own; see `PLAN.md`.
+
+One measurement belongs to this index already. Walking the constant
+dependencies of the root theorem through the kernel environment shows that,
+of the four modules that develop
+{bpref "lean_nixon_owen_reduction"}[the construction theorem of the sparsity
+chapter], only a few counting facts are reachable: from `TightCompletion.lean`
+one equation lemma for a definition made elsewhere; from
+`TriangleSequence.lean` two declarations about the four-element vertex set of
+a $`K_4`; from `GraphExtension.lean` eight facts about the edges one outside
+vertex sends into a tight module; and from `Construction.lean` its edge-set
+vocabulary rather than its reduction theorems. `notes/reachability.md` has the
+method and the whole table, and `scripts/coverage.py --reachable` rechecks the
+walk when the submodule pin moves.

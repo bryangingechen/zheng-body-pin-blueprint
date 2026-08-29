@@ -38,7 +38,7 @@ are two nodes here because the formalization proves them separately and by
 different routes, which is a distinction a reader checking the correspondence
 needs to see.
 
-Quoted bodies are named rather than copied; the mechanism is described in the
+Quoted bodies are named rather than copied; the convention is described in the
 leading comment of `Statement.lean`.  Every `def` and `abbrev` a node here names
 is quoted, which is the rule in the `AGENTS.md` beside this directory.  The
 first fence also quotes `SimpleEdge.vertices`, which no node names: `edgesInside`
@@ -49,25 +49,38 @@ fence renders in.
 The imports are the whole `Sparse22` family and nothing else: none of those
 nine modules reaches a blanket `import Mathlib`.
 
-The reachability figures quoted at the end come from `scripts/reachable.lean`;
-`notes/reachability.md` has the method and the whole table.
+The reachability claims near the end come from `scripts/reachable.lean`;
+`notes/reachability.md` has the method, and the module-by-module figures are
+rendered in the correspondence chapter rather than here.
 -/
 
 #doc (Manual) "Sparse graphs and addable edges" =>
 
-Section 2.1 of {Informal.citet "zheng2026"}[] is two paragraphs and one lemma.
-It fixes the class of graphs the rest of the argument runs on, records the two
-consequences of supermodularity that the induction needs, and shows that a
-degree-three vertex whose three neighbours do not already form a triangle
-leaves an addable edge behind. Every later chapter deletes a vertex from a
-$`(2,2)`-sparse graph and then puts an edge back, so these are the two moves
-the induction is built from.
+Section 2.1 of {Informal.citet "zheng2026"}[] fixes the class of graphs on
+which the paper's central estimate is proved: a simple graph is
+$`(2,2)`-sparse when every nonempty vertex set $`U` spans at most $`2|U| - 2`
+edges. {bpref "stress_codim"}[The stress–codimension inequality] is stated for
+exactly this class, and the class reaches the main theorem through
+{bpref "sparse_subgraph_selection"}[the selection lemma of Section 6.2]: a
+body–pin graph satisfying the partition condition contains a $`(2,2)`-sparse
+subgraph of representative pins, and the sufficiency argument bounds
+self-stresses on that subgraph.
 
-The formalization covers the same ground in nine modules and 3,789 lines. Three
-of them, 481 lines, carry the statements of Section 2.1. One more, 382 lines,
-belongs to {bpref "sparse_subgraph_selection"}[the selection lemma of Section 6.2]. The
-remaining 2,926 have no counterpart anywhere in the paper, and the last two
-sections of this chapter say what they are.
+The estimate is proved one vertex at a time, and sparsity supplies the vertex:
+a $`(2,2)`-sparse graph on $`n` vertices has at most $`2n - 2` edges, hence a
+vertex of degree at most three, and deleting a vertex leaves a sparse graph.
+We first state sparsity and tightness, then the two consequences of
+supermodularity that the deletion argument uses, and then Lemma 2.1, which
+produces an addable edge among the three neighbours of a deleted degree-three
+vertex. That edge is put back after the deletion: in the exceptional case of
+{bpref "low_degree_classification"}[the local classification], where the three
+neighbours are collinear, adding it restores the self-stress dimension the
+deletion lost, and when all three neighbour edges are already present a
+collinearity flag is created instead ({bpref "collinearity_flag"}[the flags
+chapter]). The last two sections describe combinatorics that the formalization
+contains and the paper never mentions: a construction theorem for
+$`(2,2)`-tight graphs, and a transport lemma that moves sparsity along an
+embedding.
 
 :::group "sparsity_spine"
 The paper's sparsity vocabulary: the counting condition, tight sets, and the
@@ -110,18 +123,18 @@ The bound is stated for nonempty $`U` because $`2|U| - 2` is negative at
 $`U = \emptyset`. A one-vertex set is tight, since both sides are zero, and
 $`K_4` is tight on its whole vertex set. Sparsity passes to any subset of the
 edge set, which is {name RB31E2E.Sparse22.mono}`Sparse22.mono`; deleting a
-vertex from a sparse graph therefore leaves a sparse graph, as the induction
-needs.
+vertex from a sparse graph therefore leaves a sparse graph, as the deletion
+step requires.
 
-The formalization carries the condition on a finite set of unordered pairs
-rather than on a {name SimpleGraph}`SimpleGraph`. A
+The formalization states the condition for a finite set of unordered pairs
+rather than for a {name SimpleGraph}`SimpleGraph`: a
 {name RB31E2E.SimpleEdge}`SimpleEdge` is a {name Sym2}`Sym2` of two distinct
-vertices and a
-{name RB31E2E.SimpleEdgeSet}`SimpleEdgeSet` is a {name Finset}`Finset` of those, so parallel
-pins and loops are absent by construction and multiplicity stays in the
-body–pin layer where the paper also keeps it. The accessor
+vertices, and a {name RB31E2E.SimpleEdgeSet}`SimpleEdgeSet` is a
+{name Finset}`Finset` of those, so parallel pins and loops are absent by
+construction and multiplicity stays in the body–pin layer, where the paper
+also keeps it. The accessor
 {name RB31E2E.SimpleEdge.vertices}`vertices` is quoted with them because
-{name RB31E2E.edgesInside}`edgesInside` uses it.
+{name RB31E2E.edgesInside}`edgesInside` is written with it.
 
 ```BodyPinBlueprint.bodies
 RB31E2E.SimpleEdge
@@ -139,6 +152,16 @@ is kept anyway, so the two readings agree wherever either is stated.
 
 # Two consequences of supermodularity
 
+Both lemmas of this section follow from the supermodularity of the edge-count
+function: for any two vertex sets $`A` and $`B`,
+
+$$`
+|E_F(A)| + |E_F(B)| \le |E_F(A \cup B)| + |E_F(A \cap B)|,
+`
+
+since an edge inside $`A` or inside $`B` is inside $`A \cup B`, and an edge
+inside both is inside $`A \cap B`.
+
 :::lemma_ "uncrossing" (parent := "sparsity_spine") (lean := "RB31E2E.card_edgesInside_supermodular, RB31E2E.tight22_union_inter") (tags := "paper") (uses := "sparse22")
 The union and the intersection of two tight sets with nonempty intersection are
 again tight.
@@ -153,20 +176,16 @@ tight.
 \end{lemma}
 ```
 
-The supermodularity in question is
-$`|E_F(A)| + |E_F(B)| \le |E_F(A \cup B)| + |E_F(A \cap B)|`, and it holds for
-every pair of vertex sets: an edge inside $`A` or inside $`B` is inside
-$`A \cup B`, and an edge inside both is inside $`A \cap B`. Adding the two
-sparsity bounds on $`A \cup B` and $`A \cap B` to the two tightness equalities
-on $`A` and $`B` forces both bounds to be equalities.
+Suppose $`A` and $`B` are tight and intersect. Adding the two sparsity bounds
+on $`A \cup B` and $`A \cap B` to the two tightness equalities on $`A` and
+$`B` forces both bounds to be equalities, which is the lemma.
 {name RB31E2E.card_edgesInside_supermodular}`card_edgesInside_supermodular` is
-the inequality and
+the supermodularity inequality and
 {name RB31E2E.tight22_union_inter}`tight22_union_inter` is the conclusion.
 
-Nonempty intersection is required, and a one-vertex intersection is enough:
-$`A \cap B` has to be a legitimate argument of the tightness condition. For
-disjoint $`A` and $`B` neither conclusion holds, and the formalization records
-that in the module comment rather than in a hypothesis name.
+The intersection has to be nonempty because tightness is defined only for
+nonempty sets, and a one-vertex intersection is enough. For disjoint $`A` and
+$`B` neither conclusion holds.
 
 :::lemma_ "addable_edge_criterion" (parent := "sparsity_spine") (lean := "RB31E2E.exists_tight22_of_not_sparse22_insert") (tags := "paper, deviation") (uses := "sparse22")
 If adding a nonedge $`xy` to a $`(2,2)`-sparse graph violates sparsity, then
@@ -182,14 +201,15 @@ and $y$.
 \end{lemma}
 ```
 
-The paper obtains this from supermodularity, as the sentence says. The
-formalization does not: it takes the vertex set $`X` witnessing the violation,
-observes that $`X` must contain both endpoints, since otherwise the induced
-edge counts before and after are equal, and reads tightness of $`X` off the
-arithmetic. Supermodularity is never invoked, and
+The paper obtains this lemma from the same supermodularity argument. The
+formal proof is more direct. Let $`X` be a vertex set witnessing the
+violation. Then $`X` contains both $`x` and $`y`, since otherwise adding the
+edge changes no induced edge count; hence $`|E_F(X)| + 1 > 2|X| - 2`, while
+sparsity of $`F` gives $`|E_F(X)| \le 2|X| - 2`, and $`X` is tight.
+Supermodularity is never invoked, so
 {name RB31E2E.exists_tight22_of_not_sparse22_insert}`exists_tight22_of_not_sparse22_insert`
-is proved in the same module as the definitions, before uncrossing exists. The
-divergence is recorded in `lt-source-deviations.toml`.
+is proved in the same module as the definitions, independently of uncrossing.
+The divergence is recorded in `lt-source-deviations.toml`.
 
 # An addable edge among three vertices
 
@@ -224,79 +244,72 @@ edges on one new vertex, which violates the sparsity bound for $`Q + vN`.
 
 The formalization states the lemma as a dichotomy rather than under a
 hypothesis: for a sparse edge set $`F` and a vertex $`v` of degree exactly
-three with named neighbours $`a, b, c`, either all three neighbour edges are
-present in $`F`, or one of the absent ones can be inserted after deleting $`v`.
-Taking $`Q = F - v` recovers the paper's formulation, and the flag induction
-uses the disjunction itself rather than the hypothesis form.
+three with named neighbours $`a, b, c`, either all three edges between the
+neighbours are present in $`F`, or one of the absent ones can be inserted
+after deleting $`v`. Taking $`Q = F - v` recovers the paper's formulation. The
+induction of {bpref "stress_codim_flags"}[the flags chapter] applies the
+dichotomy directly: an insertable edge becomes a
+{bpref "certified_response_edge"}[certified response edge], and a complete
+neighbour triangle starts a new flag.
 
-The formal proof is a tight-set obstruction argument that does not go through
-the construction theorem below, and does not need the graph to be tight or a
-completion to have been chosen. The module comment of
-`DegreeThreeAugmentation.lean` says so, and records why: the flag induction
-needs the local fact before any completion is available.
-
-The paper's proof splits on how many of the three neighbour pairs are missing;
-so does the formalization, in the two lemmas that
+The formal proof uses only the tight-set combinatorics above; in particular it
+does not depend on the construction theorem of the next section. Like the
+paper's proof, it splits on how many of the three neighbour edges are missing:
 {name RB31E2E.degree_three_neighbour_triangle_complete_or_addable}`degree_three_neighbour_triangle_complete_or_addable`
-assembles, one for a single missing pair and one for two.
+assembles one lemma for a single missing edge and one for two.
 
 # A construction theorem with no paper counterpart
 
+The formalization keeps an edge set on an ambient vertex type together with an
+explicit finite set of _active_ vertices, the vertices the graph currently
+lives on. The remaining statements of this chapter are phrased in those terms.
+
 :::lemma_ "lean_nixon_owen_reduction" (parent := "sparsity_infrastructure") (lean := "RB31E2E.HasNixonOwenReduction, RB31E2E.isK4Base_or_hasNixonOwenOrGraphExtensionReduction, RB31E2E.exists_tight22_completion") (tags := "lean-only")
-On at least two active vertices, a simple $`(2,2)`-tight graph is either the
-complete graph on four vertices or admits a strictly smaller legal reduction:
-one of the four inverse construction moves, or the contraction of a proper tight
-module in one graph-extension step. Separately, every $`(2,2)`-sparse edge set
-on a vertex type with at least four elements has a same-vertex $`(2,2)`-tight
-completion.
+On an active vertex set with at least two elements, a simple $`(2,2)`-tight
+graph is either the complete graph on four vertices or admits a strictly
+smaller legal reduction: one of the four inverse construction moves, or the
+contraction of a proper tight module in one graph-extension step. Separately,
+every $`(2,2)`-sparse edge set on a vertex type with at least four elements
+has a same-vertex $`(2,2)`-tight completion.
 :::
 
 ```BodyPinBlueprint.bodies
 RB31E2E.HasNixonOwenReduction
 ```
 
-The four `LegalInverse` predicates in that disjunction are inverse Henneberg one
-and two, $`K_4`-to-vertex, and $`K_3`-to-edge. `Construction.lean` calls them
-the Nixon–Owen reductions; the name is the module's own, and this blueprint has
-not checked it against a primary source. The definition puts a strict decrease
-of the active-vertex count in front of the disjunction, so it is a reduction
-rather than a rewriting, and that count is the measure the induction descends
-on.
+The four `LegalInverse` predicates in that disjunction are inverse Henneberg
+one and two, $`K_4`-to-vertex, and $`K_3`-to-edge, each defined directly on
+edge sets. `Construction.lean` calls them the Nixon–Owen reductions; the name
+is the module's own, and this blueprint has not checked it against a primary
+source. A legal reduction strictly decreases the number of active vertices, so
+repeated reductions terminate.
 
-The formalization gives each of the four a literal edge-set semantics, on an
-ambient edge set together with an explicit active vertex set. The degree-two
-case is then proved outright: deleting a degree-two vertex of a tight graph
-leaves a smaller tight one. The degree-three case ends at a vertex contained in
-a named $`K_4`, and the usual argument continues from there through a sequence
-of triangles. `GraphExtension.lean` replaces that branch with a shorter one over
-a maximum-cardinality proper tight module: tightness alone forces every outside
-vertex to send at most one edge into the module, unless the vertex already has
-degree two and supplies an inverse Henneberg-one move.
+The degree-two case of the theorem is proved outright: deleting a degree-two
+vertex of a tight graph leaves a smaller tight graph. The degree-three case
+ends at a vertex contained in a $`(2,2)`-tight $`K_4`, and a triangle-sequence
+argument would continue from there; `GraphExtension.lean` replaces that
+continuation with a shorter one, over a proper tight module of maximum
+cardinality, since tightness alone forces every outside vertex to send at most
+one edge into the module unless that vertex has degree two and supplies an
+inverse Henneberg-one move.
 
-None of that appears in {Informal.citet "zheng2026"}[], which proves Lemma 2.1
-from uncrossing in a seven-line paragraph and Lemmas 3.7 and 3.8 in the same
-style. The paper's reference list does not contain the construction theorem
-either.
+None of this appears in {Informal.citet "zheng2026"}[]: the paper proves
+Lemma 2.1 from uncrossing in a seven-line paragraph, proves Lemmas 3.7 and 3.8
+in the same style, and its reference list contains no construction theorem.
 
-Nor does the rest of the formalization use it. Walking the constant
-dependencies of the root theorem through the kernel environment reaches nothing
-from `TightCompletion.lean` but one equation lemma for a definition made
-elsewhere; two declarations from `TriangleSequence.lean`, both about the
-four-element vertex set of a named $`K_4`; eight from `GraphExtension.lean`,
-all of them facts about the edges one outside vertex brings into a tight
-module; and from `Construction.lean` its edge-set vocabulary rather than its
-reduction theorems. The reduction
+Nor does the rest of the formalization depend on this section. Of the modules
+that develop it, only a few counting facts are reachable from the root
+theorem — facts about the four-element vertex set of a $`K_4` and about the
+edges one outside vertex sends into a tight module — while the reduction
 disjunction {name RB31E2E.HasNixonOwenReduction}`HasNixonOwenReduction`, the
 graph-extension quotient, and the tight completion
 {name RB31E2E.exists_tight22_completion}`exists_tight22_completion` are not
-reachable from the root theorem at all.
-
-So these 2,811 lines are not what Lemmas 2.1, 3.7 and 3.8 rest on. They are a
-parallel development of a construction theorem, and what the main line takes
-from them is vocabulary and four or five counting facts.
-`lt-source-deviations.toml` records the divergence, `notes/reachability.md`
-records the measurement, and `scripts/coverage.py --reachable` rechecks it when
-the submodule pin moves.
+reachable at all. Lemmas 2.1, 3.7 and 3.8 therefore rest on the tight-set
+arguments above, and this section is a parallel development.
+`lt-source-deviations.toml` records the divergence; the module-by-module walk
+is in `notes/reachability.md`, is rechecked by `scripts/coverage.py
+--reachable` when the submodule pin moves, and is rendered in the
+correspondence chapter.
 
 :::lemma_ "lean_sparsity_transport" (parent := "sparsity_infrastructure") (lean := "RB31E2E.Sparse22Transport.mapEdgeSet, RB31E2E.Sparse22Transport.sparse22_of_mapEdgeSet_subset") (tags := "lean-only") (uses := "sparse22")
 Sparsity transports along an injective map of vertices: if every image of a
@@ -307,12 +320,15 @@ child edge is an edge of a sparse parent set, the child set is sparse.
 RB31E2E.Sparse22Transport.mapEdgeSet
 ```
 
-Deletion and flag registration change the type of the live vertices rather than
-removing elements from a fixed set, so a sparse edge set has to be moved along
-an embedding at every step of the induction. The paper never has to say
-anything here, because its graphs share one ambient vertex set throughout.
+In the formalization, deleting a vertex produces an edge set on a smaller
+vertex type — the subtype of the remaining vertices — rather than on a subset
+of one fixed vertex set, and creating a flag changes the type again, by
+adjoining an auxiliary vertex. A sparse edge set therefore has to be moved
+along an embedding at every step of the induction, and this lemma moves it.
+No corresponding statement appears in the paper, whose graphs share one
+ambient vertex set throughout.
 
-The map is one line because an embedding of vertices induces one of unordered
-pairs, and {name Finset.map}`Finset.map` along an embedding is injective. The
-image then has the cardinality of the source, so both sides of the counting
-condition transport, and the transport lemma needs nothing further.
+The definition is one line, because an embedding of vertices induces an
+embedding of unordered pairs, and {name Finset.map}`Finset.map` along an
+embedding is injective. The image then has the cardinality of the source, so
+both sides of the counting condition transport.
