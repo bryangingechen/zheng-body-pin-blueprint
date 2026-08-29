@@ -234,10 +234,15 @@ the point of doing it first: Chapter 05 will be written under a settled rule
 and an enforced one, so every `def` and `abbrev` it names carries its body and
 `scripts/coverage.py` says so without a reviewer.
 
-The prose pass is done as well; it is written up under "Open, not blocking".
-`BodyPinBlueprint/STYLE.md` now carries a standard measured against the sources
-rather than asserted, and `scripts/style-check.py` fails `checks.sh` on the two
-constructions it bans.
+The prose pass is done as well — two rounds of it; both are written up under
+"Open, not blocking". `BodyPinBlueprint/STYLE.md` carries the standard: six
+positive duties calibrated against the human-written references (not the
+machine-written paper), the ban list with its dodge synonyms, and the
+repository-file rule. `scripts/style-check.py` fails `checks.sh` on the two
+banned constructions, warns on the rest, and `--report` shows each chapter's
+register against the references' baselines. Draft the chapter to the duties
+(orientation paragraph first, then nodes), and run `--pedantic` and `--report`
+on it before committing.
 
 **NEXT: Chapter 05.** Vocabulary table first, then flag definitions, forest,
 selection, pivot, classification, augmentations, Thm 3.9. Longest chapter,

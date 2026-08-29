@@ -4,7 +4,10 @@ Conventions for the blueprint modules in this directory. Repo-level policy —
 what the blueprint is for, why there is no TeX source, the harness, build costs
 — is in the root `AGENTS.md`; read that first if you have not.
 
-`Chapters/Statement.lean` is the worked example. Copy its shape.
+`Chapters/Statement.lean` is the worked example for structure — nodes,
+witnesses, fences. `Chapters/Sparsity.lean` is the worked example for prose:
+it was rewritten to STYLE.md's duties and reviewed sentence by sentence.
+Copy their shape.
 
 `STYLE.md` next to this file is the register: what blueprint prose should sound
 like, calibrated against the papers themselves, with the failure modes that have
