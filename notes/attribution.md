@@ -183,5 +183,5 @@ upstream (see `notes/upstream.md` §4):
 - [x] Decide citation key scheme.
 - [x] Draft the README / Introduction scope statement wording (Phase 1: the
       front matter of `BodyPinBlueprint.lean`, and `README.md`).
-- [ ] Ask the author about the licence and about an arXiv version. Bryan has an
-      open thread.
+- [ ] Ask the author about the licence and about an arXiv version. The
+      repository owner has an open thread.

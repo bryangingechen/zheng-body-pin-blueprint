@@ -289,7 +289,7 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   exists. Needs a git remote and someone with the account.
 - Licence on the formalization repository, and whether an arXiv version of the
   paper is planned. Both are questions for the author; see
-  `notes/attribution.md`. Bryan has an open thread with him.
+  `notes/attribution.md`. The repository owner has an open thread with him.
 - Whether the Incidence/Algebra chart layer ever needs per-module nodes.
 - Whether to port to `4.33` once the content exists. Note that it would not buy
   declaration bodies in the panels: neither release line renders them, and
@@ -444,7 +444,7 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   front of the Nixon-Owen disjunction is the measure the induction descends on.
 
 - **General prose review, and a stronger style guide. Done.** Raised
-  2026-08-29 by Bryan, reading the rendered site: the register was off across
+  2026-08-29 from a reading of the rendered site: the register was off across
   the document rather than in a few places. Three things were reported — a
   section title phrased as a sentence ("The construction theorem the
   formalization carries"), proof-engineering idiom standing in for mathematics
@@ -474,7 +474,7 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   *The rewrite.* All 28 occurrences are gone, along with every idiom above,
   across the four written chapters, the five stubs and the index page. The
   offending section title is now "A construction theorem with no paper
-  counterpart". The paragraph Bryan found hard to follow was hard to follow for
+  counterpart". The paragraph reported as hard to follow was hard to follow for
   a reason the register hid: "closes the low-degree branches" and "the long
   triangle-sequence branch is replaced" both refer to a proof structure the
   reader has never been shown, so the section now says which case is proved
