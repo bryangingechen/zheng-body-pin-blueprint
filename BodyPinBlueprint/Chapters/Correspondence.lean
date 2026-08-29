@@ -23,14 +23,12 @@ index from Lean module to blueprint node.
 
 *This chapter is a stub.* Its nodes are titled, tagged and mapped to the
 correspondence table, but the mathematics is not written yet: each body is a
-one-line placeholder naming the result it will state. See `PLAN.md` for the
-phase that covers it.
+one-line placeholder naming the result it will state.
 
-The rest of this blueprint reads the paper forwards. This chapter reads the
-formalization backwards: it asks, of every module reachable from the root
-theorem, which node accounts for it.
-
-Five things go here, and none of them are written yet.
+The other chapters follow the paper's results in order; this chapter is
+organized by the formalization instead, and records, in the five sections
+below, what corresponds to what — down to which node accounts for each module
+reachable from the root theorem.
 
 # The correspondence table
 

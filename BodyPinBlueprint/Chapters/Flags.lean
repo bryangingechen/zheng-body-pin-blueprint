@@ -21,22 +21,26 @@ at the top of this chapter: every name in §3 is different in Lean.
 
 *This chapter is a stub.* Its nodes are titled, tagged and mapped to the
 correspondence table, but the mathematics is not written yet: each body is a
-one-line placeholder naming the result it will state. See `PLAN.md` for the
-phase that covers it.
+one-line placeholder naming the result it will state.
 
-A collinearity flag records the collinear neighbour triple produced by a
-degree-three deletion, a distinguished missing edge, and an auxiliary vertex;
-the simultaneous $`K_4`-completion of all flags is required to stay
-$`(2,2)`-sparse. Deletion, certified response edges, switching the distinguished
-missing edge, and creating or removing a flag all preserve that sparsity while
-reducing the base-graph vertex count, so
-{bpref "low_degree_classification"}[the local classification] becomes an
-induction. See §3 of {Informal.citet "zheng2026"}[].
+In the exceptional case of {bpref "low_degree_classification"}[the local
+classification], deleting a degree-three vertex leaves three collinear
+neighbours. Section 3 of {Informal.citet "zheng2026"}[] retains that case as a
+_collinearity flag_: the collinear triple, called its support triple, a
+distinguished missing edge on the triple, and an auxiliary vertex that
+completes the triple to a $`K_4`; the simultaneous $`K_4`-completion of all
+flags is required to stay $`(2,2)`-sparse. Every move of the argument —
+deleting a vertex, adding a certified response edge, switching the
+distinguished missing edge, creating or removing a flag — preserves that
+sparsity and decreases the number of base-graph vertices, i.e. of vertices
+that are not auxiliary, so the stress–codimension inequality follows by
+induction on that number.
 
-The chapter opens with a vocabulary table, because the Lean development renames
-every object in §3: collinearity flag becomes provenance flag, the support
-triple becomes terminals, the auxiliary vertex becomes a ghost vertex, and the
-stress–codimension inequality becomes a semismallness budget.
+The Lean development renames every object of §3: a collinearity flag becomes a
+provenance flag, the support triple becomes the terminals, the auxiliary
+vertex becomes a ghost vertex, and the inequality $`\Delta \le 0` becomes a
+semismallness budget. The vocabulary table relating the two belongs at the top
+of this chapter.
 
 :::group "flags_spine"
 The paper's flag calculus.
@@ -48,7 +52,8 @@ Transitions between flag systems, with no paper counterpart.
 
 :::definition "collinearity_flag" (parent := "flags_spine") (tags := "paper, deviation, unwritten")
 A collinearity flag $`d < T < Q`: distinguished missing edge, support triple,
-$`K_4`-completion. {Informal.citep "zheng2026" (index := "Definition 3.1")}[] Renamed throughout in the formalization.
+and $`K_4`-completion, renamed throughout in the formalization.
+{Informal.citep "zheng2026" (index := "Definition 3.1")}[]
 :::
 
 :::definition "flag_system" (parent := "flags_spine") (tags := "paper, deviation, unwritten") (uses := "collinearity_flag")
@@ -57,9 +62,9 @@ completion. {Informal.citep "zheng2026" (index := "Definition 3.2")}[]
 :::
 
 :::lemma_ "flag_incidence_forest" (parent := "flags_spine") (tags := "paper, unwritten") (uses := "flag_system")
-The incidence forest of a flag system, and $`\codim X_T = 2|\Gamma|`.
-{Informal.citep "zheng2026" (index := "Proposition 3.3")}[] Rendered as a lemma;
-see `lt-source-deviations.toml`.
+The incidence forest of a flag system, and $`\codim X_T = 2|\Gamma|`; rendered
+as a lemma rather than a proposition.
+{Informal.citep "zheng2026" (index := "Proposition 3.3")}[]
 :::
 
 :::lemma_ "support_multiplicity" (parent := "flags_spine") (tags := "paper, unwritten") (uses := "flag_system")
@@ -102,6 +107,7 @@ theorem rather than as a standalone statement.
 
 :::lemma_ "lean_flag_moves" (parent := "flags_infrastructure") (tags := "lean-only, unwritten")
 Flag state transitions — deletion, insertion, private deletion, registration —
-and the budget ledger that tracks them. No paper counterpart: the paper moves
-between flag systems in prose.
+together with the bookkeeping of the semismallness budget across each. No
+paper counterpart: the corresponding changes of flag system are made inside
+the paper's proof of Theorem 3.9.
 :::
