@@ -44,22 +44,24 @@ the `AGENTS.md` beside this directory.
 
 #doc (Manual) "Necessity" =>
 
-Section 6.4 of {Informal.citet "zheng2026"}[] proves necessity in one paragraph.
-Assign a common twist to every body in a partition block; the block twists have
+This chapter proves the necessity direction of the main theorem: a generically
+rigid body–pin graph satisfies the partition condition. Section 6.4 of
+{Informal.citet "zheng2026"}[] gives the argument in one paragraph. Assign a
+common twist to every body in a partition block; the block twists have
 $`6(t-1)` degrees of freedom modulo the ambient rigid motions, the cross-block
-pins can constrain at most $`\sum_{i<j} \ell_H(P_i, P_j)` of them, and a
-partition violating the capacity inequality therefore leaves a nontrivial
-block-twist motion. Section 6.1 supplies the vocabulary that argument is stated
-in, and its Lemma 6.1 turns the block-twist motion back into a flex of the
-expanded graph.
+pins can constrain at most $`\sum_{i<j} \ell_H(P_i, P_j)` of them, so a
+partition violating the condition leaves a nontrivial block-twist motion.
+Section 6.1 defines the twists this argument is stated in, and its Lemma 6.1
+turns the block-twist motion back into a flex of the expanded graph.
 
-The formalization takes 894 lines in the two modules that prove this direction,
-and a further 180 for the pin-capacity rank bounds. Over half of the 894 is not
-the counting argument but the passage between the two ways of saying "rigid":
-the partition condition is proved from rigidity of the _occurrence-level twist
-system_ at one pin placement, and generic rigidity of the expanded graph has to
-be brought to that form first. The paper's "a generic realization" does the same
-work in three words.
+In the formalization the counting argument itself is short, and most of the
+work is the passage between two readings of "rigid": the partition condition
+is proved from rigidity of a twist system at one pin placement — the
+vocabulary of §6.1, introduced below — while the hypothesis is generic
+rigidity of the expanded graph, and the placement connecting the two is
+constructed in the last section of this chapter. The paper crosses the same
+passage with the words "a generic realization", since a generic placement has
+every property the argument needs at once.
 
 :::group "necessity_spine"
 Twists, the pin compatibility equation, and the counting argument.
@@ -90,9 +92,9 @@ induced by this motion at $p$.
 \end{definition}
 ```
 
-Both halves of the display are declarations. A twist is the pair itself, with
-the angular part first and the translational part second, and the velocity is
-its evaluation at a point.
+The two halves of the display are the two declarations quoted here: a twist is
+the pair itself, with the angular part first and the translational part
+second, and the velocity is its evaluation at a point.
 
 ```BodyPinBlueprint.bodies
 RB31E2E.Twist
@@ -151,14 +153,17 @@ belonging only to $B_w$.  Then:
 
 The four private vertices that {bpref "bodypin_expansion"}[the expansion] gives
 every body are used in part (a). A complete graph on four affinely independent
-points is infinitesimally rigid, so its velocities come from a twist; every
-other vertex of the body is joined to all four, and subtracting the velocity
-that twist prescribes leaves a vector orthogonal to a spanning set.
+points is infinitesimally rigid, so its velocities come from a twist. Every
+other vertex $`x` of the body is joined to all four, and the bar constraints
+make the difference between the velocity at $`x` and the velocity the twist
+prescribes orthogonal to the four directions from $`x` to the tetrahedron;
+those directions span $`\R^3`, so the difference is zero.
 
 The formalization proves (a) as
 {name RB31E2E.BodyPinIncidence.exists_unique_twist_of_tetrahedronMotion}`exists_unique_twist_of_tetrahedronMotion`,
-by way of a skew-symmetry argument: the linear map recording the motion of the
-tetrahedron is skew, hence a cross product. Part (c) becomes a bijection
+by a skew-symmetry argument: the linear map recording the motion of the
+tetrahedron is skew-symmetric, and a skew-symmetric map of $`k^3` is the cross
+product with a fixed vector, the angular part of the twist. Part (c) becomes a bijection
 between twist motions and bar motions,
 {name RB31E2E.BodyPinIncidence.twistMotionToBarMotion_bijective_of_allCores}`twistMotionToBarMotion_bijective_of_allCores`,
 rather than an abstract isomorphism of kernels, and it is stated under the
@@ -189,18 +194,18 @@ twist are collinear.
 ```
 
 Here $`q(\omega, b) = \omega \cdot b` is the Split–Klein quadratic form of
-{bpref "split_klein_form"}[the Split–Klein chapter]. This lemma introduces the
-condition $`q(X) = 0`, and the sufficiency direction is a height estimate for
-the ideal that such conditions generate along the edges.
+{bpref "split_klein_form"}[the Split–Klein chapter]. The condition
+$`q(X) = 0` appears here for the first time; in the sufficiency direction, one
+such condition per pin generates the ideal whose height
+{bpref "isotropic_ideal_height"}[the Split–Klein chapter] computes.
 
-The three consequences of the lemma are separate declarations in the
-formalization, and only the ones the assembly needs are proved. Solvability
-forces isotropy; a nonzero twist with a solution has nonzero angular part; and
-two solutions of the same equation differ by a multiple of $`\omega`, which
-gives collinearity of three of them without ever naming the line.
+The affine-line description itself is not a Lean statement. The formalization
+proves the three consequences the later chapters use, as separate
+declarations: solvability of (6.2) forces $`q(X) = 0`; a nonzero twist with a
+solution has nonzero angular part; and two solutions of (6.2) differ by a
+scalar multiple of $`\omega`, so any three solutions are collinear.
 
-A bundle of three or more pins between two blocks therefore constrains no more
-than a bundle of exactly three does. The lemma is used again in
+The lemma is used again in
 {bpref "exceptional_pin_parameters"}[the assembly chapter], to show that a pin
 placement making three pins of one bundle collinear is a proper closed
 condition.
@@ -209,15 +214,15 @@ condition.
 
 :::lemma_ "necessity" (parent := "necessity_spine") (lean := "RB31E2E.BodyPinIncidence.partitionCondition_of_genericallyRigidInR3, RB31E2E.BodyPinIncidence.partitionCondition_of_twistRigidAt") (tags := "paper") (uses := "partition_condition, generic_rigidity_max_rank")
 If $`G_H` is generically rigid in $`\R^3`, then every partition of the bodies
-satisfies the capacity inequality.
+satisfies the partition inequality (1.2).
 {Informal.citep "zheng2026" (kind := "section") (index := "6.4")}[]
 :::
 
 The pin capacities bound the rank of the constraints a bundle of pins imposes
 on a single relative twist. One pin is three linear conditions on a
 six-dimensional twist; two pins leave the rotation about the line through them,
-so five; and no number of pins can remove more than the six dimensions there
-are. Those three bounds are
+so five; and no number of pins can remove more than all six dimensions of a
+twist. Those three bounds are
 {name RB31E2E.Twist.finrank_range_evalLinear_le_three}`finrank_range_evalLinear_le_three`,
 {name RB31E2E.Twist.finrank_range_twoPinLinear_le_five}`finrank_range_twoPinLinear_le_five`
 and {name RB31E2E.Twist.finrank_range_le_six}`finrank_range_le_six`, assembled
@@ -259,17 +264,18 @@ cannot be generically rigid.
 
 The paper argues by contraposition, from a violating partition to a flex. The
 formalization proves the implication in the direction it is stated, so there is
-no violating partition to start from and no flex to construct. Twist rigidity at
-a pin placement makes the grouped
-cross-block operator injective, so its rank is the full $`6(t-1)`; the same
-rank is at most the sum of the bundle capacities; and the inequality is the
-composite of those two.
+no violating partition to start from and no flex to construct: twist rigidity
+at the pin placement makes a block operator, defined in the next section,
+injective, so the rank of that operator is the full $`6(t-1)`; the same rank
+is at most the sum of the bundle capacities; and the partition inequality
+follows by comparing the two.
 
-Reading the two arguments against each other, the paper's "there is therefore a
-nontrivial tuple" is the formalization's injectivity, and the paper's ranks are
-its {name Module.finrank}`finrank` of a range. The grounding step, "modulo the
-six-dimensional diagonal subspace", is done in the formalization by fixing one
-block's twist to zero rather than by quotienting.
+The two arguments correspond clause by clause. Where the paper produces a
+nontrivial tuple, the formalization proves injectivity; where the paper counts
+ranks, the formalization computes the {name Module.finrank}`finrank` of a
+range; and the paper's grounding step, "modulo the six-dimensional diagonal
+subspace", is done by fixing one block's twist to zero rather than by
+quotienting.
 
 # From a rigid graph to a rigid twist system
 
@@ -284,16 +290,17 @@ of the coordinate ranks, so it is at most the partition capacity.
 RB31E2E.BodyPinIncidence.groupedGroundedBlockOperator
 ```
 
-The definition quoted above shows how the grounding is done.
-{name RB31E2E.extendGroundedLinear}`extendGroundedLinear` is the map that fills
-the root block's twist in as zero, so the source of the operator is indexed by
-{name RB31E2E.OffRoot}`OffRoot` — one twist per block except the chosen one —
-and that subtype is the fixed representative standing in for the quotient.
+The grounding is visible in the quoted body:
+{name RB31E2E.extendGroundedLinear}`extendGroundedLinear` extends an
+assignment by giving the root block the zero twist, so the source of the
+operator is indexed by {name RB31E2E.OffRoot}`OffRoot`, one twist per block
+except the chosen one. Working on this subspace replaces the paper's quotient
+by the diagonal.
 
 The grouping introduces a sign that the paper's paragraph does not mention. The
 constraints of a bundle are all expressed through a single relative twist, the
 one belonging to the bundle's chosen orientation, and each pin occurrence
-carries a sign recording whether its own stored orientation agrees. Signed and
+carries a sign recording whether its own orientation agrees. Signed and
 unsigned evaluations have the same kernel, so the $`3, 5, 6` bounds apply to the
 signed form unchanged.
 
@@ -304,37 +311,41 @@ equality with the complete-graph rank forces the twist system itself to be
 rigid.
 :::
 
-The paper's necessity argument begins "a generic realization", and every
-realization it needs is generic. The formalization has no genericity theory, by
-the design decision recorded on {bpref "generic_rigidity_max_rank"}[the maximum-rank definition], so it has to
-produce the placement by hand. That construction is the rest of this section.
+The paper's necessity argument begins with a generic realization, and
+genericity gives at one stroke every property the argument needs. The
+formalization has no genericity theory, by the design decision recorded on
+{bpref "generic_rigidity_max_rank"}[the maximum-rank definition], so a
+placement with the two properties actually used — maximum rigidity rank, and
+affine independence of the _core_ of every body, i.e. of its four designated
+private vertices — is constructed by a one-parameter avoidance argument.
 
-It is a one-parameter avoidance argument. A lower bound on the
-rigidity rank is an open condition on placements, because the rigidity operator
-depends continuously and linearly on the coordinates. Take a placement
-$`p` attaining the maximum rank and the standard placement $`q` whose bodies
-carry the tetrahedron $`0, e_1, e_2, e_3`, and move along the segment from
-$`p` to $`q`. Degeneracy of one body's core along that segment is the vanishing
-of an explicit univariate determinant polynomial, nonzero because it does not
-vanish at $`q`. Finitely many finite root sets cannot cover an interval, so some
-placement near $`p` is in the rank-open set and has all cores nondegenerate.
+A lower bound on the rigidity rank is an open condition on placements, because
+the rigidity operator depends continuously and linearly on the coordinates.
+Take a placement $`p` attaining the maximum rank and the standard placement
+$`q` in which every body's core is the tetrahedron $`0, e_1, e_2, e_3`, and
+consider the segment from $`p` to $`q`. Degeneracy of one body's core along
+the segment is the vanishing of an explicit univariate determinant polynomial,
+which is nonzero as a polynomial because its value at the parameter of $`q` is
+nonzero. Finitely many finite root sets cannot cover an interval, so some
+placement near $`p` attains the maximum rank and has every core affinely
+independent.
 
 ```BodyPinBlueprint.bodies
 RB31E2E.BodyPinIncidence.coreLineDetPolynomial
 ```
 
-The polynomial is a determinant and nothing else; the content is in
+The polynomial is the determinant of
 {name RB31E2E.BodyPinIncidence.coreLinePolynomialMatrix}`coreLinePolynomialMatrix`,
 whose three columns are the displacements of a body's other three core vertices
-from the first, each interpolated linearly along the segment. Evaluating at a
-parameter therefore gives the determinant of the displacement matrix at that
+from the first, each interpolated linearly along the segment. Its value at a
+parameter is therefore the determinant of the displacement matrix at that
 placement, which is nonzero exactly when the four points are affinely
-independent. The avoidance argument is then about the roots of one univariate
+independent, and the avoidance argument concerns the roots of one univariate
 real polynomial per body.
 
-The rest is short. At that placement the graph rank equals the
-complete-graph rank, so the two infinitesimal-motion kernels agree; a complete
-framework containing one nondegenerate tetrahedron has only global Euclidean
-motions; so every twist motion is diagonal, and the twist system is rigid at the
-pin coordinates. The empty-body case is separate and immediate: every twist
-assignment on an empty type is diagonal.
+At the placement so constructed, the graph rank equals the complete-graph
+rank, so the two infinitesimal-motion kernels agree; a complete framework
+containing one nondegenerate tetrahedron admits only the global Euclidean
+motions; hence every twist motion is diagonal, and the twist system is rigid
+at the pin coordinates. The empty-body case is separate and immediate: every
+twist assignment on an empty type is diagonal.
