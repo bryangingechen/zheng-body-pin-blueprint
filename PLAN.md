@@ -229,12 +229,23 @@ As of the end of Phase 2 the blueprint's 59 nodes and the 59 labelled entries of
 chapter. `scripts/coverage.py` checks that on every run, so it can no longer
 drift silently.
 
-**Phase 3 — collinearity flags.** Do the declaration-body pass under "Open, not
-blocking" first: it settles the rule Chapter 05 will be written under, and
-writing the longest chapter against a criterion that is about to change is the
-expensive order. It is one session and one full build. Then Chapter 05. Vocabulary table first, then flag
-definitions, forest, selection, pivot, classification, augmentations, Thm 3.9.
-Longest chapter, heaviest translation load.
+**Phase 3 — collinearity flags.** The declaration-body pass is done, which was
+the point of doing it first: Chapter 05 is written under a settled rule and an
+enforced one, so every `def` and `abbrev` it names carries its body and
+`scripts/coverage.py` says so without a reviewer. **NEXT: Chapter 05.**
+Vocabulary table first, then flag definitions, forest, selection, pivot,
+classification, augmentations, Thm 3.9. Longest chapter, heaviest translation
+load.
+
+What the quoting check will ask of Chapter 05 is already visible, because the
+table's `lean` names classify without a build. Of the eight the flags entries
+claim, `State` is a structure and six are theorems, all exempt by kind;
+`State.CompletionSparse` is a `def` and will need a fence. Chapter 07 has one
+more, `Twist.splitKlein`. Nothing chapters 05 to 08 currently claim is
+unclassifiable, so the scan's warning path is still untested — the first case
+will be a node naming a structure projection or a Mathlib constant, and a
+warning there is correct rather than a defect. What it must not become is a
+habit of ignoring the line.
 
 Two things carried over from Phase 2. `Deletion.lean` describes the semismallness
 budget as the only home of the paper's defect, so Chapter 05 has to state it
@@ -286,10 +297,11 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   the value, which is the only part the signature lacks. `notes/upstream.md` §8
   has the mechanism and why it is not post-processing.
 
-  All nine blocks are converted, across the four chapters that quote anything,
-  and Chapter 01 gained a tenth: twenty-five declarations, fifteen of them
-  spliced into the panel that declares them and ten standing in the prose
-  because no node names them. Counted from the built HTML, not inferred. Every `-show`
+  That commit converted all nine existing blocks, across the four chapters that
+  quote anything, and added a tenth in Chapter 01: twenty-five declarations at
+  the time, fifteen of them spliced into the panel that declares them and ten
+  standing in the prose because no node names them. Counted from the built HTML,
+  not inferred; the current totals are under the rule below. Every `-show`
   scaffolding block is gone, `scripts/check-snippets.py` reports zero, and it
   stays only so that a copy cannot drift if a fragment ever has to be quoted
   that cannot be extracted. Two habits changed with it: a chapter
@@ -312,9 +324,12 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   and they stay token searches. Checked over the extracts rather than on a page:
   of the 118 `def`, `abbrev` and `instance` commands in the fifteen extracted
   modules, the rule moves the boundary on exactly the twelve written with
-  `where` and leaves the other 106 alone, including all twenty-two the chapters
-  quote. A `structure` is now refused outright, since its `where` and its field
-  defaults read exactly like a value.
+  `where` and leaves the other 106 alone. It changed nothing visible when it was
+  written, and the rule below made it load bearing: `connectingMap` and
+  `directionEquilibrium` are both quoted now, both are `LinearMap`s written with
+  `where`, and both are spliced, so without it the deletion chapter would render
+  two bodies beginning at `toFun z :=`. A `structure` is now refused outright,
+  since its `where` and its field defaults read exactly like a value.
 
   Proof obligations are elided as `⋯`, the way `pp.proofs` does it, in
   `Bodies.lean` and not in the script — `Meta.isProp` needs the environment. A
@@ -353,10 +368,9 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   the ten blocks still standing in the prose now open with the author's own
   one-line description of each definition.
 
-- **NEXT: quote the remaining sixteen bodies, and make the rule a check.**
+- **Every named definition is quoted, and the rule is a check. Done.**
   Decided 2026-08-28, replacing the taste criterion that produced fifteen quoted
   definitions out of thirty-one named ones with no principle separating them.
-  The rule is in `BodyPinBlueprint/AGENTS.md`; this is what it takes to hold.
 
   *The rule.* Every `def` and `abbrev` a node names gets its body quoted.
   Closed exceptions: a structure or inductive (the panel renders its fields, and
@@ -365,15 +379,21 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   **value**, never the declaration, and is never a reason to omit; a long value
   is folded by default instead.
 
+  The sixteen are in — five in Chapter 01, two each in 02 and 03, seven in 04 —
+  and every one sat in a module already extracted, so this cost no build time.
+  The document now fences forty-one declarations: thirty-one named by a node and
+  spliced into its panel, ten standing in the prose because no node names them.
+  The opt-out list is empty, and that is the finished state.
+
   *Two things the measurement corrected, both of which had made the old
   criterion look reasonable.* Raw declaration length is the wrong number: the
   body is spliced onto the panel's generated signature, so the reader gains the
   value alone, and `deletedConnectingClass` is nine lines of which five are a
   type the panel renders better. And elision moves the rest —
-  `directionEquilibrium` is eighteen lines raw and four as it would appear. On
-  the sixteen, the longest value is `HasNixonOwenReduction` at six lines and
-  everything else is one to four, so no case is anywhere near the ten lines
-  where folding would start to matter.
+  `directionEquilibrium` is eighteen lines raw and four as it appears. On the
+  sixteen, the longest value is `HasNixonOwenReduction` at six lines and
+  everything else is one to four, so nothing came near the ten lines where
+  folding would start to matter.
 
   *One reason retired, deliberately.* "Its value names something no node
   explains" no longer excuses an omission. Every token in an extracted body
@@ -381,27 +401,50 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   name the reader can hover is not dead text; `HasNixonOwenReduction` ships with
   its four `LegalInverse` predicates on that basis.
 
-  The sixteen, by chapter — all in modules already extracted, so this costs no
-  build time:
+  *The check.* `scripts/coverage.py` fails on a node that names a `def` or an
+  `abbrev` with neither a fence in its own chapter nor a `[[body_optout]]` row,
+  on a row with no reason, and on a row excusing a declaration no node names. It
+  runs in the fifteen-second list and in the fast CI workflow, neither of which
+  has a built formalization, so it reads the kind off the pinned submodule's
+  source: namespace-tracked, one pass, 1,913 declarations. That reading is not
+  taken on trust — `kinds_agree` compares it against `_out/body-modules.json`
+  whenever a build has left one, and a disagreement is an error saying the scan
+  needs fixing before its verdict can be believed. It agrees with the kernel on
+  all seventy-two names the document mentions today. A name the scan cannot
+  classify is a warning rather than an error, since a structure projection is a
+  legitimate thing for a future node to name and is not a source-level
+  declaration; chapters 05 to 09 will produce the first ones.
 
-  | Chapter | Declarations |
-  |---|---|
-  | 01 `Statement` | `edgeConstraint`, `rigidityOperator`, `IsGenericallyRigidInR3`, `GenericallyRigidInR3`, `partitionCapacity` |
-  | 02 `Necessity` | `coreLineDetPolynomial`, `groupedGroundedBlockOperator` |
-  | 03 `Sparsity` | `HasNixonOwenReduction`, `Sparse22Transport.mapEdgeSet` |
-  | 04 `Deletion` | `directionEquilibrium`, `deletedConnectingClass`, `connectingMap`, `outsideResponseKernelDim`, `outsideExtensionTrdeg`, `retainedCoordinateField`, `directionRowSpace` |
+  *One defect the sixteen exposed, found on the built page.* An elided
+  obligation written `map_add' := by ...` kept its `.tactics` wrapper, and Verso
+  renders that wrapper as a toggle whose label is the elided text — so the `⋯`
+  *was* the control that expanded the goal state the elision existed to remove.
+  Nothing showed it before, because `bodyClique` was the only `where`
+  declaration quoted and its `loopless` value is `⟨by ...⟩`: the range starts at
+  the `⟨`, outside the tactics node, and consumed it whole. `connectingMap` and
+  `directionEquilibrium` write the `by` directly and did not. `Bodies.lean` now
+  drops a `.tactics` or `.span` wrapper that elision has left with no token to
+  annotate. A `by` block that is the declaration's *value* keeps its toggle, as
+  `rigidityOperator` and `genericRigidityRank` do; those are data.
 
-  Each fence goes after its node's witness and commentary, and prose that
-  currently paraphrases a body should be reread against it rather than left to
-  say the same thing twice. Then add the opt-out list to `correspondence.toml`
-  and the check to `scripts/coverage.py`: a node naming a `def` or `abbrev` with
-  neither a fence nor an opt-out fails. Expect one full `ci-pages.sh`.
+  Rereading the prose against the bodies was half the work, and it found the
+  duplication it was meant to. `rigidityOperator`'s docstring already said what
+  the paragraph beside it said about doubling and comparable ranks;
+  `genericRigidityRank`'s already named `rigidityRank_le_velocityFinrank`;
+  `groupedGroundedBlockOperator`'s already said why internal pins are dropped.
+  Those sentences are gone from the prose, which now says what the bodies do
+  not: where the grounding sits inside the operator, that the row space spans
+  the edges of $F$ rather than all pairs, and that the active-vertex count in
+  front of the Nixon-Owen disjunction is the measure the induction descends on.
 
 - **Two decisions left open**, neither blocking:
-  - *Whether the prose should name each quoted body's source file.* The
-    `-- <path>` first line is gone with the copies, and the highlighter dropped
-    it on the site anyway. A declaration with a panel has the panel's source
-    link; one without — ten of the twenty-five — has nothing but the surrounding
-    sentence. Some sentences name the file; it is not consistent.
+  - *Whether the prose should name each quoted body's source file.* Settled for
+    the reader, still open per block. Chapter 01 now says once, where the first
+    quoted body appears, that quoted Lean is the pinned formalization's own
+    source and that the panel's source link is how to check it against the
+    repository it came from. That covers the thirty-one blocks a node names. The
+    ten that stay in the prose still have no link of their own, and whether each
+    of those deserves its file named in the surrounding sentence is unresolved;
+    some sentences name it and some do not.
   - *The block styling itself*, in `BodyPinBlueprint/Style.lean`. The left rule
     is the opinionated part.

@@ -249,8 +249,9 @@ value, there is no option, and the HTML comes out of a `private def
 renderExternalDeclWrapper`, so no plugin can reach inside the panel.
 
 This is why every chapter that describes a `Prop`-valued definition has to
-restate its content in the node body and, where the body itself is the point,
-quote it in a separate code block. See `BodyPinBlueprint/AGENTS.md`.
+restate its content in the node body, and why every `def` and `abbrev` a node
+names is quoted in a block of its own -- a rule `scripts/coverage.py` enforces
+rather than leaving to a reviewer. See `BodyPinBlueprint/AGENTS.md`.
 
 Two false leads, recorded so they are not chased again. The upstream commit
 `00b8458` "record retained-body prototype outcome" is about elaborating a Verso

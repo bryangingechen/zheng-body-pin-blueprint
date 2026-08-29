@@ -32,14 +32,14 @@ paper's own sentences.  Every other witness here is a numbered environment in
 the paper except the twist definition, which §6.1 gives in a display and two
 sentences of running prose.
 
-Two files are quoted here, `Vec3Twist.lean` for the twist and its evaluation and
-`TwistSystem.lean` for the three motion predicates, so there are two visible
-blocks.  Each is preceded by a hidden `-show` block carrying what it needs: the
-`open ... hiding` in the first, the section `variable` in the second.  The
-`hiding` list names every declaration the visible blocks redeclare and then
-refer to; without it those references are ambiguous between the copies in the
-chapter's root namespace and the upstream ones the `open` brings in.  The reader
-sees none of it: both visible blocks are verbatim.
+Quoted bodies are named rather than copied; the mechanism is described in the
+leading comment of `Statement.lean`.  The names here come from four modules --
+`Vec3Twist.lean` for the twist and its evaluation, `TwistSystem.lean` for the
+three motion predicates, `TwistNecessity.lean` for the grouped operator and
+`GraphNecessity.lean` for the determinant polynomial -- and all four arrive
+through the single import above, since `GraphNecessity` reaches the other three.
+Every `def` and `abbrev` a node here names is quoted, which is the rule in
+the `AGENTS.md` beside this directory.
 -/
 
 #doc (Manual) "Necessity" =>
@@ -278,13 +278,22 @@ is at least $`6(t-1)`; the rank of a product of linear maps is at most the sum
 of the coordinate ranks, so it is at most the partition capacity.
 :::
 
-The grouping does two things the paragraph does not mention. Pins inside a
-block are dropped, since a block-constant twist makes their relative twist zero.
-And the constraints of one bundle are all expressed through a single relative
-twist, the one belonging to the bundle's chosen orientation, with each pin
-occurrence carrying a sign recording whether its own stored orientation agrees.
-Signed and unsigned evaluations have the same kernel, which is what lets the
-$`3, 5, 6` bounds apply to the signed form unchanged.
+```BodyPinBlueprint.bodies
+RB31E2E.BodyPinIncidence.groupedGroundedBlockOperator
+```
+
+The body is where the grounding of the previous section becomes visible.
+{name RB31E2E.extendGroundedLinear}`extendGroundedLinear` is the map that fills
+the root block's twist in as zero, so the source of the operator is indexed by
+{name RB31E2E.OffRoot}`OffRoot` — one twist per block except the chosen one —
+and that subtype is the fixed representative standing in for the quotient.
+
+The grouping itself does one thing the paper's paragraph does not mention. The
+constraints of a bundle are all expressed through a single relative twist, the
+one belonging to the bundle's chosen orientation, with each pin occurrence
+carrying a sign recording whether its own stored orientation agrees. Signed and
+unsigned evaluations have the same kernel, which is what lets the $`3, 5, 6`
+bounds apply to the signed form unchanged.
 
 :::lemma_ "lean_genericity" (parent := "necessity_infrastructure") (lean := "RB31E2E.BarJoint.isOpen_setOf_le_rigidityRank, RB31E2E.BodyPinIncidence.exists_allCores_rigidityRank_eq_genericRigidityRank, RB31E2E.BodyPinIncidence.coreLineDetPolynomial") (tags := "lean-only") (uses := "generic_rigidity_max_rank, twist_description") (uses_intent := "technical")
 A placement attaining the maximum rigidity rank can be chosen so that every
@@ -307,6 +316,19 @@ $`p` to $`q`. Degeneracy of one body's core along that segment is the vanishing
 of an explicit univariate determinant polynomial, nonzero because it does not
 vanish at $`q`. Finitely many finite root sets cannot cover an interval, so some
 placement near $`p` is in the rank-open set and has all cores nondegenerate.
+
+```BodyPinBlueprint.bodies
+RB31E2E.BodyPinIncidence.coreLineDetPolynomial
+```
+
+The polynomial is a determinant and nothing else; the content is in
+{name RB31E2E.BodyPinIncidence.coreLinePolynomialMatrix}`coreLinePolynomialMatrix`,
+whose three columns are the displacements of a body's other three core vertices
+from the first, each interpolated linearly along the segment. Evaluating at a
+parameter therefore gives the determinant of the displacement matrix at that
+placement, which is nonzero exactly when the four points are affinely
+independent. The avoidance argument is then about the roots of one univariate
+real polynomial per body.
 
 From there the argument closes. At that placement the graph rank equals the
 complete-graph rank, so the two infinitesimal-motion kernels agree; a complete

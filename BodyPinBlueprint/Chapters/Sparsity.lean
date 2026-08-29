@@ -38,13 +38,13 @@ are two nodes here because the formalization proves them separately and by
 different routes, which is a distinction a reader checking the correspondence
 needs to see.
 
-The quoted Lean block is preceded by a hidden `-show` block carrying the
-section `variable` and the `open` it needs to elaborate.  Scopes carry from one
-block to the next, so the visible block is verbatim with no scaffolding in it at
-all.  It quotes `SimpleEdge.vertices` along with the two abbreviations and the three
-definitions, in the source's own order, because `edgesInside` uses field
-notation on a `SimpleEdge`: redeclaring the type without its accessor leaves
-the upstream accessor expecting the upstream type, and the notation fails.
+Quoted bodies are named rather than copied; the mechanism is described in the
+leading comment of `Statement.lean`.  Every `def` and `abbrev` a node here names
+is quoted, which is the rule in the `AGENTS.md` beside this directory.  The
+first fence also quotes `SimpleEdge.vertices`, which no node names: `edgesInside`
+is written in field notation on a `SimpleEdge`, so the accessor is part of
+reading it.  Names are given in the source's own order, which is the order the
+fence renders in.
 
 The imports are the whole `Sparse22` family and nothing else: none of those
 nine modules reaches a blanket `import Mathlib`.
@@ -250,14 +250,22 @@ on a vertex type with at least four elements has a same-vertex $`(2,2)`-tight
 completion.
 :::
 
-The four inverse moves are inverse Henneberg one and two, $`K_4`-to-vertex, and
-$`K_3`-to-edge; `Construction.lean` calls them the Nixon–Owen reductions. The
-formalization gives each of them literal edge-set semantics, on an ambient edge
-set together with an explicit active vertex set, and closes the low-degree
-branches. The long triangle-sequence branch is replaced by a shorter argument
-on a maximum-cardinality proper tight module: tightness alone forces every
-outside vertex to send at most one edge into the module, unless that vertex
-already has degree two and supplies an inverse Henneberg-one move.
+```BodyPinBlueprint.bodies
+RB31E2E.HasNixonOwenReduction
+```
+
+The four `LegalInverse` predicates in that disjunction are inverse Henneberg one
+and two, $`K_4`-to-vertex, and $`K_3`-to-edge; `Construction.lean` calls them
+the Nixon–Owen reductions. The strict decrease of the active-vertex count in
+front of them is what makes the disjunction a reduction rather than a
+rewriting, and it is the measure the induction descends on.
+
+The formalization gives each of the four literal edge-set semantics, on an
+ambient edge set together with an explicit active vertex set, and closes the
+low-degree branches. The long triangle-sequence branch is replaced by a shorter
+argument on a maximum-cardinality proper tight module: tightness alone forces
+every outside vertex to send at most one edge into the module, unless that
+vertex already has degree two and supplies an inverse Henneberg-one move.
 
 None of that appears in {Informal.citet "zheng2026"}[], which proves Lemma 2.1
 from uncrossing in a seven-line paragraph and Lemmas 3.7 and 3.8 in the same
@@ -289,7 +297,16 @@ Sparsity transports along an injective map of vertices: if every image of a
 child edge is an edge of a sparse parent set, the child set is sparse.
 :::
 
+```BodyPinBlueprint.bodies
+RB31E2E.Sparse22Transport.mapEdgeSet
+```
+
 Deletion and flag registration change the type of the live vertices rather than
 removing elements from a fixed set, so a sparse edge set has to be moved along
 an embedding at every step of the induction. The paper never has to say
 anything here, because its graphs share one ambient vertex set throughout.
+
+The map is one line because an embedding of vertices induces one of unordered
+pairs, and {name Finset.map}`Finset.map` along an embedding is injective. The
+image then has the cardinality of the source, so both sides of the counting
+condition transport, and the transport lemma needs nothing further.

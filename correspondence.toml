@@ -564,6 +564,29 @@ modules = ["Tests/Trust.lean"]
 status = "mapped"
 note = "Axiom closure is exactly propext, Classical.choice, Quot.sound. Checked by the upstream scripts/audit.sh."
 
+# ------------------------------------------------ quoted-body opt-outs
+#
+# `BodyPinBlueprint/AGENTS.md`: every `def` and `abbrev` a node names has its
+# body quoted, in a ```BodyPinBlueprint.bodies fence in that node's chapter. Two
+# kinds are exempt without a row here, because the exemption is a fact about the
+# kind rather than a judgement: a structure or an inductive, whose fields and
+# constructors the panel already renders and whose `where` reads exactly like a
+# value, and a theorem, whose value is a proof and this blueprint reproduces
+# none. Anything else that is not quoted needs a row below, and
+# `scripts/coverage.py` fails without one.
+#
+# The list is empty, and that is the finished state rather than an oversight:
+# all thirty-one definitions the nodes name are quoted. It is here because a
+# rule with no escape hatch gets broken silently, and because an opt-out that
+# has to be written down is one a reader can argue with. Size is never a reason
+# -- a long value folds by default -- and neither is a value naming something no
+# node explains, since every token in a quoted body hovers with its own
+# signature and links to the pinned source.
+#
+# [[body_optout]]
+# name = "RB31E2E.Some.definition"
+# reason = "one line saying why the value is not worth showing"
+
 # ------------------------------------------------- Lean-only infrastructure
 # Clusters with no paper counterpart. Named after the proof step they serve so
 # the label survives a later split onto child nodes.

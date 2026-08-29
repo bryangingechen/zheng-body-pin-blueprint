@@ -48,7 +48,7 @@ def moduleOf? (env : Environment) (decl : Name) : Option Name :=
 The extracted items of one formalization module.
 
 Reading is not cached: a module's JSON is a few hundred kilobytes and the
-document names seventy-two declarations, of which twenty-two are quoted, so the
+document names seventy-two declarations, of which forty-one are quoted, so the
 cost is not worth a cache that could serve a stale parse.
 -/
 def loadItems (mod : Name) : IO (Array SubVerso.Module.ModuleItem) := do
@@ -206,6 +206,28 @@ private partial def cut (ranges : Array (Nat × Nat)) (mk : String → Highlight
         let (rest, i) := cut ranges mk s base e stop idx
         ((if cur == a then Highlighted.text "⋯" else .empty) ++ rest, i)
 
+/--
+Does anything survive that a tactic state or a message could annotate?
+
+A `.tactics` node carries the goal state of a `by` block, and Verso renders it
+as a toggle whose label is the block's own text.  Elide that text and the
+wrapper is still there, so the `⋯` *becomes* the toggle: clicking it expands the
+proof state the elision was there to remove.  `bodyClique` escaped only by
+accident -- its `loopless` value is `⟨by ...⟩`, so the range starts at the `⟨`,
+outside the tactics node, and the node is consumed whole.  `connectingMap` and
+`directionEquilibrium` write `map_add' := by ...` and did not escape.
+
+A range covers a whole field value and a tactics node sits inside one, so the
+node is either untouched or covered entirely; "no token left" is therefore the
+same question as "the proof text is gone", and the wrapper has nothing left to
+annotate.  The same holds of a `.span`, which carries messages.
+-/
+private partial def annotatable : Highlighted → Bool
+  | .seq xs => xs.any annotatable
+  | .span _ x | .tactics _ _ _ x => annotatable x
+  | .token .. => true
+  | _ => false
+
 private partial def elideGo (ranges : Array (Nat × Nat)) (hl : Highlighted) (pos idx : Nat) :
     Highlighted × Nat × Nat :=
   match hl with
@@ -217,10 +239,10 @@ private partial def elideGo (ranges : Array (Nat × Nat)) (hl : Highlighted) (po
     (.seq out, p, i)
   | .span info x =>
     let (y, p, i) := elideGo ranges x pos idx
-    (if y.isEmpty then .empty else .span info y, p, i)
+    (if annotatable y then .span info y else y, p, i)
   | .tactics info a b x =>
     let (y, p, i) := elideGo ranges x pos idx
-    (if y.isEmpty then .empty else .tactics info a b y, p, i)
+    (if annotatable y then .tactics info a b y else y, p, i)
   | .point .. => (hl, pos, idx)
   | .token ⟨k, s⟩ =>
     let stop := pos + s.length
@@ -243,9 +265,10 @@ def elide (ranges : Array (Nat × Nat)) (hl : Highlighted) : Highlighted :=
 One extracted command with its proof obligations elided, and what went wrong if
 anything did.
 
-A declaration with no `where` block is returned untouched, which is every
-declaration the chapters quote today except `bodyClique`, so the reparse happens
-only where it can pay for itself.
+A declaration with no `where` block is returned untouched, which is all but
+three of the declarations the chapters quote -- `bodyClique`, `connectingMap`
+and `directionEquilibrium` are the exceptions -- so the reparse happens only
+where it can pay for itself.
 -/
 def elidedCode (item : SubVerso.Module.ModuleItem) :
     MetaM (Highlighted × Option String) := do
@@ -273,6 +296,12 @@ of it: `bodyClique` is three lines of adjacency and five of `symm` and
 `loopless`. Eliding them is the same move `pp.proofs` makes, and it is visibly
 an omission rather than a change -- which is what makes it safe to do to source
 this repository does not own.
+
+The omission has to be total, which is why `annotatable` above drops a
+`.tactics` wrapper the elision emptied. A `by`-block obligation would otherwise
+keep its goal state and the `⋯` would be the toggle that expands it. A `by`
+block that is the *value* keeps its toggle, as `rigidityOperator` and
+`genericRigidityRank` do: those are data, and nothing about them is elided.
 
 `defSite := true` is load bearing rather than cosmetic. It sets Verso's
 `definitionsAsTargets`, which is what puts an `id` on the token that defines a

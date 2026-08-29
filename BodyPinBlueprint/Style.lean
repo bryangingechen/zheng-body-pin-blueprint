@@ -224,10 +224,12 @@ keyword and does carry one, and `where` is the case that was wrong.
 Checked over the extracts rather than on a page.  Of the 118 `def`, `abbrev` and
 `instance` commands in the fifteen extracted modules, the rule moves the
 boundary on exactly the twelve written with `where`, in each case to the `where`
-itself and away from a field's `:=`; the other 106 are unchanged, and so are all
-twenty-two declarations the chapters quote.  So this fixes nothing visible and
-prevents the next chapter from rendering a body that silently begins at
-`toFun weight v j :=`.
+itself and away from a field's `:=`; the other 106 are unchanged.  When it was
+written it changed nothing the chapters showed.  It does now: `connectingMap`
+and `directionEquilibrium` are both quoted, both are `LinearMap`s written with
+`where`, and both are spliced into a panel, so without this the deletion chapter
+would render two bodies beginning at `toFun z :=` with the `where` and the field
+name silently gone.
 
 The same reading gives `hasValue`.  A `structure` writes `where` before its
 fields and may give a field a default with `:=`, both of which read exactly like
@@ -239,9 +241,9 @@ across the same extracts.
 No count of what this does belongs here, because it would have to be corrected
 every time a chapter quotes something. The shape is fixed instead: one block per
 name in a ```BodyPinBlueprint.bodies fence, and a block moves into a panel
-exactly when some node also names its declaration. As the chapters stand that is
-twenty-two blocks, twelve of them claimed by a node and ten left in the prose,
-which the fences and the `(lean := ...)` options say without a build.
+exactly when some node also names its declaration. Which blocks those are is
+readable off the fences and the `(lean := ...)` options without a build, and
+`scripts/coverage.py` is what keeps the two lists in step.
 -/
 def quotedBodyJs : String := r##"
 (function () {

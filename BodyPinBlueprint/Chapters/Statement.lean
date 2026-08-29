@@ -40,11 +40,17 @@ Because §1 and A.1 are merged, most witnesses here join a §1 sentence to its
 A.1 counterpart.  `scripts/check-witness-prose.py` reports one unmatched word
 window at each such join; in this chapter they are all that merge.
 
-Quoted Lean bodies are verbatim from the file named in the block's first line.
-What they need in order to elaborate here -- the `open` that brings the
-formalization's names into scope -- is set once in a hidden `-show` block before
-the first of them, and Verso carries that scope to the rest, so the reader sees
-only the quoted text.
+Quoted Lean bodies are named rather than copied.  A `BodyPinBlueprint.bodies`
+fence lists fully qualified declaration names and `Bodies.lean`
+reads each body out of the pinned submodule's extract, so nothing is
+re-elaborated and there is no scaffolding to hide.  Where a node names the
+declaration, `quotedBodyJs` splices the value onto that declaration's panel and
+the block leaves the prose; where no node names it, the block stays where it is.
+Proof obligations render as `⋯` and nothing else is omitted.
+
+Every `def` and `abbrev` a node here names is quoted.  That is the rule in
+the `AGENTS.md` beside this directory, and `scripts/coverage.py` fails the build
+on a node that names one with neither a fence nor an opt-out.
 -/
 
 #doc (Manual) "Statement of the theorem" =>
@@ -93,8 +99,10 @@ Here $E$ is the edge set; parallel edges are distinct elements of $E$.
 \end{definition}
 ```
 
-Quoted Lean below and in the rest of this chapter is verbatim from the file its
-first line names.
+Quoted Lean here and in the rest of the blueprint is the pinned formalization's
+own source, extracted at build time rather than copied. To check one against the
+repository it came from, follow the source link on the declaration's panel: it
+is anchored to the line range of the declaration at the pinned commit.
 
 The formalization represents $`H` as a type of pins together with two endpoint
 maps and a proof that the two endpoints of a pin differ, which is the
@@ -214,18 +222,24 @@ forms are equal, so this map has the same rank as the usual rigidity matrix.
 ```
 
 The paper uses two forms of this matrix, and so does the formalization.
-Equation (1.4) is
-stated over an arbitrary field extension $`K/k`, because §2 onwards needs to
-vary the coefficient field; Appendix A.1 uses the real form $`R_G(p)`, indexed
-by _all_ ordered vertex pairs with nonedges sent to zero. The doubling does not
-change the rank, and the fixed target makes the ranks of different graphs on the
-same vertex set directly comparable, which is what the maximum-rank
-formulation requires.
+Equation (1.4) is stated over an arbitrary field extension $`K/k`, because §2
+onwards needs to vary the coefficient field; Appendix A.1 uses the real form
+$`R_G(p)`, indexed by _all_ ordered vertex pairs with nonedges sent to zero.
 
-{name RB31E2E.BarJoint.rigidityOperator}`RB31E2E.BarJoint.rigidityOperator` is the appendix's real form, built from
+{name RB31E2E.BarJoint.rigidityOperator}`rigidityOperator` is that real form,
+and the `if` in its body is where the nonedges go to zero. Its value at an
+adjacent pair is
 {name RB31E2E.BarJoint.edgeConstraint}`edgeConstraint`, the single number one
-edge contributes. The field-extension form appears in the Lean development as
-the direction matrix and its stress space; see {bpref "stress_exact_sequence"}[the deletion chapter].
+edge contributes; the two are joined by
+{name RB31E2E.BarJoint.edgeFunctional}`edgeFunctional`, which bundles that
+number as a linear functional of the velocity. The field-extension form appears
+in the Lean development as the direction matrix and its stress space; see
+{bpref "stress_exact_sequence"}[the deletion chapter].
+
+```BodyPinBlueprint.bodies
+RB31E2E.BarJoint.edgeConstraint
+RB31E2E.BarJoint.rigidityOperator
+```
 
 :::definition "generic_rigidity_max_rank" (parent := "statement_data") (lean := "RB31E2E.BarJoint.genericRigidityRank, RB31E2E.BarJoint.IsGenericallyRigidInR3, RB31E2E.BodyPinIncidence.GenericallyRigidInR3") (tags := "paper") (uses := "rigidity_matrix, bodypin_expansion")
 The generic rank $`\rho_3(G)` is the greatest rank attained by the real rigidity
@@ -259,13 +273,24 @@ because the rank takes finitely many values, so the condition is
 finite-dimensional linear algebra — which is why it can be stated in Lean
 without first developing a theory of generic points. The Lean definition takes
 the maximum as a {name Nat.findGreatest}`Nat.findGreatest` bounded by the dimension of the velocity
-space, with {name RB31E2E.BarJoint.rigidityRank_le_velocityFinrank}`rigidityRank_le_velocityFinrank` proving that no placement is
-thereby omitted.
+space, and {name RB31E2E.BarJoint.rigidityRank_le_velocityFinrank}`rigidityRank_le_velocityFinrank` is the bound that makes that
+search exhaustive.
 
 Two predicates carry that condition: {name RB31E2E.BarJoint.IsGenericallyRigidInR3}`IsGenericallyRigidInR3`
 states it of a graph, and {name RB31E2E.BodyPinIncidence.GenericallyRigidInR3}`GenericallyRigidInR3`
 of a body–pin multigraph together with a choice of private vertices, by applying
 the first to its expansion.
+
+```BodyPinBlueprint.bodies
+RB31E2E.BarJoint.IsGenericallyRigidInR3
+RB31E2E.BodyPinIncidence.GenericallyRigidInR3
+```
+
+Each is one line. The comparison with the complete graph is written once, for
+any dimension, as
+{name RB31E2E.BarJoint.IsGenericallyRigidInDimension}`IsGenericallyRigidInDimension`,
+and fixing $`d = 3` is the whole of the first; three is the only value this
+paper needs.
 
 A maximum-rank placement is precisely what
 {Informal.citet "asimowRoth1978"}[] call a _regular point_, and their theorem is
@@ -374,6 +399,7 @@ For every $t \in \mathbb{N}$ and every surjection $\pi : W \twoheadrightarrow [t
 ```
 
 ```BodyPinBlueprint.bodies
+RB31E2E.BodyPinIncidence.partitionCapacity
 RB31E2E.BodyPinIncidence.PartitionCondition
 ```
 
@@ -383,7 +409,11 @@ truncated subtraction supplies the paper's $`\max\{t - 1, 0\}` for free. Both
 moves are bookkeeping with a purpose: the empty body set and the one-block case
 then fall out of the definition instead of needing separate treatment.
 
-The formalization also carries a second, ordered convention —
+The paper's unordered pairs $`i < j` are the edges of the complete graph on
+$`[t]`, and that is literally how
+{name RB31E2E.BodyPinIncidence.partitionCapacity}`partitionCapacity` sums over
+them: the index set is `(⊤ : SimpleGraph (Fin t)).edgeFinset`. The
+formalization also carries a second, ordered convention —
 {name RB31E2E.BodyPinIncidence.orderedPartitionCapacity}`orderedPartitionCapacity`, summing over ordered pairs against a bound of
 $`12(t-1)` — as an audit form. The paper has only the unordered one.
 

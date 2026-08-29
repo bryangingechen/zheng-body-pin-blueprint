@@ -234,15 +234,19 @@ only by adding the matching status, and vice versa.
     and constructors, and because its `where` and its field defaults read
     exactly like a value;
   - a theorem, because its value is a proof and this blueprint reproduces none;
-  - anything on the opt-out list in `correspondence.toml`, each entry carrying
-    a one-line reason.
+  - anything on the `[[body_optout]]` list in `correspondence.toml`, each row
+    carrying a one-line reason.
 
-  **Not yet enforced**, and it should be: `scripts/coverage.py` is where the
-  check goes, and `PLAN.md` carries the task along with the sixteen definitions
-  still to quote. Until it lands the rule is on you. It is written to become a
-  check rather than to stay a paragraph because the taste version of it produced
-  fifteen quoted bodies out of thirty-one named definitions, with no principle
-  separating the halves.
+  `scripts/coverage.py` enforces it, so it is a build failure rather than a
+  review item: a node naming a `def` or an `abbrev` with neither a fence in its
+  own chapter nor an opt-out row fails, and so does an opt-out row with no
+  reason or one excusing a declaration no node names. It reads the kind off the
+  formalization's source, since the check runs with no build, and cross-checks
+  that reading against `_out/body-modules.json` whenever a build has left one.
+  The list is currently empty: all thirty-one definitions the nodes name are
+  quoted. It became a check rather than staying a paragraph because the taste
+  version of it produced fifteen quoted bodies out of those thirty-one, with no
+  principle separating the halves.
 
   **Size is measured on the value, never on the declaration, and it is not a
   reason to omit.** The body is spliced onto the panel's generated signature, so
