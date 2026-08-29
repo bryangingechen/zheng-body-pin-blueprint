@@ -55,7 +55,7 @@ audit. Node counts are targets. See `correspondence.toml` for what goes where.
 | 02 | `Necessity` | §6.1, §6.4 first half | 8 | **Written (Phase 2):** 6 nodes. One paragraph on paper, 894 Lean lines, two thirds of them genericity. |
 | 03 | `Sparsity` | §2.1 + Lean-only | 10 | **Written (Phase 2):** 6 nodes. 2,811 lines with no paper counterpart, and the root theorem uses almost none of them. |
 | 04 | `Deletion` | §2.2 | 12 | **Written (Phase 2):** 9 nodes. Exact sequence, ledger, the missing defect Δ. |
-| 05 | `Flags` | §3 | 16 | **Stubbed:** 12 nodes. The heart. Vocabulary table first — every Lean name here is renamed. |
+| 05 | `Flags` | §3 | 16 | **Written (Phase 3):** 12 nodes. The heart. Vocabulary table at the top; five proof blocks; four new register entries. |
 | 06 | `Strata` | §4 | 3 | **Stubbed:** 3 nodes. **Deliberately short.** See below. |
 | 07 | `SplitKlein` | §5 | 14 | **Stubbed:** 7 nodes. Plus the Lean-only weight apparatus. |
 | 08 | `BodyPin` | §6.2 onwards | 14 | **Stubbed:** 6 nodes. Matroid-union deviation shown beside Lean's substitute. |
@@ -95,8 +95,10 @@ it — a reader's first question about a scheme-theoretic section with no Lean i
 
 ## Vocabulary: the paper and Lean do not share names
 
-Chapter 05 is unreadable without this. Put it at the top of that chapter and in
-the Chapter 09 glossary.
+Chapter 05 is unreadable without this. The authoritative version is now the
+table at the top of `Flags.lean`, which also carries the distinguished missing
+edge, the completion, the O/P/S sets and the response-edge renaming; the
+Chapter 09 glossary should start from that table, not this one.
 
 | Paper | Lean |
 |---|---|
@@ -244,31 +246,57 @@ register against the references' baselines. Draft the chapter to the duties
 (orientation paragraph first, then nodes), and run `--pedantic` and `--report`
 on it before committing.
 
-**NEXT: Chapter 05.** Vocabulary table first, then flag definitions, forest,
-selection, pivot, classification, augmentations, Thm 3.9. Longest chapter,
-heaviest translation load.
+**Chapter 05 is written**: twelve nodes, every `paper`-tagged one with a
+hand-transcribed witness, five proof blocks (Prop 3.3, Lemmas 3.4, 3.7, 3.8,
+and the Theorem 3.9 induction), the vocabulary table at the top rendered with
+the `:::table` directive (its current syntax is `+header`, not
+`(header := true)`), and twenty quoted bodies across six newly extracted
+modules. Both carryovers from Phase 2 landed: the semismallness budget is
+stated in full — `FunctionFieldBranch`, its collinearity vocabulary, and
+`SemismallBudget` as the subtraction-free form of $\Delta \le 0$ — and the
+proofs of Lemmas 3.7 and 3.8 were read against the modules, confirming at
+proof level what reachability claimed: the addable branch applies the
+addable-edge lemma to the completion, the blocking arguments run on tight
+sets and uncrossing, and the construction theorem is used nowhere.
 
-What the quoting check will ask of Chapter 05 is already visible, because the
-table's `lean` names classify without a build. Of the eight the flags entries
-claim, `State` is a structure and six are theorems, all exempt by kind;
-`State.CompletionSparse` is a `def` and will need a fence. Chapter 07 has one
-more, `Twist.splitKlein`. Nothing chapters 05 to 08 currently claim is
-unclassifiable, so the scan's warning path is still untested — the first case
-will be a node naming a structure projection or a Mathlib constant, and a
-warning there is correct rather than a defect. What it must not become is a
-habit of ignoring the line.
+Findings worth keeping from the writing:
 
-Two things carried over from Phase 2. `Deletion.lean` describes the semismallness
-budget as the only home of the paper's defect, so Chapter 05 has to state it
-properly and the deviation entry on `(2.4)-(2.6)` points at it. And Chapter 03's
-`lean_nixon_owen_reduction` node claims that Lemmas 3.7 and 3.8 do not rest on
-the construction theorem either; the flags chapter is where that gets checked
-against the actual proofs rather than against the reachability table.
+- Four table corrections, all now `verified = true`: Lemma 3.6's
+  representative declarations are `privateExceptional_classification` and
+  `privateExceptional_bothVirtualRows_mem` (the previously claimed
+  `private_local_payment` is the nonexceptional half only); Prop 3.3 moved
+  from `mapped` to `deviation`, because only its counting halves are
+  formalized — `B_T` is never built, the forest conclusion is the quantified
+  inequality `TerminalHyperforest`, and the variety half has no counterpart;
+  `ProvenanceFlagGroundedPF.lean` was named by no entry and now sits under
+  `stress_codim` with `groundedPF_of_provenanceFlag_semismallness`, the
+  actual Γ = ∅ specialization plus grounding-by-translation; and
+  `ProvenanceFlagBranch.lean` moved from the moves cluster to Theorem 3.9's
+  entry, since the budget definition is the theorem's vocabulary.
+- The register gained four fingerprinted entries (Defs 3.1 and 3.2, Prop 3.3,
+  Thm 1.2), bringing it to sixteen, twelve fingerprinted.
+- The quoting scan's warning path fired for the first time, on the structure
+  projections `State.terminals` and `State.missing` named by the Def 3.1
+  node; the warning is correct, and the chapter's leading comment says so.
+- `check-witness-prose.py` reports 46 windows in this chapter; each was
+  checked and each is a text-layer artifact — pdftotext sets the raised hat
+  of $\widehat{G}$ on its own line and scrambles word order around it, math
+  tokens (`degG`, `dimK`, `trdegk`) survive as words in the text layer, and
+  §1 hyphenates one word across a line break. The chapter's leading comment
+  carries the list.
 
-*Exit:* the induction in `provenanceFlag_semismallness` is readable from the
-blueprint alone.
+*Exit met:* the induction in `provenanceFlag_semismallness` is readable from
+the blueprint alone — the Theorem 3.9 proof block walks both cases with the
+paper's ledger, and the closing section maps each move to its constructor
+and budget lift.
 
-**Phase 4 — route comparison, Split–Klein, assembly.** Chapters 06–08.
+**NEXT — Phase 4: route comparison, Split–Klein, assembly.** Chapters 06–08.
+Chapter 06 is the deliberately short route comparison (see its section above);
+Chapter 07 carries the Lean-only weight apparatus, and `Twist.splitKlein` is
+its one `def` that will need a fence; Chapter 08 has the matroid-union
+deviation (Lemma 6.3), whose register entry exists and needs its fingerprint
+when the witness lands. `notes/reachability.md` lists the seven `NullCellule`
+modules Phase 4 has to account for.
 *Exit:* every paper-numbered result has a node; no `unwritten` outside Ch 09.
 
 **Phase 5 — audit, figures, polish.** Chapter 09 in full. Redraw the three

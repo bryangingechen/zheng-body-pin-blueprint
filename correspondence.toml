@@ -279,16 +279,19 @@ paper = "Def 3.1"
 title = "Collinearity flag d < T < Q"
 chapter = "Flags"
 label = "collinearity_flag"
+lean = ["RB31E2E.ProvenanceFlag.State.terminals", "RB31E2E.ProvenanceFlag.State.missing", "RB31E2E.ProvenanceFlag.ghostEdge"]
+verified = true
 modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlag.lean"]
 status = "deviation"
-note = "Renamed throughout: provenance flag / terminals / ghost vertex. See the vocabulary table in PLAN.md."
+note = "Renamed throughout: provenance flag / terminals / ghost vertex. No standalone one-flag object; the data are fields of State, and the ghost vertex is the flag index itself, as the right summand of V ⊕ Flag. The chapter opens with the vocabulary table."
 
 [[entry]]
 paper = "Def 3.2"
 title = "Sparse collinearity-flag system"
 chapter = "Flags"
 label = "flag_system"
-lean = ["RB31E2E.ProvenanceFlag.State", "RB31E2E.ProvenanceFlag.State.CompletionSparse"]
+lean = ["RB31E2E.ProvenanceFlag.State", "RB31E2E.ProvenanceFlag.State.completionEdges", "RB31E2E.ProvenanceFlag.State.CompletionSparse"]
+verified = true
 modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlag.lean"]
 status = "deviation"
 
@@ -297,15 +300,19 @@ paper = "Prop 3.3"
 title = "Incidence forest; codim X_T = 2|Gamma|"
 chapter = "Flags"
 label = "flag_incidence_forest"
+lean = ["RB31E2E.ProvenanceFlag.State.card_terminal_inter_le_one", "RB31E2E.ProvenanceFlag.State.two_mul_card_add_one_le_card_terminalUnion", "RB31E2E.ProvenanceFlag.State.terminalHyperforest"]
+verified = true
 modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagForest.lean"]
-status = "mapped"
+status = "deviation"
+note = "Counting halves only: the incidence graph B_T is never constructed, and the variety X_T, its irreducibility and (3.5) have no counterpart. The register has the entry."
 
 [[entry]]
 paper = "§3.2"
 title = "Support multiplicity and the O/P/S split"
 chapter = "Flags"
 label = "support_multiplicity"
-lean = ["RB31E2E.ProvenanceFlag.State.card_live_partition"]
+lean = ["RB31E2E.ProvenanceFlag.State.flagMultiplicity", "RB31E2E.ProvenanceFlag.State.card_live_partition"]
+verified = true
 modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagSelection.lean"]
 status = "mapped"
 
@@ -315,7 +322,8 @@ title = "Flag selection lemma"
 chapter = "Flags"
 label = "flag_selection"
 lean = ["RB31E2E.ProvenanceFlag.State.exists_outside_degree_le_three_or_private_degree_le_two"]
-modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagSelection.lean"]
+verified = true
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagSelection.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagArithmetic.lean"]
 status = "mapped"
 
 [[entry]]
@@ -323,6 +331,8 @@ paper = "Lem 3.5"
 title = "Completion-preserving pivot"
 chapter = "Flags"
 label = "missing_edge_pivot"
+lean = ["RB31E2E.ProvenanceFlag.State.pivotPrivateOpposite", "RB31E2E.ProvenanceFlag.State.exists_privatePivotData", "RB31E2E.DirectionStress.directionStressDim_exchange_collinear_triangle"]
+verified = true
 modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagPrivatePivot.lean", "RB31EndToEnd/Linear/PrivatePivotStress.lean"]
 status = "mapped"
 
@@ -331,7 +341,8 @@ paper = "Lem 3.6"
 title = "Local classification at a private support vertex"
 chapter = "Flags"
 label = "private_local_classification"
-lean = ["RB31E2E.DirectionStress.private_nonexceptional_or_exceptional", "RB31E2E.DirectionStress.private_local_payment"]
+lean = ["RB31E2E.DirectionStress.private_nonexceptional_or_exceptional", "RB31E2E.DirectionStress.privateExceptional_classification", "RB31E2E.DirectionStress.privateExceptional_bothVirtualRows_mem"]
+verified = true
 modules = ["RB31EndToEnd/Linear/PrivateLocalClassification.lean"]
 status = "mapped"
 
@@ -340,6 +351,8 @@ paper = "Lem 3.7"
 title = "Addable edge or complete triangle outside the flags"
 chapter = "Flags"
 label = "outside_augmentation"
+lean = ["RB31E2E.ProvenanceFlag.State.outside_live_neighbour_triangle_complete_or_addable", "RB31E2E.ProvenanceFlag.State.outside_complete_triangle_live"]
+verified = true
 modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagOutsideMove.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagOutsideRegistration.lean"]
 status = "mapped"
 
@@ -348,6 +361,8 @@ paper = "Lem 3.8"
 title = "Certified response edge, private-support case"
 chapter = "Flags"
 label = "private_augmentation"
+lean = ["RB31E2E.ProvenanceFlag.State.private_response_edge_addable"]
+verified = true
 modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagPrivateMove.lean"]
 status = "mapped"
 
@@ -356,8 +371,9 @@ paper = "Thm 3.9"
 title = "Stress-codimension inequality for collinearity flags"
 chapter = "Flags"
 label = "stress_codim_flags"
-lean = ["RB31E2E.ProvenanceFlag.provenanceFlag_semismallness"]
-modules = ["RB31EndToEnd/NullCellule/ProvenanceFlagSemismallnessFinal.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagSemismallness.lean"]
+lean = ["RB31E2E.ProvenanceFlag.provenanceFlag_semismallness", "RB31E2E.ProvenanceFlag.FunctionFieldBranch.SemismallBudget"]
+verified = true
+modules = ["RB31EndToEnd/NullCellule/ProvenanceFlagSemismallnessFinal.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagSemismallness.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagBranch.lean"]
 status = "mapped"
 
 [[entry]]
@@ -365,10 +381,11 @@ paper = "Thm 1.2"
 title = "Stress-codimension inequality (Gamma empty)"
 chapter = "Flags"
 label = "stress_codim"
-lean = ["RB31E2E.endToEndBodyPinStatement_of_groundedPF"]
-modules = ["RB31EndToEnd/NullCellule/GroundedPFEndToEnd.lean"]
+lean = ["RB31E2E.ProvenanceFlagGroundedPF.groundedPF_of_provenanceFlag_semismallness", "RB31E2E.endToEndBodyPinStatement_of_groundedPF"]
+verified = true
+modules = ["RB31EndToEnd/NullCellule/ProvenanceFlagGroundedPF.lean", "RB31EndToEnd/NullCellule/GroundedPFEndToEnd.lean"]
 status = "deviation"
-note = "Appears as the grounded-PF hypothesis of the assembly theorem, not as a standalone statement."
+note = "Never stated standalone. The grounded form, with a root vertex at zero and ambient dimension 3(|V|-1), is derived from flag semismallness by adjoining three translation variables, and enters the assembly theorem as its sole hypothesis. The register has the entry."
 
 # ---------------------------------------------------------------- section 4
 
@@ -630,7 +647,9 @@ note = "Largest cluster. First pass documents it as one step under Prop 6.5 and 
 title = "Flag state transitions and budget ledger"
 chapter = "Flags"
 label = "lean_flag_moves"
-modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagDeletion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagInsertion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagPrivateDeletion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagArithmetic.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagDeletionLedger.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagPlacement.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagInsertedBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideRegisteredBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptional.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptionalBudget.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagPrivateExceptional.lean"]
+lean = ["RB31E2E.ProvenanceFlag.State.deleteOutside_completionSparse", "RB31E2E.ProvenanceFlag.State.registerOutside_completionSparse", "RB31E2E.ProvenanceFlag.FunctionFieldBranch.semismallBudget_of_deleteOutsideIntrinsic"]
+verified = true
+modules = ["RB31EndToEnd/Combinatorics/ProvenanceFlagDeletion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagInsertion.lean", "RB31EndToEnd/Combinatorics/ProvenanceFlagPrivateDeletion.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagDeletionLedger.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagPlacement.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagInsertedBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideRegisteredBranch.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptional.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptionalBudget.lean", "RB31EndToEnd/NullCellule/ProvenanceFlagPrivateExceptional.lean"]
 status = "lean-only"
 
 [[entry]]

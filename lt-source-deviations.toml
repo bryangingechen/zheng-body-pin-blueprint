@@ -88,6 +88,32 @@ chapter = "BodyPinBlueprint/Chapters/Deletion.lean"
 fingerprint = "12d7b53223b4b91a140210a78f95b581ef084028ba55fd982ad443de9d427959"
 reason = "The paper's definition requires H + xy to remain (2,2)-sparse. Lean's stress_augmentation_of_virtual_response requires only that the edge be absent and its direction row already in the row space; sparsity is the caller's obligation, discharged by the addable-edge lemma at each use."
 
+# ---------------------------------------------------------------- flags
+
+[[witness]]
+paper = "Def 3.1"
+chapter = "BodyPinBlueprint/Chapters/Flags.lean"
+fingerprint = "0001754abb74168eb985a4af3e58800562bc7449fc14fa81e21f250e5cb16804"
+reason = "Renamed throughout: a collinearity flag is a provenance flag, the support triple is the terminals, the distinguished missing edge is the missing terminal edge, and the auxiliary vertex is a ghost vertex. There is no standalone one-flag object: the data are the per-flag fields of ProvenanceFlag.State, and the ghost vertex of the flag t is the right summand t of V ⊕ Flag, so it needs no name. The realization condition is not part of the combinatorial object; it is the collinearity field of FunctionFieldBranch."
+
+[[witness]]
+paper = "Def 3.2"
+chapter = "BodyPinBlueprint/Chapters/Flags.lean"
+fingerprint = "8c8813b01c2f25632d980595b451bab2e13622b020a14cd87d1e6137406a89af"
+reason = "State keeps exact types: V holds exactly the live vertices and Flag exactly the active flags, so deletion changes the types and sparsity is transported at every step. The completion is a literal Finset union of three packets on V ⊕ Flag rather than a graph on V ⊔ {g_gamma}. The variety X_T has no counterpart; injective coordinate-generated function-field branches stand in for it."
+
+[[witness]]
+paper = "Prop 3.3"
+chapter = "BodyPinBlueprint/Chapters/Flags.lean"
+fingerprint = "942089b0e4dadd15df335a82d7a04ee2c903882877c5595f8f2f2ab70c66dba7"
+reason = "Counting halves only. Distinct triples sharing at most one live vertex and (3.4) are theorems derived from the literal edge unions, but the bipartite incidence graph B_T is never constructed: the forest conclusion is recorded as the quantified inequality TerminalHyperforest, which is all the selection lemma uses. The geometric half — irreducibility of X_T and codim = 2|Gamma| — has no Lean counterpart; the number 2|Gamma| appears as the flag term of SemismallBudget."
+
+[[witness]]
+paper = "Thm 1.2"
+chapter = "BodyPinBlueprint/Chapters/Flags.lean"
+fingerprint = "b2bc4650309d949d2c284df284ce34dc90405d92cf5f0deb1faec04162382371"
+reason = "Never stated as a standalone theorem. The paper's specialization Gamma = empty is emptyFlagState, but what the assembly consumes is a grounded form over Q with a root vertex at zero and right-hand side 3(|V|-1); groundedPF_of_provenanceFlag_semismallness derives it by adjoining three translation variables, which fix every direction row and raise the transcendence degree by exactly three, then cancelling. The equivalent subvariety form of (1.5) is likewise not formalized."
+
 # ---------------------------------------------------------------- later chapters
 
 [[witness]]
