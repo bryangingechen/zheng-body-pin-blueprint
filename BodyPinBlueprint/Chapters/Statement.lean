@@ -55,16 +55,17 @@ on a node that names one with neither a fence nor an opt-out.
 
 #doc (Manual) "Statement of the theorem" =>
 
-This chapter states what is claimed and what was proved. Everything in it comes
-from §1 and Appendix A.1 of {Informal.citet "zheng2026"}[]; the argument starts
-in {bpref "sparse22"}[the sparsity chapter].
+This chapter states what is claimed and what was proved, from §1 and
+Appendix A.1 of {Informal.citet "zheng2026"}[]; the proof begins in
+{bpref "sparse22"}[the sparsity chapter].
 
-Two statements are involved, and they are not the same statement. Theorem 1.1
-is about generic rigidity in the usual sense. Theorem A.1 is about a
+The paper states its theorem twice, and the two statements differ. Theorem 1.1
+is about generic rigidity in the usual sense; Theorem A.1 is about a
 realization attaining the same rigidity-matrix rank as the complete graph, and
-that is the statement the formalization proves. The two are related by the
+it is the statement the formalization proves. The two are related by the
 Asimow–Roth theorem, which the paper cites and the formalization does not
-contain.
+contain. We give the model and the definitions first, then both formulations
+side by side.
 
 :::group "statement_data"
 The combinatorial data of a body–pin framework, the rigidity operator, and the
@@ -100,9 +101,8 @@ Here $E$ is the edge set; parallel edges are distinct elements of $E$.
 ```
 
 Quoted Lean here and in the rest of the blueprint is the pinned formalization's
-own source, extracted at build time rather than copied. To check one against the
-repository it came from, follow the source link on the declaration's panel: it
-is anchored to the line range of the declaration at the pinned commit.
+own source, extracted at build time rather than copied; the source link on a
+declaration's panel leads to that declaration at the pinned commit.
 
 The formalization represents $`H` as a type of pins together with two endpoint
 maps and a proof that the two endpoints of a pin differ, which is the
@@ -165,13 +165,13 @@ RB31E2E.BodyPinIncidence.canonicalBodyPinGraph
 
 The body of {name RB31E2E.BodyPinIncidence.bodyClique}`bodyClique` gives the
 adjacency relation. Its two proof obligations, that adjacency is symmetric and
-irreflexive, render as `⋯`, here and in every quoted body. Nothing else is left
-out.
+irreflexive, render as `⋯`, here and in every quoted body; nothing else is
+elided.
 
-The bound $`|V(B_w)| \ge d_H(w) + 4` is exactly the requirement that four
-private vertices survive after the pins have taken theirs, so every body carries
-a $`K_4` of its own whatever its pin degree. The formalization names that
-$`K_4` explicitly:
+The bound $`|V(B_w)| \ge d_H(w) + 4` says that after one vertex of $`B_w` is
+used for each of the $`d_H(w)` pins, at least four private vertices remain, so
+every body contains a complete graph $`K_4` on private vertices, whatever its
+pin degree. The formalization names that $`K_4` explicitly:
 {name RB31E2E.BodyPinIncidence.privateCoreVertex}`privateCoreVertex` picks the
 four out, {name RB31E2E.BodyPinIncidence.privateCore_adj}`privateCore_adj` proves them mutually adjacent, and
 {name RB31E2E.BodyPinIncidence.canonicalBodyPinGraph}`canonicalBodyPinGraph` is
@@ -270,11 +270,12 @@ RB31E2E.BarJoint.genericRigidityRank
 No generic configuration is chosen in this statement, and no genericity
 hypothesis appears anywhere in it. A maximum over all placements is attained
 because the rank takes finitely many values, so the condition is
-finite-dimensional linear algebra — which is why it can be stated in Lean
-without first developing a theory of generic points. The Lean definition takes
-the maximum as a {name Nat.findGreatest}`Nat.findGreatest` bounded by the dimension of the velocity
-space, and {name RB31E2E.BarJoint.rigidityRank_le_velocityFinrank}`rigidityRank_le_velocityFinrank` is the bound that makes that
-search exhaustive.
+finite-dimensional linear algebra, so it can be stated in Lean without first
+developing a theory of generic points. The Lean definition takes the maximum as
+a {name Nat.findGreatest}`Nat.findGreatest` bounded by the dimension of the
+velocity space, and
+{name RB31E2E.BarJoint.rigidityRank_le_velocityFinrank}`rigidityRank_le_velocityFinrank`
+shows that no rank exceeds that bound, so the bounded search finds the maximum.
 
 Two predicates carry that condition: {name RB31E2E.BarJoint.IsGenericallyRigidInR3}`IsGenericallyRigidInR3`
 states it of a graph, and {name RB31E2E.BodyPinIncidence.GenericallyRigidInR3}`GenericallyRigidInR3`
@@ -286,17 +287,16 @@ RB31E2E.BarJoint.IsGenericallyRigidInR3
 RB31E2E.BodyPinIncidence.GenericallyRigidInR3
 ```
 
-Each is one line. The comparison with the complete graph is written once, for
-any dimension, as
+Each is a one-line definition. The comparison with the complete graph is
+written once, for any dimension, as
 {name RB31E2E.BarJoint.IsGenericallyRigidInDimension}`IsGenericallyRigidInDimension`,
-and {name RB31E2E.BarJoint.IsGenericallyRigidInR3}`IsGenericallyRigidInR3` fixes
-$`d = 3` in it. Three is the only value this paper needs.
+and {name RB31E2E.BarJoint.IsGenericallyRigidInR3}`IsGenericallyRigidInR3`
+fixes $`d = 3` in it, the only dimension this paper uses.
 
-A maximum-rank placement is precisely what
-{Informal.citet "asimowRoth1978"}[] call a _regular point_, and their theorem is
-stated at regular points, so this definition coincides with theirs. Their
-theorem is stated next. It is the one result in this chapter that the
-formalization does not prove.
+A maximum-rank placement is a _regular point_ in the sense of
+{Informal.citet "asimowRoth1978"}[], and their theorem is stated at regular
+points, so this definition coincides with theirs. We state their theorem next;
+it is the one result in this chapter that the formalization does not prove.
 
 :::theorem "asimow_roth" (parent := "statement_theorem") (tags := "gap") (uses := "generic_rigidity_max_rank")
 Call a placement _regular_ when the rigidity matrix attains its maximal rank
@@ -321,11 +321,10 @@ graph rather than of a placement.
 
 This is the one step of the paper's Theorem 1.1 that the formalization does not
 contain, and the only statement in this chapter given without a witness, since
-it is not the paper's sentence to quote. It is standard, the paper treats it as
-such, and {Informal.citet "asimowRoth1979"}[] carries the theory further. The
-formal statement nevertheless stops here, and a reader auditing the Lean
-development should know it. The register entry for this gap is in
-`lt-source-deviations.toml`.
+it is not the paper's sentence to quote. The theorem is standard, the paper
+cites it as such, and {Informal.citet "asimowRoth1979"}[] develops the theory
+further. The formalization nevertheless contains neither its statement nor its
+proof: Theorem 1.1 is recovered from Theorem A.1 only through this cited step.
 
 # Pin capacity and the partition condition
 
@@ -406,16 +405,17 @@ RB31E2E.BodyPinIncidence.PartitionCondition
 The formalization indexes partitions by surjections $`\pi : W \to [t]` rather than by set
 partitions, and writes the right-hand side as `6 * (t - 1)` over $`\N`, where
 truncated subtraction gives the paper's $`\max\{t - 1, 0\}`. Both conventions
-have the same effect: the empty body set and the one-block case fall out of the
-definition instead of needing separate treatment.
+have the same effect: the empty body set and the one-block case are covered by
+the definition itself instead of needing separate treatment.
 
 The paper's unordered pairs $`i < j` are the edges of the complete graph on
-$`[t]`, and that is how
-{name RB31E2E.BodyPinIncidence.partitionCapacity}`partitionCapacity` sums over
-them: the index set is `(⊤ : SimpleGraph (Fin t)).edgeFinset`. The
-formalization also carries a second, ordered convention —
-{name RB31E2E.BodyPinIncidence.orderedPartitionCapacity}`orderedPartitionCapacity`, summing over ordered pairs against a bound of
-$`12(t-1)` — as an audit form. The paper has only the unordered one.
+$`[t]`, and {name RB31E2E.BodyPinIncidence.partitionCapacity}`partitionCapacity`
+sums over exactly that edge set, `(⊤ : SimpleGraph (Fin t)).edgeFinset`. A
+second, ordered convention —
+{name RB31E2E.BodyPinIncidence.orderedPartitionCapacity}`orderedPartitionCapacity`,
+summing each unordered pair twice against the doubled bound $`12(t-1)` — is
+defined alongside it and never used in the main theorem; the paper has only the
+unordered one.
 
 For a two-block partition $`\{A, B\}` the inequality reduces to
 $`\ell_H(A, B) \ge 6`. So at least three pins must join the two blocks; one or
@@ -454,14 +454,15 @@ This is Conjecture 5 of
 {Informal.citet "jacksonJordanVillanyi2026"}[] as of July 2026.
 
 It is not the proposition the formalization proves. The formalization proves
-{bpref "formal_statement"}[Theorem A.1], its maximum-rank form; the remaining step is
-{bpref "asimow_roth"}[the Asimow–Roth step]. The dependency edges on this node record that.
+{bpref "formal_statement"}[Theorem A.1], its maximum-rank form, and the two are
+related by {bpref "asimow_roth"}[the Asimow–Roth step], which is cited rather
+than formalized.
 
 :::theorem "formal_statement" (parent := "statement_theorem") (lean := "RB31E2E.EndToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement, RB31E2E.endToEndBodyPinStatement_iff_sufficiency") (tags := "paper") (uses := "bodypin_expansion, partition_condition, generic_rigidity_max_rank")
 For every finite loopless body–pin multigraph $`H` and every $`r : W \to \N`,
 the expanded graph $`G(H, r)` attains the rigidity rank of the complete graph on
-its vertex set if and only if the capacity inequality holds for every $`t` and
-every surjection $`\pi : W \to [t]`.
+its vertex set if and only if the partition inequality (A.2) holds for every
+$`t` and every surjection $`\pi : W \to [t]`.
 {Informal.citep "zheng2026" (kind := "theorem") (index := "A.1")}[]
 :::
 
@@ -487,8 +488,9 @@ RB31E2E.EndToEndBodyPinStatement
 
 This is the root theorem of the formalization: a closed proposition, universally
 quantified over $`H` and $`r`, proved in both directions, with axiom closure
-exactly {name propext}`propext`, {name Classical.choice}`Classical.choice`, {name Quot.sound}`Quot.sound`. See
-{bpref "trust_boundary"}[the trust boundary].
+exactly {name propext}`propext`, {name Classical.choice}`Classical.choice`,
+{name Quot.sound}`Quot.sound`; {bpref "trust_boundary"}[the trust boundary]
+states what that closure does and does not cover.
 
 The appendix reconciles it with Theorem 1.1 in a paragraph. The cases
 $`W = \emptyset` and $`|W| = 1` are included; for $`W \ne \emptyset` a
@@ -504,5 +506,6 @@ direction alone: that the partition condition implies maximum-rank generic
 rigidity. The formalization records that trivial consequence as
 {name RB31E2E.endToEndBodyPinStatement_iff_sufficiency}`endToEndBodyPinStatement_iff_sufficiency`
 and uses it once, in the final assembly, to avoid restating both directions
-there. Necessity is proved separately, in {bpref "necessity"}[the necessity chapter]; everything from
-{bpref "sparse22"}[the sparsity chapter] onwards serves the other direction.
+there. Necessity is proved separately, in {bpref "necessity"}[the necessity
+chapter]; every chapter from {bpref "sparse22"}[the sparsity chapter] onwards
+belongs to the sufficiency direction.
