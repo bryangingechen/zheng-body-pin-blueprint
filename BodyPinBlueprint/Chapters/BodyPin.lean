@@ -396,7 +396,7 @@ then a proper closed subset of $P_{\mathrm{pin}}$.
 \end{lemma}
 ```
 
-:::proof "exceptional_pin_parameters" (uses := "sparse_subgraph_selection, orbit_dimension_drop, ungrounded_variety, pin_fibre")
+:::proof "exceptional_pin_parameters" (uses := "sparse_subgraph_selection, orbit_dimension_drop, isotropic_ideal_height, pin_fibre")
 Case 1: some pair of blocks is joined by three or more pins. Their relative
 twist is nonzero by the definition of the partition, so by the pin-fibre
 lemma any three of those pin points are collinear, and collinear triples
@@ -408,7 +408,9 @@ Case 2: every pair is joined by at most two pins. Choose by Lemma 6.3 a
 spanning $`(2,2)`-sparse subgraph $`F` with $`R` edges and one
 representative pin per edge. The compatibility equation of a representative
 pin gives the Split–Klein isotropic-difference equation of its edge, and the
-block twists are pairwise distinct, so by Corollary 5.4 the twist tuples
+block twists are pairwise distinct, so by
+{bpref "ungrounded_variety"}[Corollary 5.4] — formally, by the grounded
+height theorem it restates — the twist tuples
 have dimension at most $`6(t-1) - R` once one twist is fixed. Each of the
 $`M` cross-block pins then adds at most one dimension, since a nonempty pin
 fibre is an affine line, and each of the $`N - M` within-block pins has zero
@@ -461,7 +463,7 @@ ring rather than as dimensions of varieties.
 
 # The final assembly
 
-:::lemma_ "sufficiency_assembly" (parent := "bodypin_spine") (lean := "RB31E2E.endToEndBodyPinStatement_of_sparseNullIncidenceProperness, RB31E2E.BodyPinIncidence.exists_real_twistRigidAt_of_partitionCertificates, RB31E2E.BodyPinIncidence.genericallyRigidInR3_of_hasRigidTwistRealization") (tags := "paper, deviation") (uses := "sparse_subgraph_selection, exceptional_pin_parameters, stress_codim, formal_statement")
+:::lemma_ "sufficiency_assembly" (parent := "bodypin_spine") (lean := "RB31E2E.endToEndBodyPinStatement_of_sparseNullIncidenceProperness, RB31E2E.BodyPinIncidence.exists_real_twistRigidAt_of_partitionCertificates, RB31E2E.BodyPinIncidence.genericallyRigidInR3_of_hasRigidTwistRealization") (tags := "paper, deviation") (uses := "sparse_subgraph_selection, exceptional_pin_parameters, stress_codim")
 If $`|W| \ge 2` and every partition of the bodies satisfies the capacity
 inequality (1.2), then $`G_H` has a real placement attaining the rank of the
 complete graph on the same vertex set, so it is generically infinitesimally
@@ -471,7 +473,7 @@ sufficiency half of Theorem A.1.
 {Informal.citep "zheng2026" (kind := "section") (index := "6.4")}[]
 :::
 
-:::proof "sufficiency_assembly" (uses := "twist_description, asimow_roth")
+:::proof "sufficiency_assembly" (uses := "twist_description")
 For each nontrivial partition $`\mathcal{P}` the exceptional locus
 $`Z_{\mathcal{P}} = \overline{\pi_{\mathcal{P}}(I_{\mathcal{P}})}` is a
 proper closed subset of the irreducible space $`P_{\mathrm{pin}}`, and there
@@ -488,7 +490,10 @@ $`C_H` still has full column rank. Giving each body four affinely
 independent private points and avoiding the finitely many previously chosen
 points, the twist description shows the resulting real framework has only
 trivial infinitesimal motions, so $`G_H` attains the complete-graph rank;
-the Asimow–Roth theorem then gives generic rigidity in the usual sense.
+{bpref "asimow_roth"}[the Asimow–Roth theorem] then gives generic rigidity
+in the usual sense, which is the step that belongs to
+{bpref "bodypin_partition_characterization"}[Theorem 1.1] rather than to
+the maximum-rank form proved here.
 :::
 
 ```tex "sufficiency_assembly" (slot := "proof")

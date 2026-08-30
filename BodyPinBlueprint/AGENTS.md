@@ -161,7 +161,9 @@ revisions). The paper number goes in the prose and the correspondence table.
 Every node label matches a labelled `correspondence.toml` entry, one to one,
 chapter for chapter, and `scripts/coverage.py` fails the build if it does not.
 Add a node and its entry in the same commit. The invariant currently holds at
-59 for 59.
+58 for 58 (it was 59 until the trust boundary stopped being a node: A.2 is
+running prose the paper never numbers, so the audit chapter now quotes it
+verbatim under a section tag instead of wrapping it in a `lemma_`).
 
 ## Tags carry blueprint state, not proof state
 
@@ -424,6 +426,15 @@ the prose after.
 
 - `uses` for genuine mathematical dependency; `bpref` for navigational links.
 - Proof-only prerequisites go on the `:::proof` block, not the statement.
+- Edges record dependency **as the formalization discharges it**. Where the
+  paper's proof cites a result whose formal counterpart took a different
+  route, the edge points at the node carrying the formal content and the
+  paper's citation stays a `bpref` in the proof text, with the divergence in
+  the register. (Prop 6.5's proof cites Cor 5.4; its edge lands on
+  `isotropic_ideal_height`. §6.4's closing Asimow–Roth step belongs to
+  `bodypin_partition_characterization`, not to `sufficiency_assembly`.) The
+  audit chapter's "Reading the dependency graph" section states this for the
+  reader; keep the two in step.
 - Infrastructure edges get `(uses_intent := "technical")` so the main spine
   stays legible under the sparsity and weight-apparatus clusters.
 - Do not add standalone prose lines that exist only to display an edge; put it

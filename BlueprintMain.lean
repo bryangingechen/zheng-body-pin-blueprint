@@ -12,5 +12,5 @@ def main (args : List String) : IO UInt32 :=
     args
     (extensionImpls := by exact extension_impls%)
     (config :=
-      { extraCss := [BodyPinBlueprint.quotedBodyCss]
-        extraJs := [BodyPinBlueprint.quotedBodyJs] })
+      { extraCss := [BodyPinBlueprint.quotedBodyCss, BodyPinBlueprint.daggerRowCss]
+        extraJs := [BodyPinBlueprint.quotedBodyJs, BodyPinBlueprint.daggerRowJs] })

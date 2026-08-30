@@ -618,11 +618,10 @@ note = "Title said 'C to R specialization' until Phase 4 read the route: no comp
 paper = "A.2"
 title = "Trust boundary and axiom closure"
 chapter = "Correspondence"
-label = "trust_boundary"
 modules = ["Tests/Trust.lean"]
-status = "mapped"
+status = "informal"
 verified = true
-note = "Axiom closure is exactly propext, Classical.choice, Quot.sound. Checked by the upstream scripts/audit.sh."
+note = "Axiom closure is exactly propext, Classical.choice, Quot.sound. Checked by the upstream scripts/audit.sh. Deliberately no node: A.2 is running prose that numbers no result, so the audit chapter quotes it verbatim (section tag trust-boundary) instead of wrapping it in a formal environment the paper does not have."
 
 # ------------------------------------------------ quoted-body opt-outs
 #

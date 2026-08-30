@@ -326,3 +326,26 @@ emits a `keyword` token only for an atom beginning with a letter (`Code.lean`,
 `if c.isAlpha then .keyword name occ docs`), so `:=` and `|` arrive with no
 binding at all — which is why `quotedBodyJs` reads `where` off the tree and the
 other two forms off their tokens. See `BodyPinBlueprint/Style.lean`.
+
+## 9. The graph's status labels have no per-node override
+
+`Informal.Graph` computes every node's border and fill from the Lean anchors
+alone: a node with no `(lean := ...)` whose recorded statement dependencies
+are all locally formalized is labelled *ready to formalize* (blue), and a
+theorem-like node with proved anchors fills light green until every node in
+its transitive `uses` closure also has proved anchors, at which point it
+turns dark (*locally formalized + dependencies complete*). There is no node
+option to opt out of or re-word these labels — `Block/Model.lean`'s node
+fields are owner/tags/priority, and `Graph.lean` reads none of them for
+status — so a deliberately informal node in a finished blueprint (this
+repository's `asimow_roth`, the strata nodes, `ungrounded_variety`) shows
+*ready to formalize* no matter what the prose says.
+
+Not filed upstream as a bug, since the vocabulary is correct for the
+coordination blueprints the tool is built for. For this repository the
+mitigation is prose: the audit chapter's "Reading the dependency graph"
+section says how to read the labels here, and the edges were reviewed so
+that the colours at least aggregate the right closure (see
+`BodyPinBlueprint/AGENTS.md`, "Dependency edges"). If upstream ever grows a
+per-node status override or an "informal by design" flag, that section can
+shrink.

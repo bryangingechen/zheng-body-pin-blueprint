@@ -533,4 +533,47 @@ def quotedBodyJs : String := r##"
 })();
 "##
 
+/--
+Styling for the reverse index's daggered rows.
+
+A module marked † contributes nothing to the root theorem, and the audit
+chapter's reverse index says so in the cell. The dagger alone is easy to miss
+while scanning a 126-row column, so `daggerRowJs` tags the whole row and this
+mutes its ink -- text, module link and node links alike. Muted, not grayed out:
+the row is still information, and its links still work. Print keeps the
+treatment, since the dagger legend is in the prose either way.
+-/
+def daggerRowCss : String := r##"
+tr.bpx_unreachable > td,
+tr.bpx_unreachable > td a,
+tr.bpx_unreachable > td code {
+  color: var(--bp-color-text-faint);
+}
+"##
+
+/--
+Tags every table row whose first cell carries a † with `bpx_unreachable`.
+
+The dagger convention exists only in the audit chapter's reverse index, and no
+other table puts a † in its first cell, so matching on the character is exact
+today; a false positive would only mute a row that displays a dagger, which is
+the intended reading anyway. Done in JS because Verso's table markup offers no
+per-row class hook.
+-/
+def daggerRowJs : String := r##"
+(function () {
+  "use strict";
+  function run() {
+    var cells = document.querySelectorAll("table tr > td:first-child");
+    for (var i = 0; i < cells.length; i++) {
+      if (cells[i].textContent.indexOf("†") !== -1) {
+        cells[i].parentElement.classList.add("bpx_unreachable");
+      }
+    }
+  }
+  if (document.readyState === "complete") run();
+  else window.addEventListener("load", run);
+})();
+"##
+
 end BodyPinBlueprint

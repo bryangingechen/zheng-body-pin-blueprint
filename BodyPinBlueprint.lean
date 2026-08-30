@@ -110,7 +110,7 @@ into a height estimate for the ideal of twist-difference equations, and
 direction from a $`(2,2)`-sparse subgraph of representative pins.
 {bpref "direction_complex"}[The strata chapter] records the scheme-theoretic
 part of the paper that is deliberately not formalized, and
-{bpref "trust_boundary"}[the correspondence chapter] is the audit: what
+{ref "correspondence-audit"}[the correspondence chapter] is the audit: what
 corresponds to what, and what the verification does and does not cover.
 
 The formalization is already complete: no `sorry`, no custom axioms, axiom

@@ -59,7 +59,7 @@ audit. Node counts are targets. See `correspondence.toml` for what goes where.
 | 06 | `Strata` | §4 | 3 | **Written (Phase 4):** 3 nodes. **Deliberately short.** See below. |
 | 07 | `SplitKlein` | §5 | 14 | **Written (Phase 4):** 7 nodes. Two builds of the ideal; the weight apparatus and its unproved keystone. |
 | 08 | `BodyPin` | §6.2 onwards | 14 | **Written (Phase 4):** 6 nodes. No matroids, no C, and the orbit drop as homogeneity. |
-| 09 | `Correspondence` | — | 6 | **Written (Phase 5):** 1 node. Table, glossary, deviations, trust boundary, reverse index — four of the five sections are tables, not theorems, so the node count was the wrong unit; see the Phase 5 record. |
+| 09 | `Correspondence` | — | 6 | **Written (Phase 5):** 1 node, then 0 after Phase 6 turned the trust boundary into a verbatim quote. Table, glossary, deviations, trust boundary, reverse index, graph guide — the sections are tables and prose, not theorems, so the node count was the wrong unit; see the Phase 5 and 6 records. |
 
 Node counts in the fourth column are the original targets. Chapters 02 to 04
 came in under them, at 6, 6 and 9 against 8, 10 and 12, because §2.1 and §2.2
@@ -430,6 +430,42 @@ so it waits with the deployment item below.
 *Exit met:* `coverage.py --reachable` clean at zero warnings and zero
 errors; every module reachable from the root theorem is named by some entry,
 and the reverse index shows it, checked row by row.
+
+**Phase 6 — first-draft review of the audit chapter and the graph.** Driven
+by a read of chapter 09 and the rendered dependency graph.
+
+*The audit chapter's tables now link outward.* The deviations register's
+chapter cells are `bpref` links to the node whose witness each entry
+fingerprints (the fingerprint determines the node, so `audit_chapter` checks
+the link against it); the reverse index's 126 module names link to their
+source at the pinned repo and rev, checked against `correspondence.toml`'s
+`[formalization]` block; and the closing paragraph names and links
+`scripts/reachable.lean` as the measurement behind the daggers. Daggered
+rows render muted (`daggerRowCss`/`daggerRowJs` in `Style.lean`).
+
+*The trust boundary is a quote, not a lemma.* A.2 is running prose the paper
+never numbers, so wrapping it in a reconstructed `lemma` overclaimed; the
+section now quotes it verbatim under the section tag `trust-boundary`
+(reached with `{ref}`, since `bpref` needs a node), the entry lost its
+label, and the invariant moved to 58 for 58.
+
+*The graph edges were reviewed against the formalization.* The root theorem
+gained a `:::proof` block using `necessity` and `sufficiency_assembly`, so
+the arrow between the assembly and the root now points the right way;
+`sufficiency_assembly` no longer statement-uses `formal_statement`; the
+paper-route proof edges into unformalized nodes (`asimow_roth` from the
+assembly, `ungrounded_variety` from Prop 6.5) moved to the nodes carrying
+the formal content, with the paper's citations kept as `bpref` links in the
+proof text. The edge policy is recorded in `BodyPinBlueprint/AGENTS.md`, and
+a new chapter-09 section, "Reading the dependency graph", explains it to the
+reader along with the upstream *ready to formalize* label, which has no
+per-node override (`notes/upstream.md` §9). With the edges right, the spine
+renders *locally formalized + dependencies complete* from the root down, and
+the exceptions are exactly the informal nodes and Theorem 1.1's route
+through the Asimow–Roth gap.
+
+*Exit:* `checks.sh` and `coverage.py --reachable` clean; graph statuses to
+be confirmed on a full `ci-pages.sh` build.
 
 ## Practical notes
 

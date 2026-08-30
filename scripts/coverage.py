@@ -37,8 +37,10 @@ without a build:
     hand-written copies of `correspondence.toml` and
     `lt-source-deviations.toml`, and `audit_chapter` checks every row against
     its source: entries once each with their own locus and status, register
-    loci all present under their chapters, every module of the pinned
-    formalization exactly once with exactly the entries naming it, and daggers
+    loci all present under their chapters with each row's chapter link landing
+    on the node whose witness the entry fingerprints, every module of the
+    pinned formalization exactly once with exactly the entries naming it and a
+    source link to that module at the pinned repo and rev, and daggers
     agreeing with `_out/reachable.json` when a walk has left one.
 
 7.  *No declaration of the formalization is named as dead text.* Inline, a Lean
@@ -418,10 +420,14 @@ def module_name(path: str) -> str:
 
 
 BPREF = re.compile(r'\{bpref "([^"]+)"\}')
+# A `{bpref "label"}[display]` link, capturing both halves.
+BPREF_LINK = re.compile(r'\{bpref "([^"]+)"\}\[([^\]]*)\]')
 # The reverse index writes dotted module names, not file paths: the harness
 # math-delimiter check reads `A/B.lean` as quotient notation, and whitelists a
 # dotted Lean name.
 MODULE_CELL = re.compile(r'`(RB31EndToEnd(?:\.[A-Za-z0-9_]+)*)`(\s*†)?')
+# The markdown link a reverse-index module cell wraps its name in.
+MODULE_LINK = re.compile(r'\[`RB31EndToEnd[^`]*`\]\(([^)]+)\)')
 
 # How the audit chapter's deviations table names each chapter of the register.
 CHAPTER_DISPLAY = {
@@ -459,7 +465,22 @@ def table_rows(section: str) -> list[list[str]]:
     return rows
 
 
-def audit_chapter(entries: list[dict]) -> list[str]:
+def witness_label_by_fingerprint() -> dict[tuple[str, str], str]:
+    """(chapter path, fingerprint) -> the label of the witness carrying it."""
+    sys.path.insert(0, str(ROOT / "tools" / "verso-harness" / "scripts"))
+    try:
+        from check_lt_source_freshness import witness_fingerprint
+    except ImportError:                     # harness submodule not checked out
+        return {}
+    found: dict[tuple[str, str], str] = {}
+    for path in sorted(CHAPTERS.glob("*.lean")):
+        rel = str(path.relative_to(ROOT))
+        for label, body in WITNESS.findall(path.read_text(encoding="utf-8")):
+            found[(rel, witness_fingerprint(body))] = label
+    return found
+
+
+def audit_chapter(entries: list[dict], formalization_pin: dict | None = None) -> list[str]:
     """Check the audit chapter's hand-written tables against their sources.
 
     The correspondence table, the deviations table and the reverse index are
@@ -468,9 +489,12 @@ def audit_chapter(entries: list[dict]) -> list[str]:
     must name a labelled entry with the entry's own paper locus and status, and
     every labelled entry must appear exactly once; a `none` row must match an
     unlabelled entry; the deviations table must carry every register entry's
-    locus under its chapter; and the reverse index must list every module of
+    locus under its chapter, with the chapter cell linking the node whose
+    witness the entry fingerprints (or, for a fingerprint-free entry, some node
+    of that chapter); and the reverse index must list every module of
     the pinned formalization exactly once, with exactly the labelled entries
-    that name it, a dagger exactly on the modules the root theorem reaches
+    that name it, a source link to that module at the pinned repo and rev, a
+    dagger exactly on the modules the root theorem reaches
     nothing from (when `_out/reachable.json` exists to say which), and no node
     link on a module no labelled entry names.
     """
@@ -541,18 +565,49 @@ def audit_chapter(entries: list[dict]) -> list[str]:
     elif register.exists():
         with register.open("rb") as handle:
             witnesses = tomllib.load(handle).get("witness", [])
+        linked: dict[str, str] = {}
+        got: list[tuple[str, str]] = []
+        for row in table_rows(section):
+            if len(row) != 3 or row[0] == "Paper":
+                continue
+            match = BPREF_LINK.search(row[1])
+            if match is None:
+                errors.append(f"{where}: deviations row {row[0]!r} has no chapter link")
+                got.append((row[0], row[1]))
+            else:
+                linked[row[0]] = match.group(1)
+                got.append((row[0], match.group(2)))
         want = sorted(
             (w["paper"], CHAPTER_DISPLAY[Path(w["chapter"]).stem]) for w in witnesses)
-        got = sorted(
-            (row[0], row[1]) for row in table_rows(section)
-            if len(row) == 3 and row[0] != "Paper")
-        if want != got:
+        if want != sorted(got):
             missing = [w for w in want if w not in got]
             extra = [g for g in got if g not in want]
             errors.append(
                 f"{where}: deviations table disagrees with lt-source-deviations.toml"
                 + (f"; missing {missing}" if missing else "")
                 + (f"; extra {extra}" if extra else ""))
+        # The chapter cell links the node whose witness the entry excuses: for
+        # a fingerprinted entry that node is determined by the fingerprint, and
+        # for the fingerprint-free ones any node of the entry's chapter serves.
+        witness_labels = witness_label_by_fingerprint()
+        entry_by_label = {e["label"]: e for e in entries if "label" in e}
+        for item in witnesses:
+            label = linked.get(item["paper"])
+            if label is None:
+                continue                      # already reported above
+            digest = item.get("fingerprint")
+            want_label = witness_labels.get((item["chapter"], digest)) if digest else None
+            if want_label is not None:
+                if label != want_label:
+                    errors.append(
+                        f"{where}: deviations row {item['paper']!r} links {label!r}, but its "
+                        f"fingerprint matches the witness on {want_label!r}")
+            else:
+                entry = entry_by_label.get(label)
+                if entry is None or entry["chapter"] != Path(item["chapter"]).stem:
+                    errors.append(
+                        f"{where}: deviations row {item['paper']!r} links {label!r}, which is "
+                        f"not a node of {Path(item['chapter']).stem}")
 
     # --- the reverse index against the module tree and the inventories
     section = sections.get("Reverse index")
@@ -597,6 +652,16 @@ def audit_chapter(entries: list[dict]) -> list[str]:
             if module not in want_modules:
                 errors.append(f"{where}: reverse index lists {module}, which does not exist")
                 continue
+            link = MODULE_LINK.search(row[0])
+            if link is None:
+                errors.append(f"{where}: reverse-index row for {module} has no source link")
+            elif formalization_pin is not None:
+                want_url = (f"https://github.com/{formalization_pin['repo']}/blob/"
+                            f"{formalization_pin['rev']}/{module}")
+                if link.group(1) != want_url:
+                    errors.append(
+                        f"{where}: reverse index links {module} to {link.group(1)}; "
+                        f"the pinned source is {want_url}")
             labels = sorted(BPREF.findall(row[1]))
             if labels != sorted(set(named.get(module, []))):
                 errors.append(
@@ -707,7 +772,7 @@ def main() -> int:
 
     body_errors, warnings = quoted_bodies(table.get("body_optout", []))
     errors = (check(entries, nodes) + fingerprints() + body_errors + dead_names()
-              + audit_chapter(entries))
+              + audit_chapter(entries, table.get("formalization")))
     if args.reachable:
         more, reachable_warnings = reachability(entries)
         errors += more

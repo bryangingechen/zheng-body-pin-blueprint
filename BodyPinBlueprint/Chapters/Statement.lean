@@ -527,7 +527,7 @@ RB31E2E.EndToEndBodyPinStatement
 This is the root theorem of the formalization: a closed proposition, universally
 quantified over $`H` and $`r`, proved in both directions, with axiom closure
 exactly {name propext}`propext`, {name Classical.choice}`Classical.choice`,
-{name Quot.sound}`Quot.sound`; {bpref "trust_boundary"}[the trust boundary]
+{name Quot.sound}`Quot.sound`; {ref "trust-boundary"}[the trust boundary]
 states what that closure does and does not cover.
 
 The appendix reconciles it with Theorem 1.1 in a paragraph. The cases
@@ -539,11 +539,16 @@ $`r(w) = |V(B_w)| - d_H(w) - 4` identifies any expansion of the main text with
 some $`G(H, r)` after relabelling private vertices, and conversely. So the two
 statements differ only in the reading of "generically rigid".
 
-Since necessity is a theorem, the equivalence is equivalent to its sufficiency
-direction alone: that the partition condition implies maximum-rank generic
-rigidity. The formalization states that trivial consequence as
+:::proof "formal_statement" (uses := "necessity, sufficiency_assembly")
+The two directions are proved separately. Necessity — rigidity implies the
+partition condition — is a rank comparison, proved in
+{bpref "necessity"}[the necessity chapter]. Since necessity is a theorem,
+the equivalence is equivalent to its sufficiency direction alone: that the
+partition condition implies maximum-rank generic rigidity. The formalization
+states that trivial consequence as
 {name RB31E2E.endToEndBodyPinStatement_iff_sufficiency}`endToEndBodyPinStatement_iff_sufficiency`
-and uses it once, in the final assembly, to avoid restating both directions
-there. Necessity is proved separately, in {bpref "necessity"}[the necessity
-chapter]; every chapter from {bpref "sparse22"}[the sparsity chapter] onwards
-belongs to the sufficiency direction.
+and uses it once, in {bpref "sufficiency_assembly"}[the final assembly], to
+avoid restating both directions there; every chapter from
+{bpref "sparse22"}[the sparsity chapter] onwards belongs to the sufficiency
+direction.
+:::
