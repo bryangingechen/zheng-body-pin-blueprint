@@ -4,6 +4,7 @@ import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
 import BodyPinBlueprint.Bodies
+import BodyPinBlueprint.Figures
 import RB31EndToEnd.Algebra.GroundedTwist
 import RB31EndToEnd.Linear.GroundedDirectionConstraint
 
@@ -223,6 +224,33 @@ cut out by the self-stress dimension of the whole rigidity matrix, while a
 collinearity flag imposes the codimension-two collinearity condition of one
 support triple, and Theorem 3.9 carries those flag conditions inside the same
 inequality.
+
+Figure 3 of {Informal.citet "zheng2026"}[] draws the dimension count of the
+scheme-theoretic half, redrawn below: over a configuration $`a_0` outside
+$`\Sigma_1(F)` the infinitesimal-motion fiber has dimension $`d_0 = 3n_0 - m`,
+over a configuration in the exact stratum $`S_t` it has dimension $`d_0 + t`
+while $`S_t` itself has codimension at least $`t`, and hence
+$`\dim (N_F|_{S_t}) \le (3n_0 - t) + (d_0 + t) = 6n_0 - m`.
+
+```BodyPinBlueprint.svgFigure (alt := "A base variety X with a stratum S t; the infinitesimal-motion fiber has dimension d0 over a point outside Sigma 1 and dimension d0 plus t over a point of S t, whose codimension is at least t")
+<svg viewBox="0 0 700 260" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round">
+  <g font-size="12.5" text-anchor="middle">
+    <rect x="60" y="175" width="580" height="44" rx="10" fill="none" stroke="currentColor" stroke-width="1.4"/>
+    <text x="120" y="201">dim X = 3n<tspan baseline-shift="sub" font-size="9">0</tspan></text>
+    <text x="620" y="201" font-style="italic">X</text>
+    <ellipse class="bpx_fig_bodyB" cx="470" cy="197" rx="95" ry="15" stroke="currentColor" stroke-width="1.2"/>
+    <text x="398" y="201" font-style="italic">S<tspan baseline-shift="sub" font-size="9">t</tspan></text>
+    <line x1="205" y1="190" x2="205" y2="95" stroke="currentColor" stroke-width="2"/>
+    <circle cx="205" cy="197" r="3.5" fill="currentColor"/>
+    <text x="205" y="80">fiber dimension d<tspan baseline-shift="sub" font-size="9">0</tspan></text>
+    <text x="205" y="243">a<tspan baseline-shift="sub" font-size="9">0</tspan> ∉ Σ<tspan baseline-shift="sub" font-size="9">1</tspan>(F); stress dimension 0</text>
+    <line x1="470" y1="190" x2="470" y2="55" stroke="currentColor" stroke-width="2"/>
+    <circle cx="470" cy="197" r="3.5" fill="currentColor"/>
+    <text x="470" y="40">fiber dimension d<tspan baseline-shift="sub" font-size="9">0</tspan> + t</text>
+    <text x="470" y="243">a ∈ S<tspan baseline-shift="sub" font-size="9">t</tspan>; codim<tspan baseline-shift="sub" font-size="9">X</tspan> S<tspan baseline-shift="sub" font-size="9">t</tspan> ≥ t</text>
+  </g>
+</svg>
+```
 
 # The grounded model
 

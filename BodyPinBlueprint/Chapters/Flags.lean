@@ -4,6 +4,7 @@ import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
 import BodyPinBlueprint.Bodies
+import BodyPinBlueprint.Figures
 import RB31EndToEnd.Combinatorics.ProvenanceFlag
 import RB31EndToEnd.Combinatorics.ProvenanceFlagForest
 import RB31EndToEnd.Combinatorics.ProvenanceFlagSelection
@@ -218,6 +219,58 @@ on the sum type $`V \oplus \Gamma` and the ghost vertex of the flag $`t` is
 the right summand $`t` itself. The realization condition is not part of the
 combinatorial object; it reappears as the collinearity field of the
 function-field branches defined before Theorem 3.9 below.
+
+Figure 2 of {Informal.citet "zheng2026"}[] distinguishes the four kinds of
+edge; in the redrawing below, the support triple induces the two-edge path
+$`x - y - z` with the dashed arc as the distinguished missing edge
+$`d_\gamma = xz`, and the completion restores $`xz` and adds the three
+auxiliary edges from $`g_\gamma` to the support vertices. The auxiliary
+vertex has no configuration coordinate.
+
+```BodyPinBlueprint.svgFigure (alt := "A collinearity flag as the two-edge path x-y-z with a dashed missing edge from x to z, and its K4 completion, which restores that edge and joins a new vertex g to x, y, and z")
+<svg viewBox="0 0 760 255" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round">
+  <g font-size="12.5">
+    <text x="170" y="22" text-anchor="middle" font-weight="600">Flag in the current graph</text>
+    <line x1="70" y1="115" x2="170" y2="115" stroke="currentColor" stroke-width="2"/>
+    <line x1="170" y1="115" x2="270" y2="115" stroke="currentColor" stroke-width="2"/>
+    <path d="M 70 115 Q 170 190 270 115" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <circle cx="70" cy="115" r="4" fill="currentColor"/>
+    <circle cx="170" cy="115" r="4" fill="currentColor"/>
+    <circle cx="270" cy="115" r="4" fill="currentColor"/>
+    <text x="70" y="102" text-anchor="middle" font-style="italic">x</text>
+    <text x="170" y="102" text-anchor="middle" font-style="italic">y</text>
+    <text x="270" y="102" text-anchor="middle" font-style="italic">z</text>
+    <text x="170" y="178" text-anchor="middle" font-style="italic">d<tspan baseline-shift="sub" font-size="9">γ</tspan></text>
+    <text x="170" y="208" text-anchor="middle">a<tspan baseline-shift="sub" font-size="9" font-style="italic">x</tspan>, a<tspan baseline-shift="sub" font-size="9" font-style="italic">y</tspan>, a<tspan baseline-shift="sub" font-size="9" font-style="italic">z</tspan> collinear</text>
+    <line x1="305" y1="115" x2="408" y2="115" stroke="currentColor" stroke-width="1.6"/>
+    <polygon points="408,109 421,115 408,121" fill="currentColor"/>
+    <text x="362" y="98" text-anchor="middle">K<tspan baseline-shift="sub" font-size="9">4</tspan> completion</text>
+    <text x="590" y="22" text-anchor="middle" font-weight="600">Completion on Q<tspan baseline-shift="sub" font-size="9" font-style="italic">γ</tspan></text>
+    <line class="bpx_fig_auxiliary" x1="590" y1="55" x2="490" y2="140" stroke-width="1.6" stroke-dasharray="2 4"/>
+    <line class="bpx_fig_auxiliary" x1="590" y1="55" x2="590" y2="140" stroke-width="1.6" stroke-dasharray="2 4"/>
+    <line class="bpx_fig_auxiliary" x1="590" y1="55" x2="690" y2="140" stroke-width="1.6" stroke-dasharray="2 4"/>
+    <line x1="490" y1="140" x2="590" y2="140" stroke="currentColor" stroke-width="2"/>
+    <line x1="590" y1="140" x2="690" y2="140" stroke="currentColor" stroke-width="2"/>
+    <path class="bpx_fig_restored" d="M 490 140 Q 590 210 690 140" fill="none" stroke-width="2.2"/>
+    <circle cx="590" cy="55" r="4" fill="currentColor"/>
+    <circle cx="490" cy="140" r="4" fill="currentColor"/>
+    <circle cx="590" cy="140" r="4" fill="currentColor"/>
+    <circle cx="690" cy="140" r="4" fill="currentColor"/>
+    <text x="590" y="42" text-anchor="middle" font-style="italic">g<tspan baseline-shift="sub" font-size="9">γ</tspan></text>
+    <text x="478" y="136" text-anchor="end" font-style="italic">x</text>
+    <text x="602" y="133" text-anchor="start" font-style="italic">y</text>
+    <text x="702" y="136" text-anchor="start" font-style="italic">z</text>
+    <line x1="60" y1="238" x2="95" y2="238" stroke="currentColor" stroke-width="2"/>
+    <text x="102" y="242" text-anchor="start">current</text>
+    <line x1="215" y1="238" x2="250" y2="238" stroke="currentColor" stroke-width="1.6" stroke-dasharray="7 5"/>
+    <text x="257" y="242" text-anchor="start">missing</text>
+    <line class="bpx_fig_restored" x1="370" y1="238" x2="405" y2="238" stroke-width="2.2"/>
+    <text class="bpx_fig_restored_text" x="412" y="242" text-anchor="start">restored</text>
+    <line class="bpx_fig_auxiliary" x1="530" y1="238" x2="565" y2="238" stroke-width="1.6" stroke-dasharray="2 4"/>
+    <text class="bpx_fig_auxiliary_text" x="572" y="242" text-anchor="start">auxiliary star</text>
+  </g>
+</svg>
+```
 
 :::definition "flag_system" (parent := "flags_spine") (lean := "RB31E2E.ProvenanceFlag.State, RB31E2E.ProvenanceFlag.State.completionEdges, RB31E2E.ProvenanceFlag.State.CompletionSparse") (tags := "paper, deviation") (uses := "collinearity_flag, sparse22")
 A system of collinearity flags on a common base graph $`G = (V, E)` is a

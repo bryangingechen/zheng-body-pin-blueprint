@@ -4,6 +4,7 @@ import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
 import BodyPinBlueprint.Bodies
+import BodyPinBlueprint.Figures
 import RB31EndToEnd
 
 open Verso.Genre
@@ -364,7 +365,44 @@ One shared pin forces two bodies to agree at a point, which is three
 constraints. Two distinct shared pins leave a relative rotation about the line
 through them, so five. Three noncollinear shared pins remove all six relative
 degrees of freedom. The cap at six is the dimension of the group of rigid
-motions of $`\R^3`, so no bundle can ever do better.
+motions of $`\R^3`, so no bundle can ever do better. Figure 1 of
+{Informal.citet "zheng2026"}[] shows the three maximum-rank cases; in the
+redrawing below, the shaded regions are the two bodies and the black points
+their shared pins.
+
+```BodyPinBlueprint.svgFigure (alt := "Two overlapping bodies joined by one, two, or three shared pins, with relative-motion dimensions 3, 1, 0 and constraint ranks 3, 5, 6")
+<svg viewBox="0 0 750 200" xmlns="http://www.w3.org/2000/svg" stroke-linecap="round">
+  <g font-size="12.5" text-anchor="middle">
+    <g transform="translate(5,0)">
+      <text x="120" y="20" font-weight="600">One pin</text>
+      <ellipse class="bpx_fig_bodyA" cx="78" cy="93" rx="60" ry="42" stroke="currentColor" stroke-width="1.4"/>
+      <ellipse class="bpx_fig_bodyB" cx="162" cy="93" rx="60" ry="42" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="120" cy="93" r="4" fill="currentColor"/>
+      <text x="120" y="163">Relative-motion dimension 3</text>
+      <text x="120" y="184">Constraint rank 3</text>
+    </g>
+    <g transform="translate(255,0)">
+      <text x="120" y="20" font-weight="600">Two distinct pins</text>
+      <ellipse class="bpx_fig_bodyA" cx="78" cy="93" rx="60" ry="42" stroke="currentColor" stroke-width="1.4"/>
+      <ellipse class="bpx_fig_bodyB" cx="162" cy="93" rx="60" ry="42" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="120" cy="76" r="4" fill="currentColor"/>
+      <circle cx="120" cy="110" r="4" fill="currentColor"/>
+      <text x="120" y="163">Relative-motion dimension 1</text>
+      <text x="120" y="184">Constraint rank 5</text>
+    </g>
+    <g transform="translate(505,0)">
+      <text x="120" y="20" font-weight="600">Three noncollinear pins</text>
+      <ellipse class="bpx_fig_bodyA" cx="78" cy="93" rx="60" ry="42" stroke="currentColor" stroke-width="1.4"/>
+      <ellipse class="bpx_fig_bodyB" cx="162" cy="93" rx="60" ry="42" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="120" cy="78" r="4" fill="currentColor"/>
+      <circle cx="107" cy="104" r="4" fill="currentColor"/>
+      <circle cx="133" cy="104" r="4" fill="currentColor"/>
+      <text x="120" y="163">Relative-motion dimension 0</text>
+      <text x="120" y="184">Constraint rank 6</text>
+    </g>
+  </g>
+</svg>
+```
 
 {Informal.citet "jacksonJordanVillanyi2026" (kind := "section") (index := "7.2")}[]
 state the same criterion with the same $`\ell_H` notation and the same four

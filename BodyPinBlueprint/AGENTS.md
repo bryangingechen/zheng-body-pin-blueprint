@@ -448,6 +448,22 @@ not embed the author's published SVGs: they are flattened path data with
 hardcoded `rgb()` colours and no text elements, and they are © Zheng with no
 licence.
 
+The mechanism is a ```` ```BodyPinBlueprint.svgFigure (alt := "...") ````
+fence (`BodyPinBlueprint/Figures.lean`) whose content is one `<svg>` element,
+emitted verbatim inside a `<figure role="img">`; the expander refuses scripts,
+event handlers and anything that is not a single `<svg>`. Strokes and text use
+`currentColor` in the SVG itself so the drawing reads on both palettes; the
+few fills and edge accents that need a hue take a `bpx_fig_*` class from
+`figureCss`, translucent or paired with a text class. The fence needs
+`import BodyPinBlueprint.Figures`, does not touch the formalization, and
+renders identically in the preview. Give the figure a caption *sentence* in
+the prose before or after the fence, citing the paper's figure it redraws
+(`kind := "figure"`); do not put a figure fence between a node and its
+witness, since the node-kind checker pairs those positionally. The three
+existing figures (Statement, Flags, Strata) are the worked examples, and a
+`rsvg-convert` render of the fence content is the fast way to look at one
+while drawing it.
+
 ## Verso markup gotchas (learned the hard way)
 
 - **Bold is `*text*`, not `**text**`.** Verso uses `_` for emphasis and `*` for
