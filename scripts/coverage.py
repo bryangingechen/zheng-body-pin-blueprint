@@ -32,7 +32,16 @@ without a build:
     named definitions with no principle separating the halves, which is why it
     is a check.
 
-6.  *No declaration of the formalization is named as dead text.* Inline, a Lean
+6.  *The audit chapter's tables match their sources.* The correspondence table,
+    the deviations table and the reverse index in `Correspondence.lean` are
+    hand-written copies of `correspondence.toml` and
+    `lt-source-deviations.toml`, and `audit_chapter` checks every row against
+    its source: entries once each with their own locus and status, register
+    loci all present under their chapters, every module of the pinned
+    formalization exactly once with exactly the entries naming it, and daggers
+    agreeing with `_out/reachable.json` when a walk has left one.
+
+7.  *No declaration of the formalization is named as dead text.* Inline, a Lean
     constant goes in a `name` role, which renders the short name, hovers with
     the signature and docstring, and links to the pinned source; a plain code
     span renders as unhighlighted text that goes nowhere. The two look identical
@@ -331,6 +340,12 @@ def quoted_bodies(optouts: list[dict]) -> tuple[list[str], list[str]]:
             named.add(name)
             kind = kinds.get(name)
             if kind is None:
+                # A structure projection is declared by its parent structure, so
+                # the source scan rightly returns nothing for it, and it has no
+                # body to quote: `State.terminals` is a field of `State`.
+                parent = name.rsplit(".", 1)[0] if "." in name else ""
+                if kinds.get(parent) == "structure":
+                    continue
                 warnings.append(
                     f"{chapter}: {name} is named by a node but is not a declaration of the "
                     "pinned submodule's source; the quoted-body rule is not checked for it")
@@ -402,17 +417,242 @@ def module_name(path: str) -> str:
     return path.removesuffix(".lean").replace("/", ".")
 
 
+BPREF = re.compile(r'\{bpref "([^"]+)"\}')
+# The reverse index writes dotted module names, not file paths: the harness
+# math-delimiter check reads `A/B.lean` as quotient notation, and whitelists a
+# dotted Lean name.
+MODULE_CELL = re.compile(r'`(RB31EndToEnd(?:\.[A-Za-z0-9_]+)*)`(\s*†)?')
+
+# How the audit chapter's deviations table names each chapter of the register.
+CHAPTER_DISPLAY = {
+    "Statement": "Statement", "Necessity": "Necessity", "Sparsity": "Sparsity",
+    "Deletion": "Deletion", "Flags": "Flags", "Strata": "Strata",
+    "SplitKlein": "Split–Klein", "BodyPin": "Body–pin",
+    "Correspondence": "Correspondence",
+}
+
+
+def table_rows(section: str) -> list[list[str]]:
+    """The rows of every `:::table` in one section, as lists of cell strings.
+
+    A row starts `* * `, each further cell `  * `, and a cell may wrap onto
+    more-indented continuation lines. Header rows are included; callers skip
+    them by their first cell.
+    """
+    rows: list[list[str]] = []
+    inside = False
+    for line in section.splitlines():
+        if line.startswith(":::table"):
+            inside = True
+            continue
+        if line.startswith(":::"):
+            inside = False
+            continue
+        if not inside:
+            continue
+        if line.startswith("* * "):
+            rows.append([line[4:].strip()])
+        elif line.startswith("  * ") and rows:
+            rows[-1].append(line[4:].strip())
+        elif line.startswith("    ") and rows and rows[-1]:
+            rows[-1][-1] += " " + line.strip()
+    return rows
+
+
+def audit_chapter(entries: list[dict]) -> list[str]:
+    """Check the audit chapter's hand-written tables against their sources.
+
+    The correspondence table, the deviations table and the reverse index are
+    copies of `correspondence.toml` and `lt-source-deviations.toml`, made
+    readable; this is what keeps a copy from drifting. Row for row: a node row
+    must name a labelled entry with the entry's own paper locus and status, and
+    every labelled entry must appear exactly once; a `none` row must match an
+    unlabelled entry; the deviations table must carry every register entry's
+    locus under its chapter; and the reverse index must list every module of
+    the pinned formalization exactly once, with exactly the labelled entries
+    that name it, a dagger exactly on the modules the root theorem reaches
+    nothing from (when `_out/reachable.json` exists to say which), and no node
+    link on a module no labelled entry names.
+    """
+    path = CHAPTERS / "Correspondence.lean"
+    text = path.read_text(encoding="utf-8")
+    text = text[text.find("#doc (Manual)"):]
+    sections: dict[str, str] = {}
+    title = ""
+    for part in re.split(r'^# (.+)$', text, flags=re.M):
+        if title:
+            sections[title] = part
+        title = part.strip() if len(part) < 200 else ""
+    errors: list[str] = []
+    where = "Correspondence"
+
+    # --- the correspondence table against the entries
+    section = sections.get("The correspondence table")
+    if section is None:
+        return [f"{where}: no section 'The correspondence table'"]
+    seen_labels: list[str] = []
+    seen_unlabelled: list[tuple[str, str]] = []
+    for row in table_rows(section):
+        if len(row) != 4 or row[0] == "Paper":
+            if row[0] != "Paper":
+                errors.append(f"{where}: correspondence row has {len(row)} cells: {row[0]!r}")
+            continue
+        paper, _result, node, status = row
+        labels = BPREF.findall(node)
+        if len(labels) > 1:
+            errors.append(f"{where}: correspondence row {paper!r} links several nodes")
+        elif labels:
+            seen_labels.append(labels[0])
+            entry = next((e for e in entries if e.get("label") == labels[0]), None)
+            if entry is None:
+                errors.append(f"{where}: correspondence row names unknown label {labels[0]!r}")
+                continue
+            if entry.get("paper", "—") != paper:
+                errors.append(
+                    f"{where}: row for {labels[0]!r} says paper {paper!r}, "
+                    f"entry says {entry.get('paper', '—')!r}")
+            if entry.get("status") != status:
+                errors.append(
+                    f"{where}: row for {labels[0]!r} says status {status!r}, "
+                    f"entry says {entry.get('status')!r}")
+        else:
+            seen_unlabelled.append((paper, status))
+    want_labels = [e["label"] for e in entries if "label" in e]
+    for label in want_labels:
+        if seen_labels.count(label) != 1:
+            errors.append(
+                f"{where}: entry {label!r} appears {seen_labels.count(label)} times "
+                "in the correspondence table (want exactly once)")
+    for label in seen_labels:
+        if label not in want_labels:
+            errors.append(f"{where}: correspondence table row {label!r} matches no entry")
+    want_unlabelled = sorted(
+        (e.get("paper", "—"), e["status"]) for e in entries if "label" not in e)
+    if sorted(seen_unlabelled) != want_unlabelled:
+        errors.append(
+            f"{where}: node-less correspondence rows {sorted(seen_unlabelled)} do not match "
+            f"the unlabelled entries {want_unlabelled}")
+
+    # --- the deviations table against the register
+    register = ROOT / "lt-source-deviations.toml"
+    section = sections.get("Deviations register")
+    if section is None:
+        errors.append(f"{where}: no section 'Deviations register'")
+    elif register.exists():
+        with register.open("rb") as handle:
+            witnesses = tomllib.load(handle).get("witness", [])
+        want = sorted(
+            (w["paper"], CHAPTER_DISPLAY[Path(w["chapter"]).stem]) for w in witnesses)
+        got = sorted(
+            (row[0], row[1]) for row in table_rows(section)
+            if len(row) == 3 and row[0] != "Paper")
+        if want != got:
+            missing = [w for w in want if w not in got]
+            extra = [g for g in got if g not in want]
+            errors.append(
+                f"{where}: deviations table disagrees with lt-source-deviations.toml"
+                + (f"; missing {missing}" if missing else "")
+                + (f"; extra {extra}" if extra else ""))
+
+    # --- the reverse index against the module tree and the inventories
+    section = sections.get("Reverse index")
+    formalization = ROOT / "formalization"
+    if section is None:
+        errors.append(f"{where}: no section 'Reverse index'")
+    elif (formalization / "RB31EndToEnd.lean").exists():
+        named: dict[str, list[str]] = defaultdict(list)
+        unlabelled_modules: set[str] = set()
+        for entry in entries:
+            for module in entry.get("modules", []):
+                if not module.startswith("RB31EndToEnd"):
+                    continue
+                if "label" in entry:
+                    named[module].append(entry["label"])
+                else:
+                    unlabelled_modules.add(module)
+        reachable_path = ROOT / "_out" / "reachable.json"
+        reached: dict[str, int] | None = None
+        if reachable_path.exists():
+            reached = {
+                name: counts["reached"]
+                for name, counts in json.loads(reachable_path.read_text())["modules"].items()}
+        want_modules = {
+            str(p.relative_to(formalization))
+            for p in formalization.glob("RB31EndToEnd/**/*.lean")} | {"RB31EndToEnd.lean"}
+        seen_modules: list[str] = []
+        for row in table_rows(section):
+            if len(row) != 2 or row[0] == "Module":
+                if row[0] != "Module":
+                    errors.append(f"{where}: reverse-index row has {len(row)} cells: {row[0]!r}")
+                continue
+            match = MODULE_CELL.search(row[0])
+            if not match:
+                errors.append(f"{where}: reverse-index row without a module name: {row[0]!r}")
+                continue
+            module = match.group(1).replace(".", "/") + ".lean"
+            if match.group(1) == "RB31EndToEnd":
+                module = "RB31EndToEnd.lean"
+            dagger = bool(match.group(2)) or "†" in row[0]
+            seen_modules.append(module)
+            if module not in want_modules:
+                errors.append(f"{where}: reverse index lists {module}, which does not exist")
+                continue
+            labels = sorted(BPREF.findall(row[1]))
+            if labels != sorted(set(named.get(module, []))):
+                errors.append(
+                    f"{where}: reverse index links {module} to {labels}, but the entries "
+                    f"naming it are {sorted(set(named.get(module, [])))}")
+            if not labels and module in unlabelled_modules and "no node" not in row[1]:
+                errors.append(
+                    f"{where}: {module} is named by an entry without a node; say 'no node'")
+            if not labels and module not in unlabelled_modules and "(none)" not in row[1]:
+                errors.append(
+                    f"{where}: {module} is named by no entry; its row must say '(none)'")
+            if reached is not None:
+                unreachable = reached.get(module_name(module), 0) == 0
+                if dagger != unreachable:
+                    errors.append(
+                        f"{where}: {module} {'carries' if dagger else 'lacks'} a dagger, but "
+                        f"the root theorem reaches "
+                        f"{'nothing' if unreachable else 'something'} in it")
+        for module in sorted(want_modules):
+            if seen_modules.count(module) != 1:
+                errors.append(
+                    f"{where}: {module} appears {seen_modules.count(module)} times in the "
+                    "reverse index (want exactly once)")
+    return errors
+
+
 def reachability(entries: list[dict]) -> tuple[list[str], list[str]]:
-    """Compare the module inventory against what the root theorem actually uses."""
+    """Compare the module inventory against what the root theorem actually uses.
+
+    An entry may name a module the root theorem reaches nothing from, when the
+    chapter's account of that module is the point -- the two builds of the ideal,
+    the weight apparatus, the superseded orbit modules. Such an entry lists the
+    module in its `unreachable` field, with the reason in its `note`, and the
+    acknowledgment is checked in both directions: a listed module that becomes
+    reachable is an error (the acknowledgment is stale), and an unlisted one
+    still warns.
+    """
     data = ROOT / "_out" / "reachable.json"
     if not data.exists():
         return [], ["_out/reachable.json is missing; run: lake env lean scripts/reachable.lean"]
 
     modules = json.loads(data.read_text())["modules"]
     claimed: dict[str, list[str]] = defaultdict(list)
+    acknowledged: dict[str, list[str]] = defaultdict(list)
+    errors: list[str] = []
     for entry in entries:
+        label = entry.get("label") or entry["title"]
         for path in entry.get("modules", []):
-            claimed[module_name(path)].append(entry.get("label") or entry["title"])
+            claimed[module_name(path)].append(label)
+        for path in entry.get("unreachable", []):
+            if path not in entry.get("modules", []):
+                errors.append(
+                    f"correspondence.toml: {label!r} acknowledges {path} as unreachable "
+                    "but does not name it in `modules`; drop the acknowledgment")
+                continue
+            acknowledged[module_name(path)].append(label)
 
     warnings: list[str] = []
     for name, counts in sorted(modules.items()):
@@ -420,13 +660,22 @@ def reachability(entries: list[dict]) -> tuple[list[str], list[str]]:
             continue
         if counts["reached"] == 0:
             for label in claimed.get(name, []):
+                if label in acknowledged.get(name, []):
+                    continue
                 warnings.append(
-                    f"{label}: names {name}, of which the root theorem reaches nothing")
-        elif name not in claimed:
-            warnings.append(
-                f"(no entry): {name} has {counts['reached']} reachable declarations "
-                "and is named by no entry")
-    return [], warnings
+                    f"{label}: names {name}, of which the root theorem reaches nothing; "
+                    "acknowledge it in the entry's `unreachable` list or drop it")
+        else:
+            for label in acknowledged.get(name, []):
+                errors.append(
+                    f"correspondence.toml: {label!r} acknowledges {name} as unreachable, "
+                    f"but the root theorem reaches {counts['reached']} of its declarations; "
+                    "the acknowledgment is stale -- re-review the entry")
+            if name not in claimed:
+                warnings.append(
+                    f"(no entry): {name} has {counts['reached']} reachable declarations "
+                    "and is named by no entry")
+    return errors, warnings
 
 
 def summary(entries: list[dict], nodes: dict[str, list[tuple[str, set[str]]]]) -> None:
@@ -457,7 +706,8 @@ def main() -> int:
     nodes = chapter_nodes()
 
     body_errors, warnings = quoted_bodies(table.get("body_optout", []))
-    errors = check(entries, nodes) + fingerprints() + body_errors + dead_names()
+    errors = (check(entries, nodes) + fingerprints() + body_errors + dead_names()
+              + audit_chapter(entries))
     if args.reachable:
         more, reachable_warnings = reachability(entries)
         errors += more

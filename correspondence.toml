@@ -24,6 +24,12 @@
 # verified = true means a real build has resolved this entry's `lean` names
 # under `strictResolve`, or -- for an entry with no `lean` names -- that its node
 # exists and its chapter is written. Absent means not yet checked.
+#
+# unreachable = [...] acknowledges modules this entry names although the root
+# theorem reaches nothing from them -- deliberate, with the reason in `note`.
+# `scripts/coverage.py --reachable` errors on an acknowledgment that has gone
+# stale (the module became reachable, or the entry no longer names it) and
+# warns on an unreachable module no entry acknowledges.
 
 version = 1
 
@@ -450,6 +456,7 @@ chapter = "SplitKlein"
 label = "isotropic_difference_ideal"
 lean = ["RB31E2E.NullCellulePolynomial.edgeIdeal", "RB31E2E.SelectedNullHeight.coefficientSelectedNullIdeal"]
 modules = ["RB31EndToEnd/NullCellule/Definitions.lean", "RB31EndToEnd/NullCellule/PolynomialModel.lean", "RB31EndToEnd/NullCellule/SelectedNullHeight.lean", "RB31EndToEnd/Algebra/GroundedTwistPolynomial.lean"]
+unreachable = ["RB31EndToEnd/NullCellule/Definitions.lean", "RB31EndToEnd/NullCellule/PolynomialModel.lean"]
 status = "deviation"
 verified = true
 note = "Two builds. The literal one (edgeIdeal, six variables at every vertex, zero locus proved equal to the null-difference condition) is unreachable from the root theorem; the load-bearing one (coefficientSelectedNullIdeal) is grounded, over Q, and indexed by selected pin occurrences, in the twist-coordinate vocabulary of GroundedTwistPolynomial.lean (moved here from lean_weight_apparatus: its reachable part is that vocabulary, not weights). The distinct locus is handled as non-membership of a distinctness-denominator polynomial. The register has the entry."
@@ -535,6 +542,7 @@ chapter = "BodyPin"
 label = "orbit_dimension_drop"
 lean = ["RB31E2E.NullCellulePolynomial.homogeneousPrime_height_lt_of_irrelevant_mem_not_mem", "RB31E2E.NullCellulePolynomial.finiteIrrelevantIdeal_height"]
 modules = ["RB31EndToEnd/NullCellule/GroundScale.lean", "RB31EndToEnd/Algebra/HomogeneousPrimeChartHeight.lean", "RB31EndToEnd/Algebra/HomogeneousChartContradiction.lean", "RB31EndToEnd/Algebra/HomogeneousDenominatorContradiction.lean"]
+unreachable = ["RB31EndToEnd/NullCellule/GroundScale.lean", "RB31EndToEnd/Algebra/HomogeneousChartContradiction.lean"]
 status = "deviation"
 verified = true
 note = "No statement of the lemma's shape exists. GroundScale.lean proves the point-set freeness and its own comment defers the dimension conversion, which is never made; nothing reachable uses it. The load-bearing substitute is homogeneity: a homogeneous prime avoiding an irrelevant-ideal element has height strictly below the variable count, in HomogeneousDenominatorContradiction.lean (moved here from lean_base_change). HomogeneousChartContradiction.lean is its superseded single-coordinate variant, 0 declarations reachable. The register has the entry."
@@ -613,6 +621,7 @@ chapter = "Correspondence"
 label = "trust_boundary"
 modules = ["Tests/Trust.lean"]
 status = "mapped"
+verified = true
 note = "Axiom closure is exactly propext, Classical.choice, Quot.sound. Checked by the upstream scripts/audit.sh."
 
 # ------------------------------------------------ quoted-body opt-outs
@@ -668,6 +677,7 @@ chapter = "SplitKlein"
 label = "lean_weight_apparatus"
 lean = ["RB31E2E.NullCellulePolynomial.weightInitialIdeal", "RB31E2E.NullCellulePolynomial.WeightInitialHeightMonotone"]
 modules = ["RB31EndToEnd/NullCellule/WeightInitialIdeal.lean", "RB31EndToEnd/NullCellule/WeightComponents.lean", "RB31EndToEnd/NullCellule/VertexK4Weight.lean", "RB31EndToEnd/NullCellule/ReplacementIdentities.lean", "RB31EndToEnd/Algebra/FilteredInitialHeight.lean"]
+unreachable = ["RB31EndToEnd/NullCellule/WeightInitialIdeal.lean", "RB31EndToEnd/NullCellule/WeightComponents.lean", "RB31EndToEnd/NullCellule/VertexK4Weight.lean", "RB31EndToEnd/NullCellule/ReplacementIdentities.lean"]
 status = "lean-only"
 verified = true
 note = "A parallel development, like the sparsity construction theorem: the four pure weight modules (157 declarations) reach the root theorem not at all, and the height-comparison keystone WeightInitialHeightMonotone is defined as a proposition and neither assumed nor proved -- FilteredInitialHeight.lean's own comment says Mathlib lacks the flat weighted-Rees family. That file's coordinate-ideal block (11 declarations) is load bearing, under LinearFormIdealHeight. GroundedTwistPolynomial.lean moved to isotropic_difference_ideal. See notes/reachability.md."

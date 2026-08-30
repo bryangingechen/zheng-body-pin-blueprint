@@ -121,7 +121,7 @@ formalization proves the paper's theorem, and can see where the formal route
 departs from the written one. Each node that corresponds to something in the
 paper carries the paper's own words as a hidden source witness; each divergence
 has an entry in a fingerprinted register; and the audit chapter asks, of each of
-the development's 125 modules, which node accounts for it.
+the development's 126 modules, which node accounts for it.
 
 A reader new to the material may prefer to start with the author's own research
 note, [Stress Degeneracy, Collinearity Flags, and Three-Dimensional Body–Pin
@@ -130,10 +130,6 @@ which walks the same argument informally in six sections
 {Informal.citep "zheng2026note" (index := "research note")}[]. The note's
 wording differs from the paper's throughout; where this blueprint quotes, it
 quotes the paper.
-
-A chapter that is not yet drafted says so in its first line: its nodes exist,
-are tagged, and match the correspondence table, but the prose does not yet
-follow the argument.
 
 Two numbering systems appear on these pages and they are not the same. Headings
 such as "Definition 1.1.1" or "Theorem 1.4.2" are the blueprint's own numbering,

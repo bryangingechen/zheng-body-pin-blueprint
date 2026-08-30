@@ -60,8 +60,9 @@ edge sets, the live-vertex partition, and the function-field branch
 vocabulary — because the nodes' statements are unreadable without them.
 
 Two nodes name structure projections (`State.terminals`, `State.missing`).
-The coverage script cannot classify a projection from the source scan and
-says so as a warning; that warning is expected and correct here.
+A projection is declared by its parent structure rather than by a command of
+its own, so the coverage script classifies it through the parent and applies
+no quoted-body rule to it.
 
 This chapter cannot stay inside the Mathlib-blanket-free part of the
 formalization: the semismallness and grounding modules it documents sit in

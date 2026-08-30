@@ -114,6 +114,17 @@ checked against each other rather than kept in step by hand.
   both directions; this is the check that catches it, and it has caught it
   three times so far. Rerun when the submodule pin moves.
   `notes/reachability.md` holds the standing result and what it changed.
+  An entry that *deliberately* names an unreachable module — the parallel
+  developments the chapters document as such — lists it in its `unreachable`
+  field, with the reason in `note`; the checker errors when such an
+  acknowledgment goes stale and warns on an unacknowledged one, so the
+  clean state is zero warnings.
+- The audit chapter's three tables — correspondence, deviations, reverse
+  index — are hand-written copies of `correspondence.toml` and
+  `lt-source-deviations.toml`, and `scripts/coverage.py` checks every row
+  against its source (`audit_chapter`), including the reverse index's
+  daggers against `_out/reachable.json`. Change an entry, a register item,
+  or a module list, and the same commit updates the chapter's row.
 
 # Attribution
 
