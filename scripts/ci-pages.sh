@@ -15,6 +15,11 @@ step "warming dependency cache"
 python3 tools/verso-harness/scripts/ensure_dependency_cache.py --project-root . --warm-cache
 
 step "building Blueprint site"
+# The generator does not clean its output directory, so a renamed section
+# leaves its old page and search-index shard behind, and nothing links to
+# either -- check-rendered.py cannot see an orphan. Remove the rendered site
+# before rebuilding; _out/site keeps nothing else worth preserving.
+rm -rf _out/site/html-multi
 lake exe vbp build --output _out/site 2>&1 | python3 scripts/filter_docstring_warnings.py --project-root .
 
 step "checking dependency cache after build"

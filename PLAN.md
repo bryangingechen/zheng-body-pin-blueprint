@@ -59,7 +59,7 @@ audit. Node counts are targets. See `correspondence.toml` for what goes where.
 | 06 | `Strata` | §4 | 3 | **Written (Phase 4):** 3 nodes. **Deliberately short.** See below. |
 | 07 | `SplitKlein` | §5 | 14 | **Written (Phase 4):** 7 nodes. Two builds of the ideal; the weight apparatus and its unproved keystone. |
 | 08 | `BodyPin` | §6.2 onwards | 14 | **Written (Phase 4):** 6 nodes. No matroids, no C, and the orbit drop as homogeneity. |
-| 09 | `Correspondence` | — | 6 | **Stubbed:** 1 node + section skeleton. Table, glossary, deviations, trust boundary, reverse index. |
+| 09 | `Correspondence` | — | 6 | **Written (Phase 5):** 1 node. Table, glossary, deviations, trust boundary, reverse index — four of the five sections are tables, not theorems, so the node count was the wrong unit; see the Phase 5 record. |
 
 Node counts in the fourth column are the original targets. Chapters 02 to 04
 came in under them, at 6, 6 and 9 against 8, 10 and 12, because §2.1 and §2.2
@@ -95,10 +95,11 @@ it — a reader's first question about a scheme-theoretic section with no Lean i
 
 ## Vocabulary: the paper and Lean do not share names
 
-Chapter 05 is unreadable without this. The authoritative version is now the
+Chapter 05 is unreadable without this. The authoritative version is the
 table at the top of `Flags.lean`, which also carries the distinguished missing
 edge, the completion, the O/P/S sets and the response-edge renaming; the
-Chapter 09 glossary should start from that table, not this one.
+Chapter 09 glossary starts from that table and adds the document-wide
+coinages (grounded, null cellule, Nixon–Owen, twist).
 
 | Paper | Lean |
 |---|---|
@@ -358,13 +359,77 @@ Findings worth keeping:
 examples and the remark (Ex 4.1, Rem 4.3, Ex 5.2), an unlabelled entry and a
 place in its chapter's prose; no `unwritten` remains outside Chapter 09.
 
-**NEXT — Phase 5: audit, figures, polish.** Chapter 09 in full. Redraw the
-three figures. Clear coverage warnings, deciding whether `--reachable` gains
-an acknowledgment field for entries that name unreachable modules on purpose
-(see the Phase 4 findings). Then decide on porting to the current release
-line for PDF output and possible upstream reference-blueprint status.
-*Exit:* coverage checker clean; every module reachable from the root theorem
-named by some node.
+**Phase 5 — audit, figures, polish. DONE.**
+
+*Coverage warnings cleared, and the acknowledgment field exists.* An entry
+that deliberately names unreachable modules — the two ideal modules, the four
+weight modules, `GroundScale`, `HomogeneousChartContradiction` — now lists
+them in an `unreachable` field, with the reason staying in `note`;
+`coverage.py --reachable` errors when an acknowledgment goes stale in either
+direction (module became reachable, or the entry no longer names it) and
+still warns on an unacknowledged one. The two structure-projection warnings
+(`State.terminals`, `State.missing`) went away properly rather than by
+acknowledgment: the source scan now classifies a name whose parent is a
+`structure` as a projection, which has no body to quote. Clean state is zero
+warnings, and `--reachable` runs clean.
+
+*The three figures are redrawn* as hand-authored inline SVG in a new
+```BodyPinBlueprint.svgFigure fence (`Figures.lean`: a code-block expander
+that takes an `alt` string, insists on a single `<svg>` element with no
+script or event handler, and a block extension that emits it inside
+`<figure role="img">` with `figureCss`). Figure 1 (capacities 3/5/6) sits in
+the statement chapter, Figure 2 (flag and completion) in the flags chapter,
+Figure 3 (strata dimension count) in the strata chapter, each with a caption
+sentence citing the paper's figure. Strokes and labels are `currentColor`;
+the body fills and the restored/auxiliary edge accents are the only hues,
+translucent or class-scoped in `figureCss`. The fences render identically in
+the preview, and `rsvg-convert` on the fence content is the fast way to look
+at a drawing while making it. One trap found: Verso reads `_` in link text
+as emphasis and the harness math check reads `A/B.lean` as quotient
+notation, so table link texts are code spans and the reverse index writes
+dotted module names.
+
+*Chapter 09 is written*: the correspondence table (63 rows in seven tables,
+every entry linked to its node with the hover preview), the glossary
+(fifteen terms: the §3 renamings plus the document-wide coinages, each
+pointing at the chapter that glosses it), the deviations register table
+(all twenty-one entries, one sentence each), the trust boundary as the
+chapter's one node with Appendix A.2 as its witness — verbatim, contiguous,
+and zero unmatched windows — and the reverse index: all 126 modules, each
+with exactly the entries that name it, daggers on the ten modules the root
+theorem reaches nothing from, and the closing paragraph giving the
+measurement. It stayed at one node because four of its five sections are
+tables about the blueprint rather than mathematical statements, and a node
+is a statement; the original target of six assumed otherwise.
+
+*The tables cannot drift.* `coverage.py` gained `audit_chapter`: every
+correspondence row is checked against its entry (label, paper locus,
+status; labelled entries exactly once; node-less rows matching the
+unlabelled entries), the deviations table against the register's loci and
+chapters, and the reverse index against the module tree, the `modules`
+inventories and `_out/reachable.json`. Negative-tested by mutation: a
+changed status, a dropped label and a moved module each fail.
+
+*`ci-pages.sh` now removes `_out/site/html-multi` before building*, closing
+the orphan-page item from 2026-08-29.
+
+*Porting to the current release line: decided, no.* The harness rule that
+the formalization decides the toolchain is not a preference but the pin
+itself: the formalization's `v1.0.0` is released against Lean 4.29.0 and its
+mathlib, and a port to verso-blueprint `4.33` would rebuild someone else's
+kernel-checked artifact on a toolchain it was never released for, trading
+the pinned-artifact guarantee for `--pdf`. What a port would buy is small
+and known: PDF output, `:::proposition` (which would expire one register
+entry), the `source_document` layer this repo cannot use with no TeX
+source; what it would not buy is declaration bodies in the panels
+(`notes/upstream.md` §8 — neither line renders them). Revisit only if the
+upstream formalization moves its own pin. Reference-blueprint status
+upstream is contingent on deployment and on the author's licence answer,
+so it waits with the deployment item below.
+
+*Exit met:* `coverage.py --reachable` clean at zero warnings and zero
+errors; every module reachable from the root theorem is named by some entry,
+and the reverse index shows it, checked row by row.
 
 ## Practical notes
 
@@ -379,15 +444,17 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
 
 ## Open, not blocking
 
-- Pages deployment, deferred until the first full version of the blueprint
-  exists. Needs a git remote and someone with the account.
+- **NEXT: Pages deployment.** The first full version now exists — nine
+  chapters written, no `unwritten` tag anywhere, checks clean — so the
+  deferral has expired. Needs a git remote and someone with the account;
+  everything the workflow does passes locally, and `ci-pages.sh` now cleans
+  its output directory so a deploy cannot ship an orphan page.
+  Reference-blueprint status upstream waits on this and on the licence
+  answer below.
 - Licence on the formalization repository, and whether an arXiv version of the
   paper is planned. Both are questions for the author; see
   `notes/attribution.md`. The repository owner has an open thread with him.
 - Whether the Incidence/Algebra chart layer ever needs per-module nodes.
-- Whether to port to `4.33` once the content exists. Note that it would not buy
-  declaration bodies in the panels: neither release line renders them, and
-  `notes/upstream.md` §8 has the evidence and the routes if it is ever wanted.
 - **Declaration bodies: done.** A body is no longer copied into a chapter. `scripts/extract-bodies.sh` runs SubVerso's
   `subverso-extract-mod` over the 15 modules holding a `def` or an `abbrev` a
   chapter names, and a ```BodyPinBlueprint.bodies fence names declarations
@@ -651,19 +718,6 @@ without `python3 scripts/check-fresh.py` reporting `current` for it.
   *produces*), the whole extended list measured zero in the references, and
   it now gates. Witness blocks were confirmed excluded from the scan, so the
   promotion cannot fail a build on the paper's own words.
-
-- **`ci-pages.sh` does not clean its output directory.** Found 2026-08-29 while
-  verifying the prose pass: renaming a section heading leaves the old page and
-  its search-index shard behind in `_out/site/html-multi`. The rename in the
-  sparsity chapter left exactly two orphans — the old
-  `The-construction-theorem-the-formalization-carries/index.html` and
-  `-verso-search/searchIndex_79.js` — and nothing in the current site links to
-  either, so `check-rendered.py` did not see them. They were deleted by hand.
-  Harmless locally, but a first Pages deploy would ship a dead duplicate page
-  and a stale search entry, so decide before deployment: either `rm -rf` the
-  output directory at the top of `ci-pages.sh`, or clean in the workflow.
-  Not fixed here because it is a build-script change outside the prose pass and
-  cannot be verified without another ten-minute build.
 
 - **Two decisions left open**, neither blocking:
   - *Whether the prose should name each quoted body's source file.* Settled for
