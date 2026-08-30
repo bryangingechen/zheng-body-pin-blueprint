@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.SourceLinks
 import BodyPinBlueprint.Bodies
 import RB31EndToEnd.Incidence.EqualityPartition
 import RB31EndToEnd.Combinatorics.BodyPinFinpartition
@@ -27,6 +28,7 @@ open Verso.Genre
 open Verso.Genre.Manual
 open Verso.Genre.Manual.InlineLean
 open Informal
+open BodyPinBlueprint
 
 set_option doc.verso true
 
@@ -556,7 +558,7 @@ one nonzero integer certificate per partition, so
 takes the product over the finitely many partitions, picks a real point
 where it does not vanish (a nonzero real polynomial is nonzero somewhere,
 {name RB31E2E.ComplexRealSpecialization.exists_real_eval_ne_zero}`exists_real_eval_ne_zero`,
-which is the only declaration of `ComplexRealSpecialization.lean`
+which is the only declaration of {srcFile}`ComplexRealSpecialization.lean`
 the root theorem reaches), and concludes that the twist system at that pin
 placement is rigid. In particular the paper's passage from $`\C` back to
 $`\R`, and the compatibility-matrix minor $`f`, have no formal counterpart:

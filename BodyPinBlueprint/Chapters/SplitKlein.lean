@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.SourceLinks
 import BodyPinBlueprint.Bodies
 import RB31EndToEnd.Linear.Vec3Twist
 import RB31EndToEnd.NullCellule.Definitions
@@ -24,6 +25,7 @@ open Verso.Genre
 open Verso.Genre.Manual
 open Verso.Genre.Manual.InlineLean
 open Informal
+open BodyPinBlueprint
 
 set_option doc.verso true
 
@@ -190,7 +192,7 @@ diagonal closed subsets, and is therefore open.
 
 The formalization contains two builds of this ideal, and only one of them is
 used by the root theorem; the deviation register has the entry. The literal
-build, in `PolynomialModel.lean`, takes six variables at _every_
+build, in {srcFile}`PolynomialModel.lean`, takes six variables at _every_
 vertex, spans the ideal by one orientation-independent quadric per edge, and
 proves that its zero locus is exactly the null-difference condition on twist
 assignments; the module family's own name for the pair of conditions —
@@ -504,7 +506,7 @@ RB31E2E.NullCellulePolynomial.WeightInitialHeightMonotone
 ```
 
 The last quoted definition is the reason the apparatus ends where it does.
-`FilteredInitialHeight.lean` states the height comparison
+{srcFile}`FilteredInitialHeight.lean` states the height comparison
 $`\operatorname{ht}(\operatorname{in}_w I) \le \operatorname{ht} I` as a
 named proposition and proves the parts of the bridge that follow from the
 graded decomposition alone; its own comment records that Mathlib's Rees
@@ -517,5 +519,5 @@ development, like the construction theorem of
 {bpref "lean_nixon_owen_reduction"}[the sparsity chapter]; the
 module-by-module accounting appears in the correspondence chapter. What the
 root theorem does take from these files is vocabulary: the coordinate-ideal
-block of `FilteredInitialHeight.lean`, whose prime-chain height
+block of {srcFile}`FilteredInitialHeight.lean`, whose prime-chain height
 bound the linear-form ideal height of the theorem above rests on.

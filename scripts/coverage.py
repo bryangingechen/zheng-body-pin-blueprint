@@ -2,7 +2,7 @@
 """Check the blueprint against `correspondence.toml`.
 
 Coverage and correspondence are what this repository delivers, so the table and
-the document have to stay in step. Five things are checked here, cheaply and
+the document have to stay in step. Everything here is checked cheaply and
 without a build:
 
 1.  *One node per labelled entry, one entry per node, chapter for chapter.*
@@ -39,9 +39,10 @@ without a build:
     its source: entries once each with their own locus and status, register
     loci all present under their chapters with each row's chapter link landing
     on the node whose witness the entry fingerprints, every module of the
-    pinned formalization exactly once with exactly the entries naming it and a
-    source link to that module at the pinned repo and rev, and daggers
-    agreeing with `_out/reachable.json` when a walk has left one.
+    pinned formalization exactly once with exactly the entries naming it and
+    its name wrapped in the `srcFile` role, which is what links it to the
+    module at the pinned repo and rev, and daggers agreeing with
+    `_out/reachable.json` when a walk has left one.
 
 7.  *No declaration of the formalization is named as dead text.* Inline, a Lean
     constant goes in a `name` role, which renders the short name, hovers with
@@ -51,6 +52,14 @@ without a build:
     checked rather than reviewed. It can only see the formalization's own names:
     a Mathlib constant is not resolvable without a build, so `SimpleGraph` in a
     code span stays a review item.
+
+8.  *A formalization file named in prose is a link to the pinned source.* The
+    `srcFile` role (`BodyPinBlueprint/SourceLinks.lean`) builds the link from
+    the `[formalization]` pin of `correspondence.toml`, so the repository and
+    rev are quoted exactly once. A bare `` `Construction.lean` `` code span
+    leaves the reader to find the file themselves, and a hand-written URL into
+    the formalization's repository re-quotes the pin the role exists to carry;
+    both are errors naming the role to write.
 
 With `--reachable` it also reads `_out/reachable.json`, written by
 `scripts/reachable.lean`, and reports two things a module inventory cannot say
@@ -414,6 +423,70 @@ def dead_names() -> list[str]:
     return errors
 
 
+# The `srcFile` role and its span, so the span is not then read as a bare one.
+SRC_ROLE = re.compile(r"\{(?:BodyPinBlueprint\.)?srcFile[^}]*\}`[^`\n]*`")
+
+
+def file_links(formalization_pin: dict | None) -> list[str]:
+    """A formalization file named in prose goes through the `srcFile` role.
+
+    Prose names a file where the file's boundary is the point -- which module
+    proves which half, where a namespace and a file part company -- and a bare
+    `` `Construction.lean` `` leaves the reader to find it themselves while the
+    audit chapter links every module two sections away. The `srcFile` role
+    (`BodyPinBlueprint/SourceLinks.lean`) renders the span linked to the file
+    at the pinned repo and rev, reading the pin from `correspondence.toml`, and
+    it is an elaboration error on a file that does not exist -- so a code span
+    whose basename is a module of the pinned submodule must sit inside that
+    role, and a hand-written URL into the formalization's repository, which
+    re-quotes the pin the role exists to carry, is an error wherever it points.
+
+    Only the chapter's own prose is read, not its leading comment, for the same
+    reason as `dead_names`: a comment is for whoever edits the file and cannot
+    carry a link.
+    """
+    formalization = ROOT / "formalization"
+    if formalization_pin is None or not (formalization / "RB31EndToEnd.lean").exists():
+        return []
+    modules = {
+        str(p.relative_to(formalization))
+        for p in formalization.glob("RB31EndToEnd/**/*.lean")} | {"RB31EndToEnd.lean"}
+    by_basename: dict[str, list[str]] = defaultdict(list)
+    for module in sorted(modules):
+        by_basename[module.rsplit("/", 1)[-1]].append(module)
+    repo_url = f"github.com/{formalization_pin['repo']}"
+
+    errors = []
+    for path in sorted(CHAPTERS.glob("*.lean")):
+        text = path.read_text(encoding="utf-8")
+        start = text.find("#doc (Manual)")
+        if start < 0:
+            continue
+        prose = text[start:]
+        offset = text[:start].count("\n")
+        for match in re.finditer(re.escape(repo_url), prose):
+            line = prose[: match.start()].count("\n") + offset + 1
+            errors.append(
+                f"{path.stem}:{line}: literal URL into {repo_url}; write the srcFile role, "
+                "which links at the pinned rev without quoting it")
+        # The role's spans are not bare, and a role never spans lines, so the
+        # substitution leaves every line number as it was.
+        stripped = SRC_ROLE.sub("", prose)
+        for match in CODE_SPAN.finditer(stripped):
+            span = match.group(1)
+            if not span.endswith(".lean"):
+                continue
+            found = by_basename.get(span.rsplit("/", 1)[-1], [])
+            if not found:
+                continue
+            line = stripped[: match.start()].count("\n") + offset + 1
+            errors.append(
+                f"{path.stem}:{line}: `{span}` is a file of the formalization written as "
+                f"a bare code span; write {{srcFile}}`{span}`, which links it to the "
+                "pinned source")
+    return errors
+
+
 def module_name(path: str) -> str:
     """`RB31EndToEnd/Linear/PinRank.lean` -> `RB31EndToEnd.Linear.PinRank`."""
     return path.removesuffix(".lean").replace("/", ".")
@@ -426,8 +499,9 @@ BPREF_LINK = re.compile(r'\{bpref "([^"]+)"\}\[([^\]]*)\]')
 # math-delimiter check reads `A/B.lean` as quotient notation, and whitelists a
 # dotted Lean name.
 MODULE_CELL = re.compile(r'`(RB31EndToEnd(?:\.[A-Za-z0-9_]+)*)`(\s*†)?')
-# The markdown link a reverse-index module cell wraps its name in.
-MODULE_LINK = re.compile(r'\[`RB31EndToEnd[^`]*`\]\(([^)]+)\)')
+# The srcFile role a reverse-index module cell wraps its name in, which is what
+# renders the name linked to the module at the pinned repo and rev.
+MODULE_ROLE = re.compile(r'\{srcFile\}`RB31EndToEnd(?:\.[A-Za-z0-9_]+)*`')
 
 # How the audit chapter's deviations table names each chapter of the register.
 CHAPTER_DISPLAY = {
@@ -480,7 +554,7 @@ def witness_label_by_fingerprint() -> dict[tuple[str, str], str]:
     return found
 
 
-def audit_chapter(entries: list[dict], formalization_pin: dict | None = None) -> list[str]:
+def audit_chapter(entries: list[dict]) -> list[str]:
     """Check the audit chapter's hand-written tables against their sources.
 
     The correspondence table, the deviations table and the reverse index are
@@ -652,16 +726,10 @@ def audit_chapter(entries: list[dict], formalization_pin: dict | None = None) ->
             if module not in want_modules:
                 errors.append(f"{where}: reverse index lists {module}, which does not exist")
                 continue
-            link = MODULE_LINK.search(row[0])
-            if link is None:
-                errors.append(f"{where}: reverse-index row for {module} has no source link")
-            elif formalization_pin is not None:
-                want_url = (f"https://github.com/{formalization_pin['repo']}/blob/"
-                            f"{formalization_pin['rev']}/{module}")
-                if link.group(1) != want_url:
-                    errors.append(
-                        f"{where}: reverse index links {module} to {link.group(1)}; "
-                        f"the pinned source is {want_url}")
+            if not MODULE_ROLE.search(row[0]):
+                errors.append(
+                    f"{where}: reverse-index row for {module} does not use the srcFile "
+                    "role, so its name is not linked to the pinned source")
             labels = sorted(BPREF.findall(row[1]))
             if labels != sorted(set(named.get(module, []))):
                 errors.append(
@@ -772,7 +840,8 @@ def main() -> int:
 
     body_errors, warnings = quoted_bodies(table.get("body_optout", []))
     errors = (check(entries, nodes) + fingerprints() + body_errors + dead_names()
-              + audit_chapter(entries, table.get("formalization")))
+              + file_links(table.get("formalization"))
+              + audit_chapter(entries))
     if args.reachable:
         more, reachable_warnings = reachability(entries)
         errors += more

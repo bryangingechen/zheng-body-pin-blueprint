@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.SourceLinks
 import BodyPinBlueprint.Bodies
 import RB31EndToEnd.Combinatorics.Sparse22.DegreeThreeAugmentation
 import RB31EndToEnd.Combinatorics.Sparse22.GraphExtension
@@ -12,6 +13,7 @@ open Verso.Genre
 open Verso.Genre.Manual
 open Verso.Genre.Manual.InlineLean
 open Informal
+open BodyPinBlueprint
 
 set_option doc.verso true
 
@@ -282,7 +284,7 @@ RB31E2E.HasNixonOwenReduction
 
 The four `LegalInverse` predicates in that disjunction are inverse Henneberg
 one and two, $`K_4`-to-vertex, and $`K_3`-to-edge, each defined directly on
-edge sets. `Construction.lean` calls them the Nixon–Owen reductions; the name
+edge sets. {srcFile}`Construction.lean` calls them the Nixon–Owen reductions; the name
 is the module's own, and this blueprint has not checked it against a primary
 source. A legal reduction strictly decreases the number of active vertices, so
 repeated reductions terminate.
@@ -290,7 +292,7 @@ repeated reductions terminate.
 The degree-two case of the theorem is proved outright: deleting a degree-two
 vertex of a tight graph leaves a smaller tight graph. The degree-three case
 ends at a vertex contained in a $`(2,2)`-tight $`K_4`, and a triangle-sequence
-argument would continue from there; `GraphExtension.lean` replaces that
+argument would continue from there; {srcFile}`GraphExtension.lean` replaces that
 continuation with a shorter one, over a proper tight module of maximum
 cardinality, since tightness alone forces every outside vertex to send at most
 one edge into the module unless that vertex has degree two and gives an

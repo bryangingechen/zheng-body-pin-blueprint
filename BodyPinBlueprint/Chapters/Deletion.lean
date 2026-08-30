@@ -3,6 +3,7 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.SourceLinks
 import BodyPinBlueprint.Bodies
 import RB31EndToEnd.Linear.OutsideExceptionalFullResponse
 import RB31EndToEnd.Linear.DirectionResponseVertexDeletion
@@ -12,6 +13,7 @@ open Verso.Genre
 open Verso.Genre.Manual
 open Verso.Genre.Manual.InlineLean
 open Informal
+open BodyPinBlueprint
 
 set_option doc.verso true
 
@@ -451,11 +453,11 @@ $`\ker \partial_v \subseteq \ker C_v` and both are one-dimensional.
 :::
 
 The formalization splits this proof along the same lines, into a numerical and
-a geometric module. The numerical module, `OutsideLocalClassification.lean`,
+a geometric module. The numerical module, {srcFile}`OutsideLocalClassification.lean`,
 proves rank–nullity for $`C_v`, proves that the kernel of $`\partial_v` is a
 subspace of $`\ker C_v`, and deduces that a failure of $`u + \delta_v \le 3` at
 degree three forces the values in (2.8). The geometric module,
-`OutsideLocalGeometry.lean`, proves the two field-generation statements of the
+{srcFile}`OutsideLocalGeometry.lean`, proves the two field-generation statements of the
 proof above: if $`\operatorname{rank} C_v \le 1`, then $`a_v` lies on a line
 defined over $`L`, so $`\delta_v \le 1`; if $`\operatorname{rank} C_v = 2` and
 the three neighbours are not collinear, then $`a_v` lies in their affine

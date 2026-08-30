@@ -223,7 +223,9 @@ only by adding the matching status, and vice versa.
   `open Verso.Genre.Manual.InlineLean` in the chapter header, and it fails the
   build on an unknown constant — which is the point, it keeps prose references
   as honest as `(lean := ...)` ones. Only for real constants: `sorry` and
-  `admit` are not, and file paths and option names stay plain code spans.
+  `admit` are not, and option names and this repository's own paths stay plain
+  code spans; a file of the formalization goes in the `srcFile` role, next
+  bullet.
 
   The two forms are indistinguishable in the source and completely different on
   the page, so `scripts/coverage.py` checks it: a code span naming a
@@ -233,6 +235,22 @@ only by adding the matching status, and vice versa.
   constant — resolving one needs a build — so `` `SimpleGraph` ``, `` `Sym2` ``,
   `` `Finset` `` and `` `Cardinal` `` sat in the prose as dead text until they
   were found by eye. Those stay a review item.
+- **A file of the formalization is named with the `srcFile` role, never a bare
+  span or a hand-written URL.** `{srcFile}`Construction.lean`` renders the span
+  linked to the file at the pinned repository and rev, both read at elaboration
+  time from `correspondence.toml`'s `[formalization]` table
+  (`BodyPinBlueprint/SourceLinks.lean`), so the URL is quoted in no chapter and
+  a moved pin moves every link at once. A full dotted module name works too —
+  `{srcFile}`RB31EndToEnd.Combinatorics.Sparse22.Basic`` is how the audit
+  chapter's reverse index writes all 126 of its rows — and a file name that
+  matches more than one module takes `(module := ...)` to pick. A name that
+  matches nothing is an elaboration error. Needs
+  `import BodyPinBlueprint.SourceLinks` and `open BodyPinBlueprint`, touches
+  nothing the preview strips, and `scripts/coverage.py` closes the two ways
+  around it: a bare code span naming a formalization file is an error, and so
+  is any literal URL into the formalization's repository. This repository's
+  own files (`Statement.lean` in a leading comment, `scripts/reachable.lean`)
+  are not the formalization and stay plain code spans or ordinary links.
 - Prefer a `(lean := ...)` link to reproducing Lean code, and never reproduce a
   proof. `formalization/` carries no licence, so what is quoted here is limited
   to short definition bodies, quoted because they are what the blueprint is

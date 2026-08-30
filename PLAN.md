@@ -42,6 +42,7 @@ carrying *collinearity flags* through the induction.
 | Harness | adopt, in no-TeX mode | No LaTeX source exists. `lt.default_chapters = []` disables the source-fidelity half; everything source-independent stays on. |
 | Figures | redraw as inline SVG | The author's published SVGs are flattened path data with hardcoded `rgb()`, no text elements, and © with no licence. |
 | Labels | semantic, not paper numbers | Numbering shifts between preprint revisions. |
+| Links to formalization files | the `srcFile` role, never a literal URL | `BodyPinBlueprint/SourceLinks.lean` builds the link from `correspondence.toml`'s `[formalization]` pin at elaboration time, so the repo and rev are quoted in exactly one file and a moved pin moves the prose links and all 126 reverse-index links at once. `scripts/coverage.py` errors on a bare code span naming a formalization file and on any literal URL into the formalization's repository. |
 
 ## Chapter structure
 

@@ -3,11 +3,13 @@ import VersoManual
 import VersoBlueprint
 import BodyPinBlueprint.TeXPrelude
 import BodyPinBlueprint.Bibliography
+import BodyPinBlueprint.SourceLinks
 
 open Verso.Genre
 open Verso.Genre.Manual
 open Verso.Genre.Manual.InlineLean
 open Informal
+open BodyPinBlueprint
 
 set_option doc.verso true
 
@@ -670,13 +672,13 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd.lean)
+* * {srcFile}`RB31EndToEnd`
   * {bpref "formal_statement"}[`formal_statement`]
-* * [`RB31EndToEnd.Specification`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Specification.lean)
+* * {srcFile}`RB31EndToEnd.Specification`
   * {bpref "bodypin_incidence"}[`bodypin_incidence`], {bpref "pin_capacity"}[`pin_capacity`], {bpref "partition_condition"}[`partition_condition`], {bpref "formal_statement"}[`formal_statement`]
-* * [`RB31EndToEnd.Target`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Target.lean)
+* * {srcFile}`RB31EndToEnd.Target`
   * {bpref "formal_statement"}[`formal_statement`]
-* * [`RB31EndToEnd.TargetReduction`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/TargetReduction.lean)
+* * {srcFile}`RB31EndToEnd.TargetReduction`
   * no node; a one-declaration reduction recorded with the root theorem
 :::
 
@@ -685,47 +687,47 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd.Algebra.AffineSpanDescent`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/AffineSpanDescent.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.AffineSpanDescent`
   * {bpref "affine_coefficient_descent"}[`affine_coefficient_descent`]
-* * [`RB31EndToEnd.Algebra.AlgebraicIndependentAffine`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/AlgebraicIndependentAffine.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.AlgebraicIndependentAffine`
   * {bpref "affine_coefficient_descent"}[`affine_coefficient_descent`]
-* * [`RB31EndToEnd.Algebra.CoefficientLinearFibre`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/CoefficientLinearFibre.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.CoefficientLinearFibre`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Algebra.ComplexRealSpecialization`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/ComplexRealSpecialization.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.ComplexRealSpecialization`
   * {bpref "sufficiency_assembly"}[`sufficiency_assembly`]
-* * [`RB31EndToEnd.Algebra.CoordinateFieldTower`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/CoordinateFieldTower.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.CoordinateFieldTower`
   * {bpref "retained_coordinate_field"}[`retained_coordinate_field`], {bpref "deletion_ledger"}[`deletion_ledger`], {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Algebra.FilteredInitialHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/FilteredInitialHeight.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.FilteredInitialHeight`
   * {bpref "lean_weight_apparatus"}[`lean_weight_apparatus`]
-* * [`RB31EndToEnd.Algebra.FiniteChartCertificates`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/FiniteChartCertificates.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.FiniteChartCertificates`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Algebra.FiniteCoordinateTrdeg`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/FiniteCoordinateTrdeg.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.FiniteCoordinateTrdeg`
   * {bpref "polynomial_dimension_formula"}[`polynomial_dimension_formula`]
-* * [`RB31EndToEnd.Algebra.FiniteOpenIntersection`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/FiniteOpenIntersection.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.FiniteOpenIntersection`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Algebra.FractionQuotientCoordinates`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/FractionQuotientCoordinates.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.FractionQuotientCoordinates`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Algebra.GroundedTwist`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/GroundedTwist.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.GroundedTwist`
   * {bpref "grounded_model"}[`grounded_model`], {bpref "lean_block_bundle_operator"}[`lean_block_bundle_operator`]
-* * [`RB31EndToEnd.Algebra.GroundedTwistPolynomial`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/GroundedTwistPolynomial.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.GroundedTwistPolynomial`
   * {bpref "isotropic_difference_ideal"}[`isotropic_difference_ideal`]
-* * [`RB31EndToEnd.Algebra.HomogeneousChartContradiction`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/HomogeneousChartContradiction.lean) †
+* * {srcFile}`RB31EndToEnd.Algebra.HomogeneousChartContradiction` †
   * {bpref "orbit_dimension_drop"}[`orbit_dimension_drop`]
-* * [`RB31EndToEnd.Algebra.HomogeneousDenominatorContradiction`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/HomogeneousDenominatorContradiction.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.HomogeneousDenominatorContradiction`
   * {bpref "orbit_dimension_drop"}[`orbit_dimension_drop`]
-* * [`RB31EndToEnd.Algebra.HomogeneousPrimeChartHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/HomogeneousPrimeChartHeight.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.HomogeneousPrimeChartHeight`
   * {bpref "orbit_dimension_drop"}[`orbit_dimension_drop`]
-* * [`RB31EndToEnd.Algebra.LinearFormIdeal`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/LinearFormIdeal.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.LinearFormIdeal`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Algebra.LinearFormIdealHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/LinearFormIdealHeight.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.LinearFormIdealHeight`
   * {bpref "isotropic_ideal_height"}[`isotropic_ideal_height`]
-* * [`RB31EndToEnd.Algebra.MinimalPrimeLinearFibre`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/MinimalPrimeLinearFibre.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.MinimalPrimeLinearFibre`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Algebra.MinimalPrimeLinearFibreHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/MinimalPrimeLinearFibreHeight.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.MinimalPrimeLinearFibreHeight`
   * {bpref "isotropic_ideal_height"}[`isotropic_ideal_height`]
-* * [`RB31EndToEnd.Algebra.PolynomialPrimeTrdegHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/PolynomialPrimeTrdegHeight.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.PolynomialPrimeTrdegHeight`
   * {bpref "polynomial_dimension_formula"}[`polynomial_dimension_formula`]
-* * [`RB31EndToEnd.Algebra.RationalCertificateDescent`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Algebra/RationalCertificateDescent.lean)
+* * {srcFile}`RB31EndToEnd.Algebra.RationalCertificateDescent`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
 :::
 
@@ -734,51 +736,51 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd.Combinatorics.BodyPinCapacity`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/BodyPinCapacity.lean) †
+* * {srcFile}`RB31EndToEnd.Combinatorics.BodyPinCapacity` †
   * (none)
-* * [`RB31EndToEnd.Combinatorics.BodyPinFinpartition`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/BodyPinFinpartition.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.BodyPinFinpartition`
   * {bpref "twist_equality_partition"}[`twist_equality_partition`]
-* * [`RB31EndToEnd.Combinatorics.BodyPinSparseSkeleton`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/BodyPinSparseSkeleton.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.BodyPinSparseSkeleton`
   * {bpref "sparse_subgraph_selection"}[`sparse_subgraph_selection`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlag`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlag.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlag`
   * {bpref "collinearity_flag"}[`collinearity_flag`], {bpref "flag_system"}[`flag_system`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagArithmetic`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagArithmetic.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagArithmetic`
   * {bpref "flag_selection"}[`flag_selection`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagDeletion`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagDeletion.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagDeletion`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagForest`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagForest.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagForest`
   * {bpref "flag_incidence_forest"}[`flag_incidence_forest`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagInsertion`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagInsertion.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagInsertion`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagOutsideMove`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagOutsideMove.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagOutsideMove`
   * {bpref "outside_augmentation"}[`outside_augmentation`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagOutsideRegistration`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagOutsideRegistration.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagOutsideRegistration`
   * {bpref "outside_augmentation"}[`outside_augmentation`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagPrivateDeletion`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagPrivateDeletion.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagPrivateDeletion`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagPrivateMove`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagPrivateMove.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagPrivateMove`
   * {bpref "private_augmentation"}[`private_augmentation`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagPrivatePivot`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagPrivatePivot.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagPrivatePivot`
   * {bpref "missing_edge_pivot"}[`missing_edge_pivot`]
-* * [`RB31EndToEnd.Combinatorics.ProvenanceFlagSelection`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/ProvenanceFlagSelection.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.ProvenanceFlagSelection`
   * {bpref "support_multiplicity"}[`support_multiplicity`], {bpref "flag_selection"}[`flag_selection`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.Basic`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/Basic.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.Basic`
   * {bpref "sparse22"}[`sparse22`], {bpref "addable_edge_criterion"}[`addable_edge_criterion`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.Construction`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/Construction.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.Construction`
   * {bpref "lean_nixon_owen_reduction"}[`lean_nixon_owen_reduction`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.DegreeThreeAugmentation`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/DegreeThreeAugmentation.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.DegreeThreeAugmentation`
   * {bpref "addable_edge_triple"}[`addable_edge_triple`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.GraphExtension`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/GraphExtension.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.GraphExtension`
   * {bpref "lean_nixon_owen_reduction"}[`lean_nixon_owen_reduction`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.OptimalPartition`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/OptimalPartition.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.OptimalPartition`
   * {bpref "sparse_subgraph_selection"}[`sparse_subgraph_selection`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.TightCompletion`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/TightCompletion.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.TightCompletion`
   * {bpref "lean_nixon_owen_reduction"}[`lean_nixon_owen_reduction`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.Transport`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/Transport.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.Transport`
   * {bpref "lean_sparsity_transport"}[`lean_sparsity_transport`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.TriangleSequence`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/TriangleSequence.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.TriangleSequence`
   * {bpref "lean_nixon_owen_reduction"}[`lean_nixon_owen_reduction`]
-* * [`RB31EndToEnd.Combinatorics.Sparse22.Uncrossing`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Combinatorics/Sparse22/Uncrossing.lean)
+* * {srcFile}`RB31EndToEnd.Combinatorics.Sparse22.Uncrossing`
   * {bpref "uncrossing"}[`uncrossing`]
 :::
 
@@ -787,7 +789,7 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd.Graph.LooplessMultiGraph`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Graph/LooplessMultiGraph.lean) †
+* * {srcFile}`RB31EndToEnd.Graph.LooplessMultiGraph` †
   * (none)
 :::
 
@@ -796,49 +798,49 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd.Incidence.ActivePinPrimeHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/ActivePinPrimeHeight.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.ActivePinPrimeHeight`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.Arithmetic`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/Arithmetic.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.Arithmetic`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.CollinearityPolynomial`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/CollinearityPolynomial.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.CollinearityPolynomial`
   * {bpref "exceptional_pin_parameters"}[`exceptional_pin_parameters`]
-* * [`RB31EndToEnd.Incidence.DistinctProvenanceChart`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/DistinctProvenanceChart.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.DistinctProvenanceChart`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.EqualityPartition`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/EqualityPartition.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.EqualityPartition`
   * {bpref "twist_equality_partition"}[`twist_equality_partition`]
-* * [`RB31EndToEnd.Incidence.FiniteBadCover`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/FiniteBadCover.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.FiniteBadCover`
   * {bpref "exceptional_pin_parameters"}[`exceptional_pin_parameters`]
-* * [`RB31EndToEnd.Incidence.FiniteFullProvenancePropernessAssembly`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/FiniteFullProvenancePropernessAssembly.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.FiniteFullProvenancePropernessAssembly`
   * {bpref "exceptional_pin_parameters"}[`exceptional_pin_parameters`]
-* * [`RB31EndToEnd.Incidence.FullProvenanceChart`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/FullProvenanceChart.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.FullProvenanceChart`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.PinOuterActiveHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/PinOuterActiveHeight.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.PinOuterActiveHeight`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.PinOuterFullProvenanceHeightTransfer`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/PinOuterFullProvenanceHeightTransfer.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.PinOuterFullProvenanceHeightTransfer`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.PinTriangularElimination`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/PinTriangularElimination.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.PinTriangularElimination`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.SkeletonOccurrenceSelection`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/SkeletonOccurrenceSelection.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.SkeletonOccurrenceSelection`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.SmallBundleCertificate`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/SmallBundleCertificate.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.SmallBundleCertificate`
   * {bpref "exceptional_pin_parameters"}[`exceptional_pin_parameters`]
-* * [`RB31EndToEnd.Incidence.TotalRingProvenanceSwap`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/TotalRingProvenanceSwap.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.TotalRingProvenanceSwap`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.TripleBundleCertificate`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/TripleBundleCertificate.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.TripleBundleCertificate`
   * {bpref "exceptional_pin_parameters"}[`exceptional_pin_parameters`]
-* * [`RB31EndToEnd.Incidence.UniversalActivePinHeightTransfer`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/UniversalActivePinHeightTransfer.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.UniversalActivePinHeightTransfer`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.UniversalChartContraction`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/UniversalChartContraction.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.UniversalChartContraction`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.UniversalChartHeightElimination`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/UniversalChartHeightElimination.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.UniversalChartHeightElimination`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.UniversalChartIdeal`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/UniversalChartIdeal.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.UniversalChartIdeal`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.UniversalDistinctChartContraction`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/UniversalDistinctChartContraction.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.UniversalDistinctChartContraction`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.UniversalFullProvenanceChartContraction`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/UniversalFullProvenanceChartContraction.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.UniversalFullProvenanceChartContraction`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
-* * [`RB31EndToEnd.Incidence.UniversalHomogeneousChart`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Incidence/UniversalHomogeneousChart.lean)
+* * {srcFile}`RB31EndToEnd.Incidence.UniversalHomogeneousChart`
   * {bpref "lean_chart_layer"}[`lean_chart_layer`]
 :::
 
@@ -847,51 +849,51 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd.Linear.BlockKernelExact`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/BlockKernelExact.lean)
+* * {srcFile}`RB31EndToEnd.Linear.BlockKernelExact`
   * {bpref "stress_exact_sequence"}[`stress_exact_sequence`]
-* * [`RB31EndToEnd.Linear.DirectionResponse`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/DirectionResponse.lean)
+* * {srcFile}`RB31EndToEnd.Linear.DirectionResponse`
   * {bpref "certified_response_edge"}[`certified_response_edge`]
-* * [`RB31EndToEnd.Linear.DirectionResponseBaseChange`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/DirectionResponseBaseChange.lean)
+* * {srcFile}`RB31EndToEnd.Linear.DirectionResponseBaseChange`
   * {bpref "certified_response_edge"}[`certified_response_edge`]
-* * [`RB31EndToEnd.Linear.DirectionResponseVertexDeletion`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/DirectionResponseVertexDeletion.lean)
+* * {srcFile}`RB31EndToEnd.Linear.DirectionResponseVertexDeletion`
   * {bpref "certified_response_edge"}[`certified_response_edge`]
-* * [`RB31EndToEnd.Linear.DirectionStress`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/DirectionStress.lean)
+* * {srcFile}`RB31EndToEnd.Linear.DirectionStress`
   * {bpref "rigidity_row"}[`rigidity_row`], {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Linear.DirectionStressBaseChange`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/DirectionStressBaseChange.lean)
+* * {srcFile}`RB31EndToEnd.Linear.DirectionStressBaseChange`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Linear.DirectionStressDeletion`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/DirectionStressDeletion.lean)
+* * {srcFile}`RB31EndToEnd.Linear.DirectionStressDeletion`
   * {bpref "stress_exact_sequence"}[`stress_exact_sequence`]
-* * [`RB31EndToEnd.Linear.DirectionStressVertexDeletion`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/DirectionStressVertexDeletion.lean)
+* * {srcFile}`RB31EndToEnd.Linear.DirectionStressVertexDeletion`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Linear.FiniteFamilyBaseChange`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/FiniteFamilyBaseChange.lean)
+* * {srcFile}`RB31EndToEnd.Linear.FiniteFamilyBaseChange`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Linear.FiniteRowSpanStress`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/FiniteRowSpanStress.lean)
+* * {srcFile}`RB31EndToEnd.Linear.FiniteRowSpanStress`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Linear.FiniteRowSystem`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/FiniteRowSystem.lean)
+* * {srcFile}`RB31EndToEnd.Linear.FiniteRowSystem`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Linear.GroundedDirectionConstraint`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/GroundedDirectionConstraint.lean)
+* * {srcFile}`RB31EndToEnd.Linear.GroundedDirectionConstraint`
   * {bpref "grounded_model"}[`grounded_model`]
-* * [`RB31EndToEnd.Linear.OutsideExceptionalFullResponse`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/OutsideExceptionalFullResponse.lean)
+* * {srcFile}`RB31EndToEnd.Linear.OutsideExceptionalFullResponse`
   * {bpref "neighbour_rigidity_rows"}[`neighbour_rigidity_rows`]
-* * [`RB31EndToEnd.Linear.OutsideLocalClassification`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/OutsideLocalClassification.lean)
+* * {srcFile}`RB31EndToEnd.Linear.OutsideLocalClassification`
   * {bpref "low_degree_classification"}[`low_degree_classification`]
-* * [`RB31EndToEnd.Linear.OutsideLocalGeometry`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/OutsideLocalGeometry.lean)
+* * {srcFile}`RB31EndToEnd.Linear.OutsideLocalGeometry`
   * {bpref "low_degree_classification"}[`low_degree_classification`]
-* * [`RB31EndToEnd.Linear.OutsideLocalPayment`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/OutsideLocalPayment.lean)
+* * {srcFile}`RB31EndToEnd.Linear.OutsideLocalPayment`
   * {bpref "retained_coordinate_field"}[`retained_coordinate_field`], {bpref "deletion_ledger"}[`deletion_ledger`]
-* * [`RB31EndToEnd.Linear.OutsideRegistrationStress`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/OutsideRegistrationStress.lean)
+* * {srcFile}`RB31EndToEnd.Linear.OutsideRegistrationStress`
   * {bpref "lean_base_change"}[`lean_base_change`]
-* * [`RB31EndToEnd.Linear.PinFibres`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/PinFibres.lean)
+* * {srcFile}`RB31EndToEnd.Linear.PinFibres`
   * {bpref "pin_fibre"}[`pin_fibre`]
-* * [`RB31EndToEnd.Linear.PinRank`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/PinRank.lean)
+* * {srcFile}`RB31EndToEnd.Linear.PinRank`
   * {bpref "necessity"}[`necessity`]
-* * [`RB31EndToEnd.Linear.PrivateLocalClassification`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/PrivateLocalClassification.lean)
+* * {srcFile}`RB31EndToEnd.Linear.PrivateLocalClassification`
   * {bpref "private_local_classification"}[`private_local_classification`]
-* * [`RB31EndToEnd.Linear.PrivatePivotStress`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/PrivatePivotStress.lean)
+* * {srcFile}`RB31EndToEnd.Linear.PrivatePivotStress`
   * {bpref "missing_edge_pivot"}[`missing_edge_pivot`]
-* * [`RB31EndToEnd.Linear.TwistSystem`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/TwistSystem.lean)
+* * {srcFile}`RB31EndToEnd.Linear.TwistSystem`
   * {bpref "twist_system"}[`twist_system`], {bpref "twist_description"}[`twist_description`]
-* * [`RB31EndToEnd.Linear.Vec3Twist`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Linear/Vec3Twist.lean)
+* * {srcFile}`RB31EndToEnd.Linear.Vec3Twist`
   * {bpref "split_klein_form"}[`split_klein_form`], {bpref "twist_system"}[`twist_system`]
 :::
 
@@ -900,57 +902,57 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd.NullCellule.Definitions`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/Definitions.lean) †
+* * {srcFile}`RB31EndToEnd.NullCellule.Definitions` †
   * {bpref "isotropic_difference_ideal"}[`isotropic_difference_ideal`]
-* * [`RB31EndToEnd.NullCellule.GroundScale`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/GroundScale.lean) †
+* * {srcFile}`RB31EndToEnd.NullCellule.GroundScale` †
   * {bpref "orbit_dimension_drop"}[`orbit_dimension_drop`]
-* * [`RB31EndToEnd.NullCellule.GroundedPFEndToEnd`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/GroundedPFEndToEnd.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.GroundedPFEndToEnd`
   * {bpref "stress_codim"}[`stress_codim`], {bpref "sufficiency_assembly"}[`sufficiency_assembly`]
-* * [`RB31EndToEnd.NullCellule.GroundedTwistSplit`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/GroundedTwistSplit.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.GroundedTwistSplit`
   * {bpref "grounded_model"}[`grounded_model`]
-* * [`RB31EndToEnd.NullCellule.PolynomialModel`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/PolynomialModel.lean) †
+* * {srcFile}`RB31EndToEnd.NullCellule.PolynomialModel` †
   * {bpref "isotropic_difference_ideal"}[`isotropic_difference_ideal`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagBranch`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagBranch.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagBranch`
   * {bpref "stress_codim_flags"}[`stress_codim_flags`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagDeletionLedger`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagDeletionLedger.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagDeletionLedger`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagGroundedPF`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagGroundedPF.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagGroundedPF`
   * {bpref "stress_codim"}[`stress_codim`], {bpref "sufficiency_assembly"}[`sufficiency_assembly`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagInsertedBranch`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagInsertedBranch.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagInsertedBranch`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagOutsideExceptional`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptional.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagOutsideExceptional`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagOutsideExceptionalBudget`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagOutsideExceptionalBudget.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagOutsideExceptionalBudget`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagOutsideRegisteredBranch`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagOutsideRegisteredBranch.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagOutsideRegisteredBranch`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagPlacement`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagPlacement.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagPlacement`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagPrivateExceptional`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagPrivateExceptional.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagPrivateExceptional`
   * {bpref "lean_flag_moves"}[`lean_flag_moves`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagSemismallness`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagSemismallness.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagSemismallness`
   * {bpref "stress_codim_flags"}[`stress_codim_flags`]
-* * [`RB31EndToEnd.NullCellule.ProvenanceFlagSemismallnessFinal`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ProvenanceFlagSemismallnessFinal.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.ProvenanceFlagSemismallnessFinal`
   * {bpref "stress_codim_flags"}[`stress_codim_flags`]
-* * [`RB31EndToEnd.NullCellule.ReplacementIdentities`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/ReplacementIdentities.lean) †
+* * {srcFile}`RB31EndToEnd.NullCellule.ReplacementIdentities` †
   * {bpref "lean_weight_apparatus"}[`lean_weight_apparatus`]
-* * [`RB31EndToEnd.NullCellule.SelectedDirectionFibre`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/SelectedDirectionFibre.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.SelectedDirectionFibre`
   * {bpref "isotropic_ideal_height"}[`isotropic_ideal_height`]
-* * [`RB31EndToEnd.NullCellule.SelectedDirectionHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/SelectedDirectionHeight.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.SelectedDirectionHeight`
   * {bpref "isotropic_ideal_height"}[`isotropic_ideal_height`]
-* * [`RB31EndToEnd.NullCellule.SelectedNullHeight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/SelectedNullHeight.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.SelectedNullHeight`
   * {bpref "isotropic_difference_ideal"}[`isotropic_difference_ideal`], {bpref "isotropic_ideal_height"}[`isotropic_ideal_height`]
-* * [`RB31EndToEnd.NullCellule.SelectedNullHeightPrimewise`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/SelectedNullHeightPrimewise.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.SelectedNullHeightPrimewise`
   * {bpref "isotropic_ideal_height"}[`isotropic_ideal_height`]
-* * [`RB31EndToEnd.NullCellule.VertexK4Weight`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/VertexK4Weight.lean) †
+* * {srcFile}`RB31EndToEnd.NullCellule.VertexK4Weight` †
   * {bpref "lean_weight_apparatus"}[`lean_weight_apparatus`]
-* * [`RB31EndToEnd.NullCellule.WeightComponents`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/WeightComponents.lean) †
+* * {srcFile}`RB31EndToEnd.NullCellule.WeightComponents` †
   * {bpref "lean_weight_apparatus"}[`lean_weight_apparatus`]
-* * [`RB31EndToEnd.NullCellule.WeightInitialIdeal`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/WeightInitialIdeal.lean) †
+* * {srcFile}`RB31EndToEnd.NullCellule.WeightInitialIdeal` †
   * {bpref "lean_weight_apparatus"}[`lean_weight_apparatus`]
-* * [`RB31EndToEnd.NullCellule.WittShear`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/WittShear.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.WittShear`
   * {bpref "witt_shear_componentwise"}[`witt_shear_componentwise`]
-* * [`RB31EndToEnd.NullCellule.WittShearDistinctPrime`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/NullCellule/WittShearDistinctPrime.lean)
+* * {srcFile}`RB31EndToEnd.NullCellule.WittShearDistinctPrime`
   * {bpref "witt_shear_componentwise"}[`witt_shear_componentwise`]
 :::
 
@@ -959,17 +961,17 @@ The root modules state the theorem:
 :::table +header
 * * Module
   * Node
-* * [`RB31EndToEnd.Rigidity.BarJoint`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Rigidity/BarJoint.lean)
+* * {srcFile}`RB31EndToEnd.Rigidity.BarJoint`
   * {bpref "rigidity_matrix"}[`rigidity_matrix`], {bpref "generic_rigidity_max_rank"}[`generic_rigidity_max_rank`]
-* * [`RB31EndToEnd.Rigidity.BodyPinGraph`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Rigidity/BodyPinGraph.lean)
+* * {srcFile}`RB31EndToEnd.Rigidity.BodyPinGraph`
   * {bpref "bodypin_expansion"}[`bodypin_expansion`]
-* * [`RB31EndToEnd.Rigidity.BodyTwistBridge`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Rigidity/BodyTwistBridge.lean)
+* * {srcFile}`RB31EndToEnd.Rigidity.BodyTwistBridge`
   * {bpref "twist_description"}[`twist_description`]
-* * [`RB31EndToEnd.Rigidity.BodyTwistGenericBridge`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Rigidity/BodyTwistGenericBridge.lean)
+* * {srcFile}`RB31EndToEnd.Rigidity.BodyTwistGenericBridge`
   * {bpref "sufficiency_assembly"}[`sufficiency_assembly`], {bpref "lean_genericity"}[`lean_genericity`]
-* * [`RB31EndToEnd.Rigidity.GraphNecessity`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Rigidity/GraphNecessity.lean)
+* * {srcFile}`RB31EndToEnd.Rigidity.GraphNecessity`
   * {bpref "necessity"}[`necessity`], {bpref "lean_genericity"}[`lean_genericity`]
-* * [`RB31EndToEnd.Rigidity.TwistNecessity`](https://github.com/DongzheZheng/Kiraly-Tanigawa-Body-Pin-Rigidity-Conjecture/blob/afdfb9fc8f28abc4feb5dcee31ae04082922ceb7/RB31EndToEnd/Rigidity/TwistNecessity.lean)
+* * {srcFile}`RB31EndToEnd.Rigidity.TwistNecessity`
   * {bpref "necessity"}[`necessity`], {bpref "lean_block_bundle_operator"}[`lean_block_bundle_operator`]
 :::
 
@@ -987,15 +989,15 @@ declarations, and the ten daggered modules contribute none of theirs; every
 module the walk does reach is named by some entry above, so nothing
 load-bearing is unaccounted for. Of the four modules that develop
 {bpref "lean_nixon_owen_reduction"}[the construction theorem of the sparsity
-chapter], only a few counting facts are reachable: from `TightCompletion.lean`
+chapter], only a few counting facts are reachable: from {srcFile}`TightCompletion.lean`
 one equation lemma for a definition made elsewhere; from
-`TriangleSequence.lean` two declarations about the four-element vertex set of
-a $`K_4`; from `GraphExtension.lean` eight facts about the edges one outside
-vertex sends into a tight subgraph; and from `Construction.lean` its edge-set
+{srcFile}`TriangleSequence.lean` two declarations about the four-element vertex set of
+a $`K_4`; from {srcFile}`GraphExtension.lean` eight facts about the edges one outside
+vertex sends into a tight subgraph; and from {srcFile}`Construction.lean` its edge-set
 vocabulary rather than its reduction theorems. The ten daggered modules
 divide into two groups. Two are superseded and named by no entry: the
 multigraph interface, whose conversion is never used, and the capacity
-table, whose bounds the proof takes from `PinRank.lean` instead. The other
+table, whose bounds the proof takes from {srcFile}`PinRank.lean` instead. The other
 eight are documented as parallel developments by the
 {bpref "isotropic_difference_ideal"}[Split–Klein] and
 {bpref "orbit_dimension_drop"}[assembly] chapters: the literal build of the
