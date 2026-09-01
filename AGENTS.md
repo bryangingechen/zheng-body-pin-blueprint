@@ -162,6 +162,17 @@ does not apply here (see above); what follows is the half that does.
   `python3 tools/verso-harness/scripts/status_harness.py --project-root .` to
   see helper, upstream and `VersoBlueprint` drift, then
   `check_harness.py --project-root .` to audit the layout.
+- Two files the harness templates own are deliberately ours, and
+  `update_ci.py --dry-run` reports both as needing an update: `scripts/
+  ci-pages.sh` and `.github/workflows/blueprint.yml`. Do not "fix" either by
+  running `update_ci.py` without `--dry-run`. The workflow is vendored from
+  `leanprover/verso-blueprint`'s reusable `blueprint-pages.yml`, which this repo
+  called through `uses:` until the root build cache needed to carry
+  `.lake/build/highlighted` too; that workflow takes three inputs, none of them
+  a cache path, and a job that calls a reusable workflow cannot carry steps of
+  its own, so there was nothing to add from the calling side. On a
+  `VersoBlueprint` bump, diff it against upstream's at the new tag and carry the
+  local change across. Its header comment says the same.
 - Treat the host formalization as the source of truth for what is proved.
 - Keep the root build green. If a Lean link would pull in imports that are not
   harness-clean on the current toolchain, leave the node informal and note the
@@ -267,7 +278,20 @@ is the cheaper fix for the problem that actually occurs.
   content — nodes, witnesses, declaration references, quoted bodies — costs
   under 10 s. See the import-granularity rule in `BodyPinBlueprint/AGENTS.md`,
   which now has a measured payoff and not just an auditability one.
-- Only CI pays the full cold cost, so the workflow's dependency cache matters.
+- Only CI pays the full cold cost, so the workflow's caches matter. They cover
+  `.lake/build/{lib,ir,highlighted}` and the formalization's `{lib,ir}`; the
+  highlighted tree is there because of the local change to
+  `.github/workflows/blueprint.yml` described under "Harness notes".
+- The figures above are local and predate the current module list; a cold CI run
+  disagrees with them by enough that they should not be quoted without
+  remeasuring. Run 33512249893, ubuntu-latest, all three caches missing, 23m33s
+  end to end: `lake build RB31EndToEnd` 5m12s (not ~37 min);
+  `scripts/extract-bodies.sh` 6m21s over 35 modules, about 11 s each (not ~47
+  min at 189 s over 15); `lake env lean scripts/body-modules.lean` 5 s (not ~3
+  min); `lake exe vbp build` 7m59s. Some of that is a warm page cache right
+  after the formalization built, so the two are not measuring quite the same
+  thing -- but the local numbers are the ones that have not been checked
+  lately.
 - Do not iterate with `lake build` or `ci-pages.sh`. Two fast loops cover almost
   everything, both documented in `BodyPinBlueprint/AGENTS.md`:
   `python3 scripts/preview.py` renders the whole document without the

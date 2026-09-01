@@ -1,5 +1,35 @@
 name: Blueprint Pages
 
+# Vendored from leanprover/verso-blueprint's reusable
+# `.github/workflows/blueprint-pages.yml` at v4.29.0, with one change: the root
+# build cache carries `.lake/build/highlighted` as well.
+#
+# Why vendor. `scripts/extract-bodies.sh` re-elaborates 35 formalization modules
+# through SubVerso to get declaration bodies. Lake keeps that output, and the
+# per-module traces that let it skip the work next time, under
+# `.lake/build/highlighted/`. Upstream caches `.lake/build/{lib,ir}` and not
+# that, so every Pages run paid for all 35 again. Upstream takes three inputs,
+# none of them a cache path, and a job that calls a reusable workflow cannot
+# carry steps of its own -- so there is no way to add the path from the calling
+# side, and no action to add beside it.
+#
+# Measured on run 33512249893, a cold build with all three caches missing:
+# extraction 6m21s of a 23m33s job, against 5m12s to build the formalization and
+# 7m59s for the site itself. So this saves about six minutes a run once the
+# formalization cache hits and the traces line up -- worth having, but a good
+# deal less than the repo's older per-module figures imply. Anyone re-deciding
+# whether to keep this file vendored should weigh it against that, not against
+# the stale estimates in AGENTS.md's "Build costs".
+#
+# The cost is that `tools/verso-harness/scripts/update_ci.py` owns this file and
+# will now report it as needing an update, exactly as it already does for
+# `scripts/ci-pages.sh`. On a verso-blueprint bump, diff this against upstream's
+# `blueprint-pages.yml` at the new tag and carry the change across.
+#
+# Upstream was called with `checkout_submodules`, `harness_enabled` and
+# `warm_dependency_cache` all true, so their `if:` guards are resolved away
+# here. Everything else is upstream's, verbatim.
+
 on:
   pull_request:
   push:
@@ -12,11 +42,98 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: ${{ github.repository }}-blueprint-pages-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  pages:
-    uses: leanprover/verso-blueprint/.github/workflows/blueprint-pages.yml@v4.29.0
-    with:
-      checkout_submodules: true
-      harness_enabled: true
-      warm_dependency_cache: true
-    secrets: inherit
+  build:
+    name: Build Blueprint Site
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          submodules: recursive
+      - uses: actions/configure-pages@v6
+      - name: Install elan
+        run: |
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Read harness config
+        id: harness
+        run: python3 tools/verso-harness/scripts/export_ci_env.py --project-root . >> "$GITHUB_OUTPUT"
+      - name: Restore Lake package cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            .lake/packages/VersoBlueprint
+            .lake/packages/mathlib
+            .lake/packages/subverso
+            .lake/packages/verso
+          key: ${{ runner.os }}-lake-packages-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', '.gitmodules') }}
+          restore-keys: |
+            ${{ runner.os }}-lake-packages-v2-
+      # `.lake/build/highlighted` is the local addition. A restore that predates
+      # the current submodule pin is safe: Lake traces each `<module>.json` on
+      # the module's olean, so an entry whose olean still matches is reused and
+      # one that does not is re-elaborated. The exact key hashes this workflow
+      # file too, which upstream's does not -- without that, editing the `path:`
+      # above would leave the key unmoved, `actions/cache` would find the old
+      # entry already present and skip the save, and the new path would never be
+      # cached at all. The restore-keys stay coarse, so warm restores survive.
+      - name: Restore root Lean build cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            .lake/build/lib
+            .lake/build/ir
+            .lake/build/highlighted
+          key: ${{ runner.os }}-lean-build-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean', '.gitmodules', '*.lean', '**/*.lean', 'scripts/ci-pages.sh', '.github/workflows/blueprint.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-lean-build-v2-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean', '.gitmodules') }}-
+            ${{ runner.os }}-lean-build-v2-
+      - name: Restore formalization Lean build cache
+        uses: actions/cache@v5
+        with:
+          path: |
+            ${{ steps.harness.outputs.formalization_path }}/.lake/build/lib
+            ${{ steps.harness.outputs.formalization_path }}/.lake/build/ir
+          key: ${{ runner.os }}-formalization-build-v1-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean', '.gitmodules', '*.lean', '**/*.lean', 'scripts/ci-pages.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-formalization-build-v1-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'lakefile.lean', '.gitmodules') }}-
+            ${{ runner.os }}-formalization-build-v1-
+      - name: Show tool versions
+        run: |
+          lean --version
+          lake --version
+          python3 --version
+          git submodule status || true
+      - name: Warm Lean dependency cache
+        run: |
+          lake exe cache get || true
+          if [ -f "${{ steps.harness.outputs.formalization_path }}/lakefile.lean" ]; then
+            (
+              cd "${{ steps.harness.outputs.formalization_path }}"
+              lake exe cache get || true
+            )
+          fi
+      - name: Validate harness contract
+        run: python3 tools/verso-harness/scripts/check_harness.py --project-root .
+      - name: Build Blueprint site
+        run: ./scripts/ci-pages.sh
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
+        with:
+          path: _out/site/html-multi
+
+  deploy:
+    name: Deploy Pages
+    if: github.event_name != 'pull_request'
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
