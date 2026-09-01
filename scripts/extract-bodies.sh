@@ -8,7 +8,7 @@
 # code; `BodyPinBlueprint/Bodies.lean` reads that back and the ```bodies fence
 # renders it. Nothing is copied into this repository and no copy can go stale.
 #
-# Only modules holding a `def` or an `abbrev` a node names are extracted -- 15
+# Only modules holding a `def` or an `abbrev` a node names are extracted -- 35
 # of the 125 that correspondence.toml lists, because a theorem's value is its
 # proof and the panel already renders a structure's fields. That list is
 # computed by scripts/body-modules.lean, which needs the formalization loaded;
@@ -68,6 +68,16 @@ else:
 PY
 
 if [ ! -f "$map" ] || [ "$names" -nt "$map" ]; then
+  # `lake env lean` sets up a search path and elaborates; it builds nothing. So
+  # `import RB31EndToEnd` fails with `unknown module prefix` unless the
+  # formalization's oleans are already on disk, which on a fresh checkout --
+  # CI's, every time, since `_out/` and the build trees are ignored -- they are
+  # not. Build the root module first. It pulls in exactly the modules the map
+  # can name (every cited declaration is reachable from it: `missing` is empty),
+  # and the extraction loop below needs the same oleans anyway.
+  step "building the formalization the map loads"
+  lake build RB31EndToEnd
+
   step "mapping declarations to modules (about three minutes, loads oleans)"
   lake env lean scripts/body-modules.lean
 else
