@@ -1,7 +1,8 @@
 # Upstream findings
 
-Issues and suggestions for `leanprover/verso-blueprint` and
-`ejgallego/leanblueprint-to-verso`, found while building this blueprint.
+Issues and suggestions for `leanprover/verso-blueprint`, `leanprover/verso`,
+`leanprover/subverso` and `ejgallego/leanblueprint-to-verso`, found while
+building this blueprint. Each section says which under **Where:**.
 
 Expectations are low for anything specific to the `v4.29.0` line: it is not in
 `branch-policy.json`'s release targets and is no longer backported to. File
@@ -304,9 +305,14 @@ to the *workspace root* build dir — so it caches, and it never writes inside t
 submodule. Measured against the eleven hand-quoted declarations that could be
 compared, it reproduced every one byte for byte.
 
-The cost is real and is recorded in `AGENTS.md`: about 47 minutes cold for the
-15 modules that hold a `def` or an `abbrev` a node names, roughly doubling a
-cold CI build, and a no-op once warm.
+The cost is real and is recorded in `AGENTS.md`. It is 35 modules now, not the
+15 first measured, and the local per-module figures there have not been
+rechecked since; what has been measured is CI, where a cold extract of all 35
+took 6m21s and 6m55s on two runs whose job totals were 23m33s and 16m18s. Warm,
+with the tree restored and the modules built in one invocation, it is 5.4 s
+(run 33519120430, a 7m58s job). Section 10 below is why it runs as a single `lake build`
+invocation, and section 11 is what CI had to change to keep the output between
+runs.
 
 It joins on the panel's `data-decl`, on the `id` Verso puts on a block's
 defining occurrence of a constant (`Token.Kind.idAttr`, which emits one only for
@@ -349,3 +355,132 @@ that the colours at least aggregate the right closure (see
 `BodyPinBlueprint/AGENTS.md`, "Dependency edges"). If upstream ever grows a
 per-node status override or an "informal by design" flag, that section can
 shrink.
+
+---
+
+## 10. SubVerso's `highlighted` module facet is not parallel-safe
+
+**Where:** `subverso`, `lakefile.lean` (`module_facet highlighted`, both the
+`Compat.useOldBind` branch and the other).
+
+**What happens:** each module's facet computes
+
+```lean
+let suppNS := (← IO.getEnv "SUBVERSO_SUPPRESS_NAMESPACES").getD ""
+let nsFile := buildDir / "highlighted" / s!"ns-{hash suppNS}"
+```
+
+The marker's name depends only on that environment variable, so every module in
+a workspace resolves to the same path. It is then built *inline inside the
+module's own job* —
+
+```lean
+buildFileUnlessUpToDate' (text := true) nsFile do
+  IO.FS.createDirAll (buildDir / "highlighted")
+  IO.FS.writeFile nsFile suppNS
+```
+
+— rather than being registered as a target, so Lake neither dedupes nor orders
+those writes. Observed: building one module and then a different one bumps the
+marker's mtime both times, so it is rewritten unconditionally even when nothing
+changed.
+
+Serially this is invisible, which is why a loop over `lake build
+<module>:highlighted` never showed it. Building several such targets in one
+invocation makes the jobs race on the marker and on its `.hash` and `.trace`,
+and a reader that catches one mid-write reports
+
+```
+warning: .../.lake/build/highlighted/ns-<hash>.trace: offset 0: unexpected end of input
+```
+
+against whichever module happened to lose — 4 of 6 batched runs here. Lake
+5.0.0 has no job-count flag to serialise it (checked `lake help build`, the
+global options, and the binary's strings).
+
+The blast radius, as far as it could be checked, is confined to the marker: each
+module writes its own `<Module>.json`, `.hash` and `.trace`, which no other job
+touches, and all 35 JSON files parsed after every warning run.
+
+**Workaround here:** `LEAN_NUM_THREADS=1` on the batched invocation pins Lean's
+thread pool and serialises Lake's jobs — 0 warnings in 6 runs locally, and 0 on
+CI, where the same change took extraction from 1m52s to 5.4 s (run
+33519120430). See `scripts/extract-bodies.sh`, which explains the trade: the
+`subverso-extract-mod` children inherit the variable, so a cold extract
+elaborates single-threaded. That has not been measured — no pin has moved since
+— and it is the one number here that is still a prediction.
+
+**Suggested change:** register the marker as a real Lake target so Lake builds
+it once and orders the dependency, rather than building it inline in every
+module's job. Failing that, skip the write when the file already holds `suppNS`.
+
+---
+
+## 11. The Pages workflow caches the build but not the extracted highlighting
+
+**Where:** `verso-blueprint`, `.github/workflows/blueprint-pages.yml` (v4.29.0).
+
+**What happens:** the reusable workflow restores three caches —
+`.lake/packages/*`, `.lake/build/{lib,ir}`, and
+`<formalization>/.lake/build/{lib,ir}`. SubVerso's `highlighted` facet writes to
+the *workspace root's* `.lake/build/highlighted/`, which none of them cover. So
+a blueprint that quotes declaration bodies re-extracts every module on every
+run, even when the oleans were restored unchanged and Lake's own traces would
+have skipped the work.
+
+And it cannot be fixed from the calling side:
+
+- the workflow takes exactly three inputs — `checkout_submodules`,
+  `harness_enabled`, `warm_dependency_cache` — none of them a cache path;
+- a job that calls a reusable workflow cannot carry `steps`, so no
+  `actions/cache` can run beside `./scripts/ci-pages.sh`;
+- a sibling job runs on a different runner and shares no filesystem;
+- and the cache service is unreachable from inside the script, because
+  `ACTIONS_RUNTIME_TOKEN` and `ACTIONS_CACHE_URL` are not exported to `run:`
+  steps. Re-exporting them is what `crazy-max/ghaction-github-runtime` is for,
+  and that is an action, so it cannot be added either.
+
+**Workaround here:** `.github/workflows/blueprint.yml` vendors the upstream job
+at v4.29.0 and adds `.lake/build/highlighted` to the root build cache. Verified
+structurally identical to upstream otherwise, bar the three `if:` input guards,
+which all resolve true. Restoring the tree took extraction from 6m55s to 1m52s.
+The cost is that `update_ci.py` reports the file as diverged from then on, as it
+already did for `scripts/ci-pages.sh`; see that file's header comment for the
+re-sync instruction.
+
+Worth knowing if anyone repeats it: **adding the path is not sufficient on its
+own.** The exact cache key has to move as well, or `actions/cache` finds the
+existing entry already present, skips the save, and the new path is never
+cached — the edit looks applied and does nothing. This repo puts
+`.github/workflows/blueprint.yml` into the key's `hashFiles` so that any future
+edit to `path:` busts the key automatically, and leaves the `restore-keys`
+coarse so warm restores still hit.
+
+**Suggested change:** add the highlighting output to the root build cache
+upstream — it is the natural companion to `.lake/build/{lib,ir}` for any
+blueprint that quotes bodies — or expose an `extra_build_cache_paths` input so
+consumers can extend it without vendoring the whole job.
+
+---
+
+## 12. Two smaller things in the same workflow
+
+**Where:** `verso-blueprint`, `.github/workflows/blueprint-pages.yml` (v4.29.0).
+
+- The warm-cache step guards the formalization's `lake exe cache get` on
+  `[ -f "<formalization_path>/lakefile.lean" ]`. A formalization with a
+  `lakefile.toml` — this one — never matches, so that branch never runs. Harmless
+  here (it is a single Lake workspace, there is no `formalization/.lake/packages`,
+  and the root `cache get` already covers mathlib), but the guard should accept
+  either filename.
+
+- The root and formalization cache keys hash `'*.lean', '**/*.lean'`. The package
+  cache is restored earlier in the same job, so once it hits, `**/*.lean` sweeps
+  `.lake/packages/` as well — thousands of mathlib files — and the exact key
+  differs between a run where the packages were cold and one where they were
+  warm. Seen here: the formalization key was `...-v1-4f0564...` on the first
+  cold run and `...-v1-77fe43...` on the next, and the coarse `restore-keys`
+  prefix is the only reason the second run got its hit. It settles once the
+  package cache is stable, but it means the first warm run always saves a fresh
+  multi-gigabyte entry against the repository's 10 GB cache budget. Excluding
+  `.lake/**` from those globs would make the keys mean what they appear to mean.
